@@ -1,0 +1,72 @@
+[DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'H'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'He'}hasSelection: trueisCollapsed: falserangeCount: 1text: "He"[[Prototype]]: Object
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'H'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here,'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, '}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Pl'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Pla'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plai'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plain'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaint'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plainti'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintif'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff '}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff a'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff '}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff a'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff al'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff all'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection state (inside container)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Ask AI clicked
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Selection BEFORE: {hasSelection: true, isCollapsed: false, rangeCount: 1, text: 'Here, Plaintiff alleges only economic damages—spec'}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Saved selection to ref
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] useEffect triggered {showInstructPopover: true, hasSelection: true, isCollapsed: false, hasSavedRange: true}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Popover is showing, keeping toolbar visible
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Selection AFTER (async): {hasSelection: true, isCollapsed: false, rangeCount: 1, hasSavedRange: true}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] selectionchange event: {hasSelection: true, isCollapsed: true, rangeCount: 1, text: ''}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [DocumentViewer] Setting selection to null (collapsed or no selection)
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] useEffect triggered {showInstructPopover: true, hasSelection: false, isCollapsed: undefined, hasSavedRange: true}
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Popover is showing, keeping toolbar visible

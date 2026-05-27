@@ -1,0 +1,3 @@
+                     {isDoc && (
+                       <div className="shrink-0">
+                         <DocumentToolbar 

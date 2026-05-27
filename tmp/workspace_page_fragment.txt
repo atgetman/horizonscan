@@ -1,0 +1,15 @@
+                     {isDoc && (
+                       <div className="shrink-0">
+                         <DocumentToolbar 
+                            isChatOpen={isChatVisible}
+                            onToggleChat={() => toggleTabChat(tab.id)}
+                            isSourcesOpen={isSourcesVisible}
+                            onToggleSources={() => toggleTabSources(tab.id)}
+                            isHistoryOpen={isHistoryVisible}
+                            onToggleHistory={() => toggleTabHistory(tab.id)}
+                            isCommentsOpen={isCommentsVisible}
+                            onToggleComments={() => toggleTabComments(tab.id)}
+                            documentName={tab.label}
+                         />
+                       </div>
+                     )}

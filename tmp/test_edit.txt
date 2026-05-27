@@ -1,0 +1,9 @@
+            {!tabs.some(t => t.type === 'new-chat') && (
+              <button 
+                onClick={handleAddChat}
+                className="mr-1 p-1 rounded-[6px] bg-[#E6E6E6] hover:bg-[#C0C0C0] text-[#212223] transition-colors mb-1.5 shrink-0"
+                title="New chat"
+              >
+                <Plus className="size-3.5" />
+              </button>
+            )}

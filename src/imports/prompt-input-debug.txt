@@ -1,0 +1,40 @@
+1329 requests
+3.1 MB transferred
+278 MB resources
+﻿
+code_components_prev…e5050f.min.js.br:28 🔍 PromptInput render: 
+{value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_prev…e5050f.min.js.br:28 📝 Calculated text value: 
+{text: '', value !== undefined: false, Will use controlled: false, Textarea will get: 'NO value prop (truly uncontrolled!)'}
+code_components_prev…e5050f.min.js.br:28 🎯 ACTUAL DOM textarea: 
+{element.value: '', element.placeholder: 'Ask CoCounsel to perform a legal task...', has value attribute: false, value attribute: null}
+code_components_prev…e5050f.min.js.br:28 🔍 PromptInput render: 
+{value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_prev…e5050f.min.js.br:28 📝 Calculated text value: 
+{text: '', value !== undefined: false, Will use controlled: false, Textarea will get: 'NO value prop (truly uncontrolled!)'}
+code_components_prev…e5050f.min.js.br:28 🎯 ACTUAL DOM textarea: 
+{element.value: '', element.placeholder: 'Ask CoCounsel to perform a legal task...', has value attribute: false, value attribute: null}
+code_components_prev…e5050f.min.js.br:28 🔍 PromptInput render: 
+{value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_prev…e5050f.min.js.br:28 📝 Calculated text value: 
+{text: '', value !== undefined: false, Will use controlled: false, Textarea will get: 'NO value prop (truly uncontrolled!)'}
+code_components_prev…e5050f.min.js.br:28 🎯 ACTUAL DOM textarea: 
+{element.value: '', element.placeholder: 'Ask CoCounsel to perform a legal task...', has value attribute: false, value attribute: null}
+code_components_prev…e5050f.min.js.br:28 🔍 PromptInput render: 
+{value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_prev…e5050f.min.js.br:28 📝 Calculated text value: 
+{text: '', value !== undefined: false, Will use controlled: false, Textarea will get: 'NO value prop (truly uncontrolled!)'}
+code_components_prev…e5050f.min.js.br:28 🎯 ACTUAL DOM textarea: 
+{element.value: '', element.placeholder: 'Ask CoCounsel to perform a legal task...', has value attribute: false, value attribute: null}
+code_components_prev…e5050f.min.js.br:28 🔍 PromptInput render: 
+{value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_prev…e5050f.min.js.br:28 📝 Calculated text value: 
+{text: '', value !== undefined: false, Will use controlled: false, Textarea will get: 'NO value prop (truly uncontrolled!)'}
+code_components_prev…e5050f.min.js.br:28 🎯 ACTUAL DOM textarea: 
+{element.value: '', element.placeholder: 'Ask CoCounsel to perform a legal task...', has value attribute: false, value attribute: null}
+code_components_prev…e5050f.min.js.br:28 🔍 PromptInput render: 
+{value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_prev…e5050f.min.js.br:28 📝 Calculated text value: 
+{text: '', value !== undefined: false, Will use controlled: false, Textarea will get: 'NO value prop (truly uncontrolled!)'}
+code_components_prev…e5050f.min.js.br:28 🎯 ACTUAL DOM textarea: 
+{element.value: '', element.placeholder: 'Ask CoCounsel to perform a legal task...', has value attribute: false, value attribute: null}

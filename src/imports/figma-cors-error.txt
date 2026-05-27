@@ -1,0 +1,47 @@
+[MultiplayerSession] connecting to wss://www.figma.com/api/multiplayer/ceiskyObxEFiacV1Sm7KVn?role=editor&tracking_session_id=HfbC1j2DTy87Wl97&version=151&recentReload=0&file-load-streaming-compression=&user-id=873205039774742828&client_release=43c1b3f3f6656c516bec82d03d20612950373562&clientID=81b787a1794d437a895722fbb2ec5ea7&reconnect-key=063ee2a7a3f1ee7666629640d4bf99eee39c370f&reconnect-sequence-number=18245&initialFileVersion=106&previousLoadMode=full&incremental-loading-validation=0
+vendor-core-0f06c244c7c593a2.min.js.br:54 [MultiplayerSession] Joining file version 106 (skip_reload reconnect)
+Legal-AI-Assistant?p=f&viewport=142%2C25%2C0.75&t=TsLIKMJJDjLtSMqd-0&preview-route=%2Fworkspace%2FM…:1 Access to image at 'https://www.gravatar.com/avatar/e7dfa1d50dd867fc03b1b88fcdeb6be9?size=240&default=https%3A%2F%2Fs3-alpha.figma.com%2Fstatic%2Fuser_b_v2.png?c=1' from origin 'https://www.figma.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+www.gravatar.com/avatar/e7dfa1d50dd867fc03b1b88fcdeb6be9?size=240&default=https%3A%2F%2Fs3-alpha.figma.com%2Fstatic%2Fuser_b_v2.png?c=1:1  GET https://www.gravatar.com/avatar/e7dfa1d50dd867fc03b1b88fcdeb6be9?size=240&default=https%3A%2F%2Fs3-alpha.figma.com%2Fstatic%2Fuser_b_v2.png?c=1 net::ERR_FAILED 302 (Found)
+Image
+(anonymous) @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:437
+U @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:437
+g @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:1575
+(anonymous) @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:1575
+(anonymous) @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:1575
+ot @ vendor-core-0f06c244c7c593a2.min.js.br:11
+li @ vendor-core-0f06c244c7c593a2.min.js.br:11
+(anonymous) @ vendor-core-0f06c244c7c593a2.min.js.br:11
+lt @ vendor-core-0f06c244c7c593a2.min.js.br:11
+o2 @ vendor-core-0f06c244c7c593a2.min.js.br:11
+fl @ vendor-core-0f06c244c7c593a2.min.js.br:11
+(anonymous) @ vendor-core-0f06c244c7c593a2.min.js.br:11
+requestAnimationFrame
+(anonymous) @ vendor-core-0f06c244c7c593a2.min.js.br:63
+AR @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:218
+s @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:554
+requestAnimationFrame @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:221
+_Async_requestAnimationFrame @ compiled_wasm.js.br:2
+$wasm-function[1872] @ compiled_wasm.wasm.br:0x3d317
+$wasm-function[2225] @ compiled_wasm.wasm.br:0x64f15
+$wasm-function[4995] @ compiled_wasm.wasm.br:0x282e0e
+$wasm-function[40131] @ compiled_wasm.wasm.br:0x21c2faa
+$wasm-function[17064] @ compiled_wasm.wasm.br:0xf2c041
+$wasm-function[37903] @ compiled_wasm.wasm.br:0x1f7d4c8
+(anonymous) @ compiled_wasm.js.br:2
+(anonymous) @ compiled_wasm.js.br:2
+_wrapCppCall @ compiled_wasm.js.br:2
+(anonymous) @ compiled_wasm.js.br:2
+gv @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:197
+(anonymous) @ figma_app__react_profile-ac5b60ea0bc94651.min.js.br:197
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 🏠 WorkspacePage render - promptText: undefined
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 🔍 PromptInput render: {value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 📝 Calculated text value: {text: '', value !== undefined: false, Will use controlled: false, Textarea will get: {…}}
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 🏠 WorkspacePage render - promptText: undefined
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 🔍 PromptInput render: {value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 📝 Calculated text value: {text: '', value !== undefined: false, Will use controlled: false, Textarea will get: {…}}
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 🔍 PromptInput render: {value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 📝 Calculated text value: {text: '', value !== undefined: false, Will use controlled: false, Textarea will get: {…}}
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 🔍 PromptInput render: {value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 📝 Calculated text value: {text: '', value !== undefined: false, Will use controlled: false, Textarea will get: {…}}
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 🔍 PromptInput render: {value: undefined, localText: '', value !== undefined: false, placeholder: 'Ask CoCounsel to perform a legal task...'}
+code_components_preview_iframe-7e022e10d2e5050f.min.js.br:28 📝 Calculated text value: {text: '', value !== undefined: false, Will use controlled: false, Textarea will get: {…}}

@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Clario';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Clario Medium'), local('Clario-Medium');
+}
+
+@font-face {
+  font-family: 'Clario';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Clario Regular'), local('Clario-Regular');
+}

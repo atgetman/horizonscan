@@ -1,0 +1,209 @@
+--- a/src/app/components/ActiveChatView.tsx
++++ b/src/app/components/ActiveChatView.tsx
+@@ -1648,95 +1648,9 @@
+                >
+                  <div className="overflow-y-auto max-h-[350px] py-2 px-4">
+                    <div className="space-y-4 text-[14px]">
+-                      {/* Step 1 - Understanding Request */}
+-                      {reasoningSteps >= 1 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.4 }}
+-                        >
+-                          <p className="text-[#404040] leading-relaxed">
+-                            Okay, so I need to draft a Motion to Dismiss based on lack of personal jurisdiction. Let me think through this step by step.
+-                          </p>
+-                        </motion.div>
+-                      )}
+-
+-                      {/* Step 2 - Reviewing Files */}
+-                      {reasoningSteps >= 2 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.4 }}
+-                        >
+-                          <p className="text-[#404040] leading-relaxed mb-2">
+-                            First, I'll review the project files to get a clear picture of the case. I'm looking for:
+-                          </p>
+-                          <ul className="text-[#404040] leading-relaxed space-y-1 pl-4">
+-                            <li className="flex items-start gap-2">
+-                              <span className="text-[#d64000] shrink-0">•</span>
+-                              <span>What the complaint alleges about the defendant's contacts with the forum</span>
+-                            </li>
+-                            <li className="flex items-start gap-2">
+-                              <span className="text-[#d64000] shrink-0">•</span>
+-                              <span>Any precedents or similar cases we've dealt with before</span>
+-                            </li>
+-                            <li className="flex items-start gap-2">
+-                              <span className="text-[#d64000] shrink-0">•</span>
+-                              <span>Specific facts I can use to challenge jurisdiction</span>
+-                            </li>
+-                          </ul>
+-                        </motion.div>
+-                      )}
+-
+-                      {/* Step 3 - Checking Practical Law */}
+-                      {reasoningSteps >= 3 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.4 }}
+-                        >
+-                          <p className="text-[#404040] leading-relaxed">
+-                            I should check Practical Law for motion templates and make sure I'm following the right procedural format. Don't want to miss any technical requirements that could get this kicked back.
+-                          </p>
+-                        </motion.div>
+-                      )}
+-
+-                      {/* Step 4 - Searching Westlaw */}
+-                      {reasoningSteps >= 4 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.4 }}
+-                        >
+-                          <p className="text-[#404040] leading-relaxed mb-2">
+-                            Now I'll search Westlaw for the strongest authorities on personal jurisdiction. I need:
+-                          </p>
+-                          <ul className="text-[#404040] leading-relaxed space-y-1 pl-4">
+-                            <li className="flex items-start gap-2">
+-                              <span className="text-[#d64000] shrink-0">•</span>
+-                              <span>Recent cases with similar fact patterns</span>
+-                            </li>
+-                            <li className="flex items-start gap-2">
+-                              <span className="text-[#d64000] shrink-0">•</span>
+-                              <span>Circuit-specific precedents that favor our position</span>
+-                            </li>
+-                            <li className="flex items-start gap-2">
+-                              <span className="text-[#d64000] shrink-0">•</span>
+-                              <span>Any Supreme Court decisions that support dismissal</span>
+-                            </li>
+-                          </ul>
+-                        </motion.div>
+-                      )}
+-
+-                      {/* Step 5 - Building Arguments */}
+-                      {reasoningSteps >= 5 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.4 }}
+-                        >
+-                          <p className="text-[#404040] leading-relaxed">
+-                            Finally, I'll pull this together into a compelling argument. I need to select the most persuasive authorities, distinguish any cases that might hurt our position, and craft a narrative showing why the court clearly lacks jurisdiction over the defendant.
+-                          </p>
+-                        </motion.div>
+-                      )}
++                      <DynamicReasoningSteps 
++                        reasoningSteps={reasoningSteps}
++                        reasoningContent={reasoningContent}
++                      />
+                    </div>
+                  </div>
+@@ -1795,99 +1709,9 @@
+                >
+                  <div className="overflow-y-auto max-h-[350px] py-2 px-4">
+                    <div className="text-[14px]">
+-                      {/* Source Item 1 - Practical Law */}
+-                      {sourcesItems >= 1 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.3 }}
+-                          className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors"
+-                        >
+-                          <BookOpen className="size-4 text-[#8a8a8a] shrink-0" />
+-                          <p className="text-[#212223] leading-relaxed flex-1 min-w-0">
+-                            Motion to Dismiss for Lack of Personal Jurisdiction - Practical Law
+-                          </p>
+-                          <span className="text-[#8a8a8a] text-[13px] shrink-0">practicallaw.com</span>
+-                        </motion.div>
+-                      )}
+-
+-                      {/* Source Item 2 - Westlaw */}
+-                      {sourcesItems >= 2 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.3 }}
+-                          className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors"
+-                        >
+-                          <Scale className="size-4 text-[#8a8a8a] shrink-0" />
+-                          <p className="text-[#212223] leading-relaxed flex-1 min-w-0">
+-                            Personal Jurisdiction Standards and Requirements
+-                          </p>
+-                          <span className="text-[#8a8a8a] text-[13px] shrink-0">westlaw.com</span>
+-                        </motion.div>
+-                      )}
+-
+-                      {/* Source Item 3 - Practical Law */}
+-                      {sourcesItems >= 3 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.3 }}
+-                          className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors"
+-                        >
+-                          <BookOpen className="size-4 text-[#8a8a8a] shrink-0" />
+-                          <p className="text-[#212223] leading-relaxed flex-1 min-w-0">
+-                            Federal Civil Procedure: Jurisdiction Challenges
+-                          </p>
+-                          <span className="text-[#8a8a8a] text-[13px] shrink-0">practicallaw.com</span>
+-                        </motion.div>
+-                      )}
+-
+-                      {/* Source Item 4 - Government Site */}
+-                      {sourcesItems >= 4 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.3 }}
+-                          className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors"
+-                        >
+-                          <FileCheck className="size-4 text-[#8a8a8a] shrink-0" />
+-                          <p className="text-[#212223] leading-relaxed flex-1 min-w-0">
+-                            Federal Rules of Civil Procedure - Rule 12(b)(2)
+-                          </p>
+-                          <span className="text-[#8a8a8a] text-[13px] shrink-0">uscourts.gov</span>
+-                        </motion.div>
+-                      )}
+-
+-                      {/* Source Item 5 - Westlaw */}
+-                      {sourcesItems >= 5 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.3 }}
+-                          className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors"
+-                        >
+-                          <Scale className="size-4 text-[#8a8a8a] shrink-0" />
+-                          <p className="text-[#212223] leading-relaxed flex-1 min-w-0">
+-                            Recent Case Law: Minimum Contacts Analysis
+-                          </p>
+-                          <span className="text-[#8a8a8a] text-[13px] shrink-0">westlaw.com</span>
+-                        </motion.div>
+-                      )}
+-
+-                      {/* Source Item 6 - Government Legal Database */}
+-                      {sourcesItems >= 6 && (
+-                        <motion.div
+-                          initial={{ opacity: 0, y: 10 }}
+-                          animate={{ opacity: 1, y: 0 }}
+-                          transition={{ duration: 0.3 }}
+-                          className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors"
+-                        >
+-                          <FileCheck className="size-4 text-[#8a8a8a] shrink-0" />
+-                          <p className="text-[#212223] leading-relaxed flex-1 min-w-0">
+-                            Supreme Court Decisions on Personal Jurisdiction
+-                          </p>
+-                          <span className="text-[#8a8a8a] text-[13px] shrink-0">supremecourt.gov</span>
+-                        </motion.div>
+-                      )}
++                      <DynamicSourceItems 
++                        sourcesItems={sourcesItems}
++                        sourceContent={sourceContent}
++                      />
+                    </div>
+                  </div>

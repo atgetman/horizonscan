@@ -1,0 +1,40 @@
+=== PATCH FOR SOURCE ITEMS (ActiveChatView.tsx lines 1796-1890) ===
+
+Replace the 6 hardcoded source items with this dynamic version:
+
+---START REPLACEMENT---
+                    <div className="text-[14px]">
+                      {/* Dynamic Source Items */}
+                      {sourceContent.items.map((source, index) => (
+                        sourcesItems >= (index + 1) && (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors"
+                          >
+                            {source.icon === 'BookOpen' && <BookOpen className="size-4 text-[#8a8a8a] shrink-0" />}
+                            {source.icon === 'Scale' && <Scale className="size-4 text-[#8a8a8a] shrink-0" />}
+                            {source.icon === 'FileCheck' && <FileCheck className="size-4 text-[#8a8a8a] shrink-0" />}
+                            <p className="text-[#212223] leading-relaxed flex-1 min-w-0">
+                              {source.title}
+                            </p>
+                            <span className="text-[#8a8a8a] text-[13px] shrink-0">{source.domain}</span>
+                          </motion.div>
+                        )
+                      ))}
+                    </div>
+---END REPLACEMENT---
+
+This replaces all 6 hardcoded source items (lines 1796-1890) with a single dynamic .map() function that:
+1. Iterates through sourceContent.items array
+2. Shows each item based on sourcesItems counter
+3. Dynamically renders the correct icon (BookOpen, Scale, or FileCheck)
+4. Shows the title and domain from the source object
+
+Now when you select a research prompt, it will show research-specific sources like:
+- "International Shoe v. Washington Analysis" 
+- "GDPR Compliance Overview"
+- "Schrems II Decision Analysis"
+etc.

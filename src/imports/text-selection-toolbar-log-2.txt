@@ -1,0 +1,27 @@
+[TextSelectionToolbar] Popover opened, attempting to focus textarea
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Textarea found: true
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] document.hasFocus(): true
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] activeElement before focus: BODY
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] After focus attempt:
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] - activeElement: TEXTAREA
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] - textarea === activeElement: true
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] - document.hasFocus(): true
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] - textarea.disabled: false
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] - textarea.readOnly: false
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] - textarea computed style pointer-events: auto
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] onMouseDown fired
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] e.target: TEXTAREA
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Popover onMouseDown
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Target element: TEXTAREA
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [TextSelectionToolbar] Allowing default focus for form element
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] setTimeout executing
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] document.hasFocus() in setTimeout: true
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] After setTimeout focus, activeElement: TEXTAREA
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] textareaRef.current: <textarea placeholder=​"Ask for changes..." class=​"w-full resize-none outline-none text-[#212223]​ placeholder:​text-[#999999]​ text-[16px]​ bg-transparent font-light " rows=​"1" data-fg-dmqp39=​"1095.741:​1097.27758:​/​src/​app/​components/​PromptInput.tsx:​525:​13:​20168:​556:​e:​textarea" style=​"height:​ 24px;​ overflow-y:​ hidden;​">​</textarea>​
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] document.hasFocus() after setTimeout: true
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] onClick fired
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] e.target: TEXTAREA
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] document.hasFocus() before: true
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] After focus attempt, activeElement: TEXTAREA
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] document.hasFocus() after: true
+code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28 [PromptInput] textareaRef === activeElement: true

@@ -1,0 +1,4 @@
+                        className={clsx(
+                          "p-0.5 rounded-md hover:bg-black/10 shrink-0",
+                          isTabActive ? "block" : "hidden group-hover:block"
+                        )}
