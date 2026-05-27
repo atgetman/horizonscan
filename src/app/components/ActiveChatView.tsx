@@ -15,6 +15,7 @@ import { DynamicSourceItems } from './chat/DynamicSourceItems';
 import { HorizonScanResults, RegulatoryScanSummary } from './regulatory';
 import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 import { CPCHandoffScreen } from './CPCHandoffScreen';
+import { CPCScanSummary } from './regulatory/CPCScanSummary';
 
 interface StagedItem {
     id: string;
@@ -2170,35 +2171,138 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
           )}
         </AnimatePresence>
 
-        {/* Final Artifact Card or Regulatory Scan Results - appears after preparing completes */}
-        {showArtifact && taskType === 'cpc-analysis' ? (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex flex-col gap-3 max-w-[800px] mr-auto w-full"
-          >
-            {/* Intro Text */}
-            {streamedIntroText && (
-              <div className="text-[15px] text-[#212223] leading-relaxed">
-                {streamedIntroText}
-              </div>
-            )}
+  {/* Final Artifact Card or Regulatory Scan Results - appears after preparing completes */}
+  {showArtifact && taskType === 'cpc-analysis' ? (
+  <motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4 }}
+  className="flex flex-col gap-4 max-w-[800px] mr-auto w-full"
+  >
+  {/* Intro Text */}
+  {streamedIntroText && (
+  <div className="text-[15px] text-[#212223] leading-relaxed">
+  {streamedIntroText}
+  </div>
+  )}
+  
+  {/* CPC Results Card - matching horizon scan format */}
+  {streamedIntroText && streamedIntroText.length > 0 && (
+  <div className="relative rounded-[8px] w-full">
+  <div aria-hidden="true" className="absolute border border-[#e5e5e5] border-solid inset-0 pointer-events-none rounded-[8px]" />
+  <div className="content-stretch flex flex-col gap-[8px] px-[24px] py-[16px] relative">
+  <div className="content-stretch flex gap-[8px] items-center w-full">
+  <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3:Semibold',sans-serif] justify-center leading-[0] not-italic text-[#212223] text-[12px]">
+  <p className="leading-[1.5]">CPC analysis results</p>
+  </div>
+  </div>
+  <button
+  onClick={() => {
+  onOpenTab?.({ name: `CPC Analysis - ${cpcRegulation}`, type: 'doc' });
+  }}
+  className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors"
+  >
+  <div aria-hidden="true" className="absolute border border-[#8a8a8a] border-solid inset-0 pointer-events-none rounded-[8px]" />
+  <div className="flex flex-row items-center size-full">
+  <div className="content-center flex flex-wrap gap-[4px_8px] items-center pr-[12px] py-[8px] relative size-full">
+  <div className="flex-[1_0_0] min-w-px relative">
+  <div className="flex flex-row items-center size-full">
+  <div className="content-stretch flex gap-[8px] items-center pl-[8px] relative size-full">
+  <div className="content-stretch flex items-center justify-center max-h-[28px] max-w-[28px] relative shrink-0 size-[28px]">
+  <div className="relative">
+  <FileCheck className="size-5 text-[#1d4b34]" strokeWidth={1.5} />
+  </div>
+  </div>
+  <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative">
+  <div className="content-stretch flex items-center relative w-full">
+  <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Clario:Medium',sans-serif] justify-center leading-[0] min-w-px not-italic overflow-hidden relative text-[#212223] text-[16px] text-ellipsis whitespace-nowrap">
+  <p className="leading-[1.5] overflow-hidden text-ellipsis text-left">Cross-Product Clause Analysis</p>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div className="flex items-center gap-1 shrink-0 pr-2">
+  <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0 hover:bg-[#F5F5F5]">
+  <Save className="size-4 text-[#1d4b34]" strokeWidth={1.5} />
+  </div>
+  <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
+  <ExternalLink className="size-4 text-[#212223]" strokeWidth={1.5} />
+  </div>
+  </div>
+  </div>
+  </div>
+  </button>
 
-            {/* CPC Handoff Screen */}
-            {streamedIntroText && streamedIntroText.length > 0 && (
-              <CPCHandoffScreen
-                regulation={cpcRegulation}
-                docsAffected={cpcDocsAffected}
-                clausesAffected={cpcClausesAffected}
-                impactLevel={cpcImpactLevel}
-                onOpenRegulation={() => {
-                  onOpenTab?.({ name: cpcRegulation, type: 'doc' });
-                }}
-              />
-            )}
-          </motion.div>
-        ) : showArtifact && taskType === 'regulatory-scan' ? (
+  {/* Supporting documents */}
+  <div className="content-stretch flex flex-col gap-[8px] items-start pt-[12px] w-full">
+  <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3:Semibold',sans-serif] justify-center leading-[0] not-italic text-[#212223] text-[12px]">
+  <p className="leading-[1.5]">Supporting documents</p>
+  </div>
+  <div className="flex flex-wrap gap-[6px] w-full">
+  <div className="bg-white justify-self-stretch max-w-[240px] min-h-[24px] relative rounded-[8px] self-start shrink-0">
+  <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px]" />
+  <div className="flex flex-row items-center justify-center max-w-[inherit] min-h-[inherit] size-full">
+  <div className="content-stretch flex gap-[4px] items-center justify-center max-w-[inherit] min-h-[inherit] px-[8px] py-[2px] relative size-full">
+  <FileText className="size-3 text-[#8a8a8a]" strokeWidth={1.5} />
+  <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative">
+  <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-px overflow-hidden relative text-[#212223] text-[14px] text-ellipsis whitespace-nowrap">
+  <p className="leading-[1.35] overflow-hidden text-ellipsis">M&A Purchase Agreement</p>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div className="bg-white justify-self-stretch max-w-[240px] min-h-[24px] relative rounded-[8px] self-start shrink-0">
+  <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px]" />
+  <div className="flex flex-row items-center justify-center max-w-[inherit] min-h-[inherit] size-full">
+  <div className="content-stretch flex gap-[4px] items-center justify-center max-w-[inherit] min-h-[inherit] px-[8px] py-[2px] relative size-full">
+  <FileText className="size-3 text-[#8a8a8a]" strokeWidth={1.5} />
+  <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative">
+  <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-px overflow-hidden relative text-[#212223] text-[14px] text-ellipsis whitespace-nowrap">
+  <p className="leading-[1.35] overflow-hidden text-ellipsis">Due Diligence Checklist</p>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div className="bg-white justify-self-stretch max-w-[240px] min-h-[24px] relative rounded-[8px] self-start shrink-0">
+  <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px]" />
+  <div className="flex flex-row items-center justify-center max-w-[inherit] min-h-[inherit] size-full">
+  <div className="content-stretch flex gap-[4px] items-center justify-center max-w-[inherit] min-h-[inherit] px-[8px] py-[2px] relative size-full">
+  <FileText className="size-3 text-[#8a8a8a]" strokeWidth={1.5} />
+  <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative">
+  <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-px overflow-hidden relative text-[#212223] text-[14px] text-ellipsis whitespace-nowrap">
+  <p className="leading-[1.35] overflow-hidden text-ellipsis">Disclosure Schedule Template</p>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  )}
+
+  {/* CPC Scan Summary - matching RegulatoryScanSummary format */}
+  {streamedIntroText && streamedIntroText.length > 0 && (
+  <CPCScanSummary
+  regulation={cpcRegulation}
+  docsAffected={cpcDocsAffected}
+  clausesAffected={cpcClausesAffected}
+  impactLevel={cpcImpactLevel}
+  onReviewRedlines={() => {
+  onOpenTab?.({ name: `CPC Redlines - ${cpcRegulation}`, type: 'doc' });
+  }}
+  onAcceptAllRedlines={() => {
+  console.log('Accept all redlines clicked');
+  }}
+  />
+  )}
+  </motion.div>
+  ) : showArtifact && taskType === 'regulatory-scan' ? (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
