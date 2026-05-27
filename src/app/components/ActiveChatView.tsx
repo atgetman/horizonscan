@@ -657,6 +657,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       // Extract regulation name from prompt
       const regulationMatch = userPrompt.match(/analysis for:\s*(.+)/i);
       const regulation = regulationMatch ? regulationMatch[1].trim() : 'Regulatory Change';
+      topic = regulation;
       setCpcRegulation(regulation);
       
       // Get CPC workflow data from sessionStorage
@@ -674,21 +675,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         setCpcClausesAffected(12);
         setCpcImpactLevel('High');
       }
-      
-      setTaskType('cpc-analysis');
-      
-      // Add assistant placeholder for CPC response
-      setMessages(prev => {
-        if (prev.length > 0 && prev[prev.length - 1].role === 'assistant') return prev;
-        return [...prev, { role: 'assistant', text: '' }];
-      });
-      
-      // Show the CPC handoff screen directly (skip reasoning/sources workflow)
-      setShowThinking(false);
-      setShowArtifact(true);
-      setStreamedIntroText('I\'ve initiated the Cross-Product Clause analysis. Here\'s a summary of the affected documents and recommended updates:');
-      onThinkingChange?.(false);
-      return; // CPC renders its own screen, no workflow animation needed
+      // CPC will now run through the full workflow animation below
     }
 
     // Check for regulatory scan
@@ -880,6 +867,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                       descText = `This analysis examines the legal standards, applies them to the facts, and identifies key considerations. It includes discussion of relevant precedents, potential arguments, and strategic recommendations. Let me know if you'd like me to explore any particular aspect in more detail.`;
                                     } else if (detectedType === 'regulatory-scan') {
                                       introText = `I ran a regulatory horizon scan across federal and state sources to identify any changes that may impact your M&A contract templates.`;
+                                      descText = ``;
+                                    } else if (detectedType === 'cpc-analysis') {
+                                      introText = `I've initiated the Cross-Product Clause analysis for ${topic}. Here's a summary of the affected documents and recommended updates:`;
                                       descText = ``;
                                     } else {
                                       introText = `I've drafted ${topic.toLowerCase()}.`;

@@ -11,10 +11,28 @@ export interface ReasoningContent {
 }
 
 export function getReasoningContent(
-  taskType: 'draft' | 'research' | 'analyze' | 'regulatory-scan',
+  taskType: 'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis',
   topic: string
 ): ReasoningContent {
-  if (taskType === 'regulatory-scan') {
+  if (taskType === 'cpc-analysis') {
+    return {
+      step1: `I'll initiate a Cross-Product Clause analysis to identify all documents and clauses affected by ${topic || 'this regulatory change'}.`,
+      step2Title: `First, I'll scan your document library for affected templates:`,
+      step2Items: [
+        'M&A agreement templates and deal documents',
+        'Due diligence checklists and schedules',
+        'Disclosure templates and rep & warranty provisions'
+      ],
+      step3: `Now I'll analyze each document to identify specific clauses that require updates based on the new regulatory requirements.`,
+      step4Title: `I'm cross-referencing affected clauses with the regulatory changes:`,
+      step4Items: [
+        'Mapping clause language to regulatory requirements',
+        'Identifying required disclosure updates',
+        'Flagging high-risk provisions needing immediate attention'
+      ],
+      step5: `Finally, I'll compile recommended redlines and updates for each affected document, prioritized by impact level.`
+    };
+  } else if (taskType === 'regulatory-scan') {
     return {
       step1: `To conduct a comprehensive regulatory horizon scan, I'll identify the practice area and jurisdiction scope based on your workspace documents.`,
       step2Title: `I'll query federal regulatory databases for recent changes:`,
@@ -99,12 +117,23 @@ export interface SourceContent {
 }
 
 export function getSourceContent(
-  taskType: 'draft' | 'research' | 'analyze' | 'regulatory-scan',
+  taskType: 'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis',
   topic: string
 ): SourceContent {
   const topicLower = topic.toLowerCase();
 
-  if (taskType === 'regulatory-scan') {
+  if (taskType === 'cpc-analysis') {
+    return {
+      items: [
+        { icon: 'FileCheck', title: 'M&A Purchase Agreement Template', domain: 'workspace' },
+        { icon: 'FileCheck', title: 'Due Diligence Checklist - Regulatory', domain: 'workspace' },
+        { icon: 'FileCheck', title: 'Disclosure Schedule Template', domain: 'workspace' },
+        { icon: 'Scale', title: 'Rep & Warranty Provisions Library', domain: 'workspace' },
+        { icon: 'BookOpen', title: 'Regulatory Change Summary', domain: 'federalregister.gov' },
+        { icon: 'BookOpen', title: 'Compliance Requirements Update', domain: 'regulations.gov' }
+      ]
+    };
+  } else if (taskType === 'regulatory-scan') {
     return {
       items: [
         { icon: 'FileCheck', title: 'Final Rules & Proposed Changes - Federal Register', domain: 'federalregister.gov' },
