@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
 interface DocumentCategory {
   name: string;
@@ -75,17 +75,81 @@ export function CPCScanSummary({
                 Analyzed all M&A transaction documents in the Project Atlas workspace for compliance with {regulation}.
               </p>
 
-              {/* Document categories list */}
-              <ul className="space-y-1.5 text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5]">
-                {documentCategories.map((category, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="text-[#1d4b34] shrink-0">•</span>
-                    <span>
-                      <span className="font-semibold">{category.name}:</span> {category.documentCount} documents, {category.clauseCount} affected clauses
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              {/* Table - matching RegulatoryScanSummary */}
+              <div className="relative">
+                <div className="overflow-clip">
+                  {/* Header Row */}
+                  <div className="content-stretch flex items-center w-full">
+                    <div className="bg-[#f0f2f1] content-stretch flex items-center min-h-[40px] flex-[2_0_0]">
+                      <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid border-t inset-0 pointer-events-none" />
+                      <div className="content-stretch flex gap-[16px] items-center min-h-[inherit] px-[12px] py-[4px] w-full">
+                        <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3'] font-semibold justify-center leading-[0] text-[#212223]">
+                          <p className="leading-[1.2] text-[14px]">Document Category</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-[#f0f2f1] content-stretch flex items-center min-h-[40px] flex-[1_0_0]">
+                      <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid border-t inset-0 pointer-events-none" />
+                      <div className="content-stretch flex gap-[16px] items-center min-h-[inherit] px-[12px] py-[4px] w-full">
+                        <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3'] font-semibold justify-center leading-[0] text-[#212223]">
+                          <p className="leading-[1.2] text-[14px]">Documents</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-[#f0f2f1] content-stretch flex items-center min-h-[40px] flex-[1_0_0]">
+                      <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid border-t inset-0 pointer-events-none" />
+                      <div className="content-stretch flex gap-[16px] items-center min-h-[inherit] px-[12px] py-[4px] w-full">
+                        <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3'] font-semibold justify-center leading-[0] text-[#212223]">
+                          <p className="leading-[1.2] text-[14px]">Affected Clauses</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Data Rows */}
+                  {documentCategories.map((category, idx) => (
+                    <div key={idx} className="content-stretch flex items-center w-full h-[40px]">
+                      <div className="flex flex-[2_0_0] flex-row items-center self-stretch">
+                        <div className="bg-white flex-[1_0_0] h-full min-h-[40px] min-w-px relative">
+                          <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid inset-0 pointer-events-none" />
+                          <div className="content-stretch flex items-start min-h-[inherit] px-[12px] py-[8px] size-full">
+                            <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-start min-w-px">
+                              <p className="[word-break:break-word] flex-[1_0_0] font-['Source_Sans_3'] font-normal leading-[1.2] min-w-px overflow-hidden text-[#404040] text-[14px] text-ellipsis">
+                                {category.name}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-[1_0_0] flex-row items-center self-stretch">
+                        <div className="bg-white flex-[1_0_0] h-full min-h-[40px] min-w-px relative">
+                          <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid inset-0 pointer-events-none" />
+                          <div className="content-stretch flex items-start min-h-[inherit] px-[12px] py-[8px] size-full">
+                            <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-start min-w-px">
+                              <p className="[word-break:break-word] flex-[1_0_0] font-['Source_Sans_3'] font-normal leading-[1.2] min-w-px overflow-hidden text-[#404040] text-[14px] text-ellipsis">
+                                {category.documentCount}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-[1_0_0] flex-row items-center self-stretch">
+                        <div className="bg-white flex-[1_0_0] h-full min-h-[40px] min-w-px relative">
+                          <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid inset-0 pointer-events-none" />
+                          <div className="content-stretch flex items-start min-h-[inherit] px-[12px] py-[8px] size-full">
+                            <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-start min-w-px">
+                              <p className="[word-break:break-word] flex-[1_0_0] font-['Source_Sans_3'] font-normal leading-[1.2] min-w-px overflow-hidden text-[#404040] text-[14px] text-ellipsis">
+                                {category.clauseCount}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div aria-hidden="true" className="absolute border border-[#ededed] border-solid inset-0 pointer-events-none" />
+              </div>
             </div>
           )}
         </div>
@@ -109,23 +173,17 @@ export function CPCScanSummary({
           {expandedSections.has('docs-updates') && (
             <div className="mt-2">
               <p className="text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5] mb-3">
-                {docsAffected} documents contain {clausesAffected} clauses that require updates to comply with the new regulatory requirements. Impact level: <span className="font-semibold">{impactLevel}</span>.
+                {docsAffected} documents contain {clausesAffected} clauses that may need updates based on the new regulatory requirements.
               </p>
-
-              <ul className="space-y-1.5 text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">•</span>
-                  <span><span className="font-semibold">M&A Purchase Agreement Template</span> - 8 clauses requiring disclosure updates</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">•</span>
-                  <span><span className="font-semibold">Due Diligence Checklist</span> - 3 sections requiring regulatory compliance additions</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">•</span>
-                  <span><span className="font-semibold">Disclosure Schedule Template</span> - 1 new schedule item required</span>
-                </li>
-              </ul>
+              {onReviewRedlines && (
+                <button
+                  onClick={onReviewRedlines}
+                  className="h-[24px] px-[8px] py-[4px] flex items-center gap-1.5 text-[14px] font-['Clario'] font-medium text-[#1d4b34] rounded-[4px] border border-transparent hover:bg-[#edf2f0] hover:border-[#8a8a8a] transition-all"
+                >
+                  View affected clauses
+                  <ExternalLink className="size-3.5" />
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -148,29 +206,25 @@ export function CPCScanSummary({
 
           {expandedSections.has('next-steps') && (
             <div className="mt-2">
-              <ul className="space-y-1.5 text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5]">
+              <ul className="space-y-2 text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5]">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">1.</span>
+                  <span className="text-[#1d4b34] shrink-0">•</span>
                   <span>Review the suggested redlines for each affected document</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">2.</span>
+                  <span className="text-[#1d4b34] shrink-0">•</span>
                   <span>Consult with deal team leads on high-impact clause changes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">3.</span>
+                  <span className="text-[#1d4b34] shrink-0">•</span>
                   <span>Accept approved redlines to update templates</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">4.</span>
-                  <span>Run compliance check on updated documents to verify changes</span>
                 </li>
               </ul>
             </div>
           )}
         </div>
 
-        {/* Section 4: Caveats */}
+        {/* Section 4: Caveats (collapsed by default) */}
         <div className="border-b border-[#E5E5E5] pb-2 pt-2">
           <button
             onClick={() => toggleSection('caveats')}
@@ -196,22 +250,6 @@ export function CPCScanSummary({
             </div>
           )}
         </div>
-      </div>
-
-      {/* Footer actions */}
-      <div className="flex gap-3 mt-6">
-        <button
-          onClick={onReviewRedlines}
-          className="h-[40px] px-[16px] flex items-center justify-center text-[15px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors"
-        >
-          Review redlines
-        </button>
-        <button
-          onClick={onAcceptAllRedlines}
-          className="h-[40px] px-[16px] flex items-center justify-center text-[15px] font-['Clario'] font-medium text-[#1d4b34] bg-white border border-[#1d4b34] rounded-[4px] hover:bg-[#edf2f0] transition-colors"
-        >
-          Accept all redlines
-        </button>
       </div>
     </div>
   );
