@@ -1,35 +1,99 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
-/* Clario is a local system font that may not be available on all systems.
-   We define it here for systems that have it installed, and use CSS to provide
-   sans-serif fallbacks for systems that don't. */
+/* Clario font family - loaded from local files */
+
+/* Light */
 @font-face {
   font-family: 'Clario';
   font-style: normal;
-  font-weight: 500;
-  src: local('Clario Medium'), local('Clario-Medium');
+  font-weight: 300;
+  src: url('/fonts/Clario-Light.woff2') format('woff2'),
+       url('/fonts/Clario-Light.woff') format('woff');
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Clario';
+  font-style: italic;
+  font-weight: 300;
+  src: url('/fonts/Clario-LightItalic.woff2') format('woff2'),
+       url('/fonts/Clario-LightItalic.woff') format('woff');
+  font-display: swap;
+}
+
+/* Regular */
 @font-face {
   font-family: 'Clario';
   font-style: normal;
   font-weight: 400;
-  src: local('Clario Regular'), local('Clario-Regular');
+  src: url('/fonts/Clario-Regular.woff2') format('woff2'),
+       url('/fonts/Clario-Regular.woff') format('woff');
   font-display: swap;
 }
 
-/* Override Tailwind's arbitrary font classes to include sans-serif fallbacks.
-   This ensures all font-['Clario'] and font-['Source_Sans_3'] usages fall back properly. */
-[style*="font-family: Clario"],
-[style*="font-family: 'Clario'"],
-[class*="font-['Clario"]  {
-  font-family: 'Clario', 'Inter', 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+@font-face {
+  font-family: 'Clario';
+  font-style: italic;
+  font-weight: 400;
+  src: url('/fonts/Clario-RegularItalic.woff2') format('woff2'),
+       url('/fonts/Clario-RegularItalic.woff') format('woff');
+  font-display: swap;
 }
 
-[style*="font-family: Source_Sans_3"],
-[style*="font-family: 'Source_Sans_3'"],
-[class*="font-['Source_Sans_3"]  {
-  font-family: 'Source Sans 3', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+/* Medium */
+@font-face {
+  font-family: 'Clario';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/Clario-Medium.woff2') format('woff2'),
+       url('/fonts/Clario-Medium.woff') format('woff');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clario';
+  font-style: italic;
+  font-weight: 500;
+  src: url('/fonts/Clario-MediumItalic.woff2') format('woff2'),
+       url('/fonts/Clario-MediumItalic.woff') format('woff');
+  font-display: swap;
+}
+
+/* Bold */
+@font-face {
+  font-family: 'Clario';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/Clario-Bold.woff2') format('woff2'),
+       url('/fonts/Clario-Bold.woff') format('woff');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clario';
+  font-style: italic;
+  font-weight: 700;
+  src: url('/fonts/Clario-BoldItalic.woff2') format('woff2'),
+       url('/fonts/Clario-BoldItalic.woff') format('woff');
+  font-display: swap;
+}
+
+/* Black */
+@font-face {
+  font-family: 'Clario';
+  font-style: normal;
+  font-weight: 900;
+  src: url('/fonts/Clario-Black.woff2') format('woff2'),
+       url('/fonts/Clario-Black.woff') format('woff');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clario';
+  font-style: italic;
+  font-weight: 900;
+  src: url('/fonts/Clario-BlackItalic.woff2') format('woff2'),
+       url('/fonts/Clario-BlackItalic.woff') format('woff');
+  font-display: swap;
 }
