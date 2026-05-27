@@ -2627,29 +2627,29 @@ export function Knowledge() {
                 />
 
                 {/* View Mode Toggle */}
-                <div className="flex items-center gap-1 rounded-lg p-0.5">
+                <div className="inline-flex w-fit items-center rounded-[8px] bg-[#f0f2f1] p-[4px] gap-[2px]">
                   <button
                     onClick={() => setViewMode('card')}
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-[13px] font-['Source_Sans_3'] transition-all ${
+                    className={`flex items-center gap-1.5 px-[16px] py-[6px] text-[14px] font-medium rounded-[6px] transition-all font-['Source_Sans_3',sans-serif] ${
                       viewMode === 'card'
-                        ? 'bg-[#edf2f0] text-[#314b3e] font-semibold'
-                        : 'text-[#666666] hover:text-[#212223]'
+                        ? 'bg-white text-[#1d4b34] shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
+                        : 'text-[#5c5c5c] hover:text-[#1d4b34] bg-transparent'
                     }`}
                     title="Card view"
                   >
-                    <LayoutGrid className="size-3.5" />
+                    <LayoutGrid className="size-4" />
                     Card
                   </button>
                   <button
                     onClick={() => setViewMode('table')}
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-[13px] font-['Source_Sans_3'] transition-all ${
+                    className={`flex items-center gap-1.5 px-[16px] py-[6px] text-[14px] font-medium rounded-[6px] transition-all font-['Source_Sans_3',sans-serif] ${
                       viewMode === 'table'
-                        ? 'bg-[#edf2f0] text-[#314b3e] font-semibold'
-                        : 'text-[#666666] hover:text-[#212223]'
+                        ? 'bg-white text-[#1d4b34] shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
+                        : 'text-[#5c5c5c] hover:text-[#1d4b34] bg-transparent'
                     }`}
                     title="Table view"
                   >
-                    <Table className="size-3.5" />
+                    <Table className="size-4" />
                     Table
                   </button>
                 </div>
