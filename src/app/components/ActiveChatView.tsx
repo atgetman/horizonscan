@@ -2239,9 +2239,6 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   </div>
   </div>
   <div className="flex items-center gap-1 shrink-0 pr-2">
-  <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0 hover:bg-[#F5F5F5]">
-  <Save className="size-4 text-[#1d4b34]" strokeWidth={1.5} />
-  </div>
   <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
   <ExternalLink className="size-4 text-[#212223]" strokeWidth={1.5} />
   </div>
