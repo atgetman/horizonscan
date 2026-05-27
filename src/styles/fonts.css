@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
+/* Clario is a local system font that may not be available on all systems.
+   We define it here for systems that have it installed, and use CSS to provide
+   sans-serif fallbacks for systems that don't. */
 @font-face {
   font-family: 'Clario';
   font-style: normal;
   font-weight: 500;
   src: local('Clario Medium'), local('Clario-Medium');
+  font-display: swap;
 }
 
 @font-face {
@@ -13,4 +17,19 @@
   font-style: normal;
   font-weight: 400;
   src: local('Clario Regular'), local('Clario-Regular');
+  font-display: swap;
+}
+
+/* Override Tailwind's arbitrary font classes to include sans-serif fallbacks.
+   This ensures all font-['Clario'] and font-['Source_Sans_3'] usages fall back properly. */
+[style*="font-family: Clario"],
+[style*="font-family: 'Clario'"],
+[class*="font-['Clario"]  {
+  font-family: 'Clario', 'Inter', 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+[style*="font-family: Source_Sans_3"],
+[style*="font-family: 'Source_Sans_3'"],
+[class*="font-['Source_Sans_3"]  {
+  font-family: 'Source Sans 3', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
