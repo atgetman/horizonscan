@@ -1818,7 +1818,7 @@ export function Knowledge() {
                       <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">{alert.topic}</h3>
+                      <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1">{alert.topic}</h3>
                       <p className="text-[13px] text-gray-500 mb-3 line-clamp-2">{alert.criteria}</p>
                       <div className="flex gap-1.5 items-center">
                         <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
@@ -1843,7 +1843,7 @@ export function Knowledge() {
                         <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">Personal jurisdiction developments</h3>
+                        <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1">Personal jurisdiction developments</h3>
                         <p className="text-[13px] text-gray-500 mb-3">Second Circuit cases on minimum contacts analysis</p>
                         <div className="flex gap-1.5 items-center">
                           <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
@@ -1864,7 +1864,7 @@ export function Knowledge() {
                         <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">GDPR enforcement actions</h3>
+                        <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1">GDPR enforcement actions</h3>
                         <p className="text-[13px] text-gray-500 mb-3">EU data protection authority guidance and decisions</p>
                         <div className="flex gap-1.5 items-center">
                           <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
@@ -1888,7 +1888,7 @@ export function Knowledge() {
                       <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">Personal jurisdiction developments</h3>
+                      <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1">Personal jurisdiction developments</h3>
                       <p className="text-[13px] text-gray-500 mb-3">Second Circuit cases on minimum contacts analysis</p>
                       <div className="flex gap-1.5 items-center">
                         <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
@@ -1912,7 +1912,7 @@ export function Knowledge() {
                     <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">SEC Disclosure Requirements</h3>
+                    <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1">SEC Disclosure Requirements</h3>
                     <p className="text-[13px] text-gray-500 mb-3">Updates to Regulation S-K and Form 10-K requirements</p>
                     <div className="flex gap-1.5 items-center">
                       <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
@@ -2856,7 +2856,7 @@ function SkillCard({ skill, onEdit, onShare, onDelete, onTest }: {
           <Blocks className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
         </div>
         <div className="flex-1 min-w-0 pr-32">
-          <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight mb-1">{skill.name}</h3>
+          <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight mb-1">{skill.name}</h3>
           <p className="text-[13px] text-gray-500 line-clamp-2 mb-2">{skill.purpose || skill.practiceArea}</p>
           <div className="flex gap-1.5 items-center">
             <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
