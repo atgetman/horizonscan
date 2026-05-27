@@ -19,7 +19,7 @@ export function Toggle({ value, onChange, options, className }: ToggleProps) {
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-lg bg-[#f5f5f5] p-1",
+        "inline-flex items-center rounded-[8px] bg-[#f0f2f1] p-[4px] gap-[2px]",
         className
       )}
     >
@@ -29,10 +29,10 @@ export function Toggle({ value, onChange, options, className }: ToggleProps) {
           type="button"
           onClick={() => onChange(option.value)}
           className={cn(
-            "px-4 py-1.5 text-sm font-medium rounded-md transition-all",
+            "px-[16px] py-[6px] text-[14px] font-medium rounded-[6px] transition-all font-['Source_Sans_3',sans-serif]",
             value === option.value
-              ? "bg-white text-[#314b3e] shadow-sm"
-              : "text-[#6b7280] hover:text-[#314b3e]"
+              ? "bg-white text-[#1d4b34] shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
+              : "text-[#5c5c5c] hover:text-[#1d4b34] bg-transparent"
           )}
         >
           {option.label}
