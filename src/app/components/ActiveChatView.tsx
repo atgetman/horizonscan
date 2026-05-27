@@ -733,6 +733,12 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     } else if (detectedType === 'analyze') {
       setArtifactName('Document Analysis');
       setArtifactCategory('Analysis');
+    } else if (detectedType === 'cpc-analysis') {
+      setArtifactName('Cross-Product Clause Analysis');
+      setArtifactCategory('CPC Analysis');
+    } else if (detectedType === 'regulatory-scan') {
+      setArtifactName('M&A regulatory findings');
+      setArtifactCategory('Regulatory scan');
     } else {
       setArtifactName('Motion to Dismiss');
       setArtifactCategory('Motion');
@@ -1772,9 +1778,18 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const hasAutoOpenedRef = useRef(false);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-open artifact when streaming is complete
+  // Auto-open artifact when streaming is complete (but NOT for CPC or regulatory scan - they show inline)
   useEffect(() => {
     if (isStreamingComplete && showArtifact && !hasAutoOpenedRef.current && isMountedRef.current) {
+      // Skip auto-open for CPC and regulatory scan - they display results inline
+      if (taskType === 'cpc-analysis' || taskType === 'regulatory-scan') {
+        hasAutoOpenedRef.current = true;
+        setIsContentGenerating(false);
+        setShowOpeningMessage(false);
+        setHasDocumentOpened(true);
+        return;
+      }
+      
       hasAutoOpenedRef.current = true;
       safeSetTimeout(() => {
         // Double-check component is still mounted before opening
@@ -1787,7 +1802,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         }
       }, 500);
     }
-  }, [isStreamingComplete, showArtifact]); // Removed unstable dependencies
+  }, [isStreamingComplete, showArtifact, taskType]); // Added taskType dependency
 
   return (
     <div className="flex flex-col h-full relative bg-[#FCFCFC]">
