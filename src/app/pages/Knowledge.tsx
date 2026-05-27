@@ -1046,7 +1046,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Professional Legal Writing</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-0">Professional Legal Writing</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Formal tone, precise language, and citation standards for legal documents</p>
                 <div className="flex gap-1.5 items-center">
@@ -1094,7 +1094,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Client Communication</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-0">Client Communication</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Accessible language, empathetic tone for client-facing correspondence</p>
                 <div className="flex gap-1.5 items-center">
@@ -1142,7 +1142,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Research Analysis</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-0">Research Analysis</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Comprehensive case analysis with detailed citations and precedent review</p>
                 <div className="flex gap-1.5 items-center">
@@ -1192,7 +1192,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Firm Standard Brief Format</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-0">Firm Standard Brief Format</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Standardized formatting, citation style, and structure for all firm briefs</p>
                 <div className="flex gap-1.5 items-center">
@@ -1240,7 +1240,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Contract Review Standards</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-0">Contract Review Standards</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Comprehensive checklist and risk assessment framework for contract analysis</p>
                 <div className="flex gap-1.5 items-center">
@@ -1288,7 +1288,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Litigation Response Protocol</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-0">Litigation Response Protocol</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Procedures and guidelines for responding to discovery requests and motions</p>
                 <div className="flex gap-1.5 items-center">
@@ -1394,7 +1394,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Brief template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1 truncate">Brief template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">2 hours ago</p>
@@ -1416,7 +1416,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">NDA template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1 truncate">NDA template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">3 days ago</p>
@@ -1438,7 +1438,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Motion template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1 truncate">Motion template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">5 days ago</p>
@@ -1460,7 +1460,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Correspondence template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1 truncate">Correspondence template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">1 week ago</p>
@@ -1484,7 +1484,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Brief template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1 truncate">Brief template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">324 KB</p>
@@ -1506,7 +1506,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">NDA template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1 truncate">NDA template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">521 KB</p>
@@ -1528,7 +1528,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Motion template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1 truncate">Motion template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">198 KB</p>
@@ -1550,7 +1550,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Correspondence template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] mb-1 truncate">Correspondence template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">276 KB</p>
@@ -1587,7 +1587,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <SquarePen className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Agreement Clause Drafting</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-2">Agreement Clause Drafting</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Create a specific clause for a given agreement type</p>
             <div className="flex gap-1.5 items-center">
@@ -1606,7 +1606,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <Sheet className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Amendment Term Analysis</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-2">Amendment Term Analysis</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Understand contract terms relating to amending and modifying</p>
             <div className="flex gap-1.5 items-center">
@@ -1625,7 +1625,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <Scale className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">AI Jurisdiction Surveys</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-2">AI Jurisdiction Surveys</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Get a survey of the law across jurisdictions</p>
             <div className="flex gap-1.5 items-center">
@@ -1646,7 +1646,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <Scale className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Compliance assessment</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-2">Compliance assessment</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">across regulatory frameworks</p>
             <div className="flex gap-1.5 items-center">
@@ -1665,7 +1665,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <SquarePen className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Prepare client memo</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-2">Prepare client memo</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">summarizing case developments</p>
             <div className="flex gap-1.5 items-center">
@@ -1684,7 +1684,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <Sheet className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Risk analysis</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] leading-tight pt-2">Risk analysis</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">for M&A transactions</p>
             <div className="flex gap-1.5 items-center">
@@ -1719,7 +1719,7 @@ export function Knowledge() {
             <>
           <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223]">Contract Review Checklist</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223]">Contract Review Checklist</h3>
               <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-1 rounded-full">15 questions</span>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Standard questions for reviewing commercial contracts</p>
@@ -1736,7 +1736,7 @@ export function Knowledge() {
 
           <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223]">Discovery Analysis</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223]">Discovery Analysis</h3>
               <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-1 rounded-full">8 questions</span>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Key questions for analyzing discovery materials</p>
@@ -1755,7 +1755,7 @@ export function Knowledge() {
             <>
           <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223]">Employee Onboarding Legal Checklist</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223]">Employee Onboarding Legal Checklist</h3>
               <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-1 rounded-full">22 questions</span>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Comprehensive checklist for new employee documentation</p>
@@ -1772,7 +1772,7 @@ export function Knowledge() {
 
           <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223]">M&A Due Diligence Framework</h3>
+              <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223]">M&A Due Diligence Framework</h3>
               <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-1 rounded-full">31 questions</span>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Essential questions for mergers and acquisitions review</p>
@@ -2343,7 +2343,7 @@ export function Knowledge() {
         {filteredSkills.length === 0 && (
           <div className="py-12 text-center">
             <Blocks className="size-12 text-gray-300 mx-auto mb-3" />
-            <h3 className="text-[15px] font-['Clario'] text-gray-700 mb-1">No skills yet</h3>
+            <h3 className="text-[15px] font-['Clario'] font-normal text-gray-700 mb-1">No skills yet</h3>
             <p className="text-[14px] text-gray-500">Create your first skill to get started</p>
           </div>
         )}
@@ -2355,7 +2355,7 @@ export function Knowledge() {
     <div className="flex items-center justify-center h-full">
       <div className="text-center">
         {icon}
-        <h3 className="text-[16px] font-['Clario'] text-gray-700 mb-2">{title}</h3>
+        <h3 className="text-[16px] font-['Clario'] font-normal text-gray-700 mb-2">{title}</h3>
         <p className="text-[14px] text-gray-500">{description}</p>
       </div>
     </div>
@@ -2707,7 +2707,7 @@ export function Knowledge() {
                           <div className={`w-[24px] h-[24px] rounded-md ${bgColor} border ${borderColor} flex items-center justify-center flex-shrink-0`}>
                             <PromptIcon className={`w-[18px] h-[18px] ${iconColor}`} />
                           </div>
-                          <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] truncate">
+                          <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] truncate">
                             {prompt.title}
                           </h3>
                         </div>
