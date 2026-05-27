@@ -19,7 +19,7 @@ export function Toggle({ value, onChange, options, className }: ToggleProps) {
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-[8px] bg-[#f0f2f1] p-[4px] gap-[2px]",
+        "inline-flex w-fit items-center rounded-[8px] bg-[#f0f2f1] p-[4px] gap-[2px]",
         className
       )}
     >
