@@ -24,16 +24,16 @@ export function StandaloneViewPage() {
 
   // Listen for CPC initiation events from regulatory table
   useEffect(() => {
-    console.log('🎧 StandaloneViewPage: Setting up initiateCPC event listener');
+    console.log('[v0] StandaloneViewPage: Setting up initiateCPC event listener');
     const handleCPCInitiation = (event: Event) => {
-      console.log('✅ StandaloneViewPage: CPC event received!');
+      console.log('[v0] StandaloneViewPage: CPC event received!');
       const customEvent = event as CustomEvent;
       const { regulation, docsAffected, clausesAffected, impactLevel } = customEvent.detail;
-      console.log('📊 Details:', { regulation, docsAffected, clausesAffected, impactLevel });
+      console.log('[v0] CPC Details:', { regulation, docsAffected, clausesAffected, impactLevel });
 
       // Get the source tab ID from sessionStorage (set when artifact was clicked)
       const sourceTabId = sessionStorage.getItem('regulatoryTableSourceTabId');
-      console.log('🔍 Retrieved source tab ID from sessionStorage:', sourceTabId);
+      console.log('[v0] Retrieved source tab ID from sessionStorage:', sourceTabId);
 
       // Store the CPC workflow data
       sessionStorage.setItem('pendingCPCWorkflow', JSON.stringify({
@@ -48,32 +48,39 @@ export function StandaloneViewPage() {
         docsAffected,
         clausesAffected,
         impactLevel,
-        sourceTabId: sourceTabId, // Store the source tab ID
+        sourceTabId: sourceTabId,
         timestamp: Date.now()
       };
       sessionStorage.setItem('pendingCPCData', JSON.stringify(cpcData));
-      console.log('💾 Stored CPC data in sessionStorage:', cpcData);
+      console.log('[v0] Stored CPC data in sessionStorage:', cpcData);
 
       // Clear the source tab ID
       sessionStorage.removeItem('regulatoryTableSourceTabId');
 
-      // Navigate back to chat or workspace
-      if (fromParam) {
-        // fromParam is a chatId - navigate back to that chat
-        console.log('🔙 Navigating back to chat:', fromParam);
+      // Navigate based on where we came from
+      if (fromParam && fromParam !== 'recent-activity') {
+        // fromParam is a chatId - navigate back to that chat to append CPC
+        console.log('[v0] Navigating back to source chat:', fromParam);
         navigate(`/chat/${fromParam}`);
+      } else if (fromParam === 'recent-activity') {
+        // Came from recent activity sidebar - create a NEW chat for CPC workflow
+        console.log('[v0] Came from recent activity - creating new chat for CPC');
+        const newChatId = `cpc-${Date.now()}`;
+        // Store the CPC prompt for the new chat
+        sessionStorage.setItem(`chat_${newChatId}_prompt`, `Initiate Cross-Product Clause analysis for: ${regulation}`);
+        navigate(`/chat/${newChatId}`);
       } else {
-        // No fromParam - navigate to default M&A workspace (where regulatory findings were created)
-        console.log('🔙 Navigating to M&A workspace for CPC workflow');
+        // No fromParam - navigate to default M&A workspace
+        console.log('[v0] No source - navigating to M&A workspace for CPC workflow');
         navigate('/workspace/Project%20Atlas%20-%20M%26A%20Due%20Diligence');
       }
     };
 
     window.addEventListener('initiateCPC', handleCPCInitiation);
-    console.log('✅ StandaloneViewPage: initiateCPC listener attached');
+    console.log('[v0] StandaloneViewPage: initiateCPC listener attached');
 
     return () => {
-      console.log('🗑️ StandaloneViewPage: Removing initiateCPC listener');
+      console.log('[v0] StandaloneViewPage: Removing initiateCPC listener');
       window.removeEventListener('initiateCPC', handleCPCInitiation);
     };
   }, [navigate, fromParam, workspaceParam]);

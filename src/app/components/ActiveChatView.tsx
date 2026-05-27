@@ -23,21 +23,23 @@ interface StagedItem {
 }
 
 interface ActiveChatViewProps {
-    prompt: string;
-    attachments: StagedItem[];
-    onNewPrompt: (prompt: string, attachments: StagedItem[]) => void;
-    onThinkingChange?: (isThinking: boolean) => void;
-    onOpenTab?: (item: { name: string, type: string }) => void;
-    initialMessages?: any[];
-    onMessagesChange?: (messages: any[]) => void;
-    onArtifactCreated?: (item: { name: string, type: string, sourceChatMessages?: any[] }) => void;
-    mode?: 'chatgpt' | 'hybrid';
-    cocounselToken?: string;
-    isSkillCreation?: boolean;
-    showClarifyingQuestions?: boolean;
-    onSubmitQuestions?: (answers: any) => void;
-    onSkipQuestions?: () => void;
-    currentTabId?: string;
+  prompt: string;
+  attachments: StagedItem[];
+  onNewPrompt: (prompt: string, attachments: StagedItem[]) => void;
+  onThinkingChange?: (isThinking: boolean) => void;
+  onOpenTab?: (item: { name: string, type: string }) => void;
+  initialMessages?: any[];
+  onMessagesChange?: (messages: any[]) => void;
+  onArtifactCreated?: (item: { name: string, type: string, sourceChatMessages?: any[] }) => void;
+  mode?: 'chatgpt' | 'hybrid';
+  cocounselToken?: string;
+  isSkillCreation?: boolean;
+  showClarifyingQuestions?: boolean;
+  onSubmitQuestions?: (answers: any) => void;
+  onSkipQuestions?: () => void;
+  currentTabId?: string;
+  appendCPCPrompt?: string; // New: append CPC workflow to existing chat without remounting
+  onCPCAppended?: () => void; // New: callback when CPC has been appended
 }
 
 const LOGO_PATHS = [
@@ -470,7 +472,7 @@ function ArtifactCard({ onArtifactClick, streamedIntroText, streamedDescText, is
   );
 }
 
-export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingChange, onOpenTab, initialMessages, onMessagesChange, onArtifactCreated, mode = 'chatgpt', cocounselToken, isSkillCreation = false, showClarifyingQuestions = false, onSubmitQuestions, onSkipQuestions, currentTabId }: ActiveChatViewProps) {
+export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingChange, onOpenTab, initialMessages, onMessagesChange, onArtifactCreated, mode = 'chatgpt', cocounselToken, isSkillCreation = false, showClarifyingQuestions = false, onSubmitQuestions, onSkipQuestions, currentTabId, appendCPCPrompt, onCPCAppended }: ActiveChatViewProps) {
   const navigate = useNavigate();
 
   console.log('🎬 ActiveChatView rendering with initialMessages:', initialMessages);
@@ -603,16 +605,93 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     };
   }, [messages]);
 
+  // Handle appending CPC workflow to existing chat without remounting
+  useEffect(() => {
+    if (appendCPCPrompt && appendCPCPrompt.length > 0) {
+      console.log('[v0] ActiveChatView: Appending CPC prompt to existing chat:', appendCPCPrompt);
+      
+      // Add the CPC user message to existing messages
+      const cpcMessage = { role: 'user' as const, text: appendCPCPrompt, attachments: [] };
+      
+      setMessages(prev => {
+        const updated = [...prev, cpcMessage];
+        console.log('[v0] ActiveChatView: Messages after CPC append:', updated.length);
+        return updated;
+      });
+      
+      // Trigger the CPC workflow by calling processChatHybrid with the new message
+      // Use a small delay to ensure state is updated
+      setTimeout(() => {
+        setMessages(prev => {
+          // Add placeholder for assistant response
+          if (prev.length > 0 && prev[prev.length - 1].role === 'user') {
+            // Trigger the hybrid mode workflow
+            processChatHybrid(prev).catch(err => {
+              console.error('[v0] processChatHybrid error (CPC append):', err);
+            });
+          }
+          return prev;
+        });
+      }, 100);
+      
+      // Notify parent that CPC has been appended
+      onCPCAppended?.();
+    }
+  }, [appendCPCPrompt, onCPCAppended]);
+
   const processChat = useCallback(async (history: any[]) => {
     // Clear any existing timers before starting new workflow
     clearAllTimersRef.current();
     
-    // Detect task type from user prompt
-    const userPrompt = prompt.toLowerCase();
-    let detectedType: 'draft' | 'research' | 'analyze' | 'regulatory-scan' = 'draft';
+    // Use the last user message text for detection (more accurate than prompt prop)
+    const lastUserMsg = history.filter(m => m.role === 'user').pop();
+    const userPrompt = (lastUserMsg?.text || prompt).toLowerCase();
+    let detectedType: 'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis' = 'draft';
     let topic = '';
+    
+    // Check for CPC analysis FIRST (highest priority)
+    if (userPrompt.includes('initiate cross-product clause analysis') || userPrompt.includes('initiate cpc')) {
+      console.log('[v0] processChat: CPC ANALYSIS DETECTED!');
+      detectedType = 'cpc-analysis';
+      
+      // Extract regulation name from prompt
+      const regulationMatch = userPrompt.match(/analysis for:\s*(.+)/i);
+      const regulation = regulationMatch ? regulationMatch[1].trim() : 'Regulatory Change';
+      setCpcRegulation(regulation);
+      
+      // Get CPC workflow data from sessionStorage
+      const workflowData = sessionStorage.getItem('pendingCPCWorkflow');
+      if (workflowData) {
+        const { docsAffected, clausesAffected, impactLevel } = JSON.parse(workflowData);
+        setCpcDocsAffected(docsAffected || 3);
+        setCpcClausesAffected(clausesAffected || 12);
+        setCpcImpactLevel(impactLevel || 'High');
+        sessionStorage.removeItem('pendingCPCWorkflow');
+        console.log('[v0] processChat: CPC data loaded from sessionStorage');
+      } else {
+        // Default values if no data
+        setCpcDocsAffected(3);
+        setCpcClausesAffected(12);
+        setCpcImpactLevel('High');
+      }
+      
+      setTaskType('cpc-analysis');
+      
+      // Add assistant placeholder for CPC response
+      setMessages(prev => {
+        if (prev.length > 0 && prev[prev.length - 1].role === 'assistant') return prev;
+        return [...prev, { role: 'assistant', text: '' }];
+      });
+      
+      // Show the CPC handoff screen directly (skip reasoning/sources workflow)
+      setShowThinking(false);
+      setShowArtifact(true);
+      setStreamedIntroText('I\'ve initiated the Cross-Product Clause analysis. Here\'s a summary of the affected documents and recommended updates:');
+      onThinkingChange?.(false);
+      return; // CPC renders its own screen, no workflow animation needed
+    }
 
-    // Check for regulatory scan first
+    // Check for regulatory scan
     if ((userPrompt.includes('scan') || userPrompt.includes('check') || userPrompt.includes('identify')) &&
         (userPrompt.includes('regulatory') || userPrompt.includes('regulation')) &&
         (userPrompt.includes('change') || userPrompt.includes('update') || userPrompt.includes('affect'))) {

@@ -34,7 +34,7 @@ export function ChatPage() {
   const [toastMessage, setToastMessage] = useState('');
   const [initialMessages, setInitialMessages] = useState<any[] | undefined>(undefined);
   const [cpcPrompt, setCpcPrompt] = useState<string>('');
-  const [chatKey, setChatKey] = useState(0); // Force re-mount when CPC is triggered
+  const [appendCPCToExisting, setAppendCPCToExisting] = useState(false); // Signal to append CPC without remounting
   const titleRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -43,17 +43,12 @@ export function ChatPage() {
     const checkPendingCPC = () => {
       const pendingData = sessionStorage.getItem('pendingCPCData');
       if (pendingData) {
-        console.log('✅ ChatPage: Found pending CPC data!');
+        console.log('[v0] ChatPage: Found pending CPC data!');
         const { regulation, docsAffected, clausesAffected, impactLevel } = JSON.parse(pendingData);
-        console.log('📊 CPC data:', { regulation, docsAffected, clausesAffected, impactLevel });
+        console.log('[v0] CPC data:', { regulation, docsAffected, clausesAffected, impactLevel });
 
         // Clear the pending data
         sessionStorage.removeItem('pendingCPCData');
-
-        // Get existing messages from sessionStorage (if any)
-        const existingMessagesKey = `chat_${chatId}_messages`;
-        const existingMessagesStr = sessionStorage.getItem(existingMessagesKey);
-        const existingMessages = existingMessagesStr ? JSON.parse(existingMessagesStr) : [];
 
         // Create CPC user message text
         const cpcPromptText = `Initiate Cross-Product Clause analysis for: ${regulation}`;
@@ -64,16 +59,16 @@ export function ChatPage() {
           clausesAffected,
           impactLevel
         }));
-        console.log('💾 ChatPage: Stored CPC workflow data in sessionStorage');
+        console.log('[v0] ChatPage: Stored CPC workflow data in sessionStorage');
 
-        // Set the CPC prompt to trigger workflow
+        // Set the CPC prompt to trigger workflow - WITHOUT remounting
         setCpcPrompt(cpcPromptText);
-
-        // Set initial messages to existing messages (without the CPC prompt yet)
-        setInitialMessages(existingMessages);
-
-        // Force re-mount of ActiveChatView to trigger workflow
-        setChatKey(prev => prev + 1);
+        
+        // Signal to ActiveChatView to append CPC instead of restarting
+        setAppendCPCToExisting(true);
+        
+        // DO NOT remount - let ActiveChatView handle appending via the appendCPCToExisting prop
+        // REMOVED: setChatKey(prev => prev + 1)
       }
     };
 
@@ -235,13 +230,14 @@ export function ChatPage() {
         {/* Chat View */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <ActiveChatView
-            key={chatKey}
             prompt={cpcPrompt || initialPrompt}
             attachments={[]}
             onNewPrompt={() => {}}
             isSkillCreation={isSkillCreation}
             initialMessages={initialMessages}
             currentTabId={chatId}
+            appendCPCPrompt={appendCPCToExisting ? cpcPrompt : undefined}
+            onCPCAppended={() => setAppendCPCToExisting(false)}
             onMessagesChange={(messages) => {
               // Save messages to sessionStorage so we can append CPC messages later
               const messagesKey = `chat_${chatId}_messages`;

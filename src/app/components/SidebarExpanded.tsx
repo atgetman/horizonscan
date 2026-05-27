@@ -319,12 +319,13 @@ function ActivityItem({ item, onShare }: { item: { type: 'table' | 'doc' | 'chat
     
     if (item.workspace) {
       // Navigate to workspace with the specific item
-      console.log('🚀 Navigating to workspace with item:', item.workspace, item.name, item.type);
+      console.log('[v0] Navigating to workspace with item:', item.workspace, item.name, item.type);
       navigate(`/workspace/${encodeURIComponent(item.workspace)}?open=${encodeURIComponent(item.name)}&type=${item.type}`);
     } else {
       // Workspace-agnostic: Navigate to /chat with URL params to open just this item
-      console.log('🚀 Navigating to workspace-agnostic view:', item.name, item.type);
-      navigate(`/chat?open=${encodeURIComponent(item.name)}&type=${item.type}`);
+      // Add from=recent-activity so CPC flow knows to create a new chat instead of going to workspace
+      console.log('[v0] Navigating to workspace-agnostic view:', item.name, item.type);
+      navigate(`/chat?open=${encodeURIComponent(item.name)}&type=${item.type}&from=recent-activity`);
     }
   };
 
