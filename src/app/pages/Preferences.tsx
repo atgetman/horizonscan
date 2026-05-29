@@ -1,8 +1,23 @@
-import { useState } from "react";
-import { User, Palette, Bell, Camera, ChevronDown, X, Check, MousePointer2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { User, Palette, Bell, Camera, ChevronDown, ChevronUp, X, Check, MousePointer2 } from "lucide-react";
 import { clsx } from "clsx";
 
 type PreferenceTab = "profile" | "appearance" | "notifications";
+
+const PRACTICE_AREAS = [
+  "Litigation",
+  "Corporate",
+  "Intellectual Property",
+  "Employment",
+  "Real Estate",
+  "Tax",
+  "Criminal Defense",
+  "Family Law",
+  "Immigration",
+  "Bankruptcy",
+  "Healthcare",
+  "Environmental",
+];
 
 const navItems: { id: PreferenceTab; label: string; icon: typeof User }[] = [
   { id: "profile", label: "Profile", icon: User },
@@ -76,7 +91,7 @@ function Card({ children }: { children: React.ReactNode }) {
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-[18px] font-['Source_Sans_3'] font-semibold text-[#212223] mb-6">
+    <h3 className="text-[18px] font-['Clario'] font-medium text-[#212223] mb-6">
       {children}
     </h3>
   );
@@ -84,7 +99,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block text-[14px] font-['Source_Sans_3'] text-[#666666] mb-1.5">
+    <label className="block text-[15px] font-['Source_Sans_3'] font-semibold text-[#212223] leading-[1.35] mb-1.5">
       {children}
     </label>
   );
@@ -99,6 +114,97 @@ function TextField({ label, defaultValue }: { label: string; defaultValue: strin
         defaultValue={defaultValue}
         className="w-full h-11 bg-white border border-[#d2d2d2] rounded-lg px-3.5 text-[15px] font-['Source_Sans_3'] text-[#212223] focus:outline-none focus:border-gray-400"
       />
+    </div>
+  );
+}
+
+function PracticeAreaSelect() {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState<string[]>(["Litigation"]);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggle = (area: string) => {
+    setSelected((prev) =>
+      prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area]
+    );
+  };
+
+  const remove = (area: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelected((prev) => prev.filter((a) => a !== area));
+  };
+
+  return (
+    <div>
+      <FieldLabel>Practice area</FieldLabel>
+      <div className="relative" ref={ref}>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className={clsx(
+            "w-full min-h-11 bg-white border rounded-lg px-3 py-1.5 flex items-center justify-between gap-2 transition-colors",
+            open ? "border-[#1D4B34]" : "border-[#d2d2d2] hover:border-gray-400"
+          )}
+        >
+          <span className="flex flex-wrap items-center gap-1.5">
+            {selected.length === 0 ? (
+              <span className="text-[15px] font-['Source_Sans_3'] text-[#666666]">
+                Select practice areas
+              </span>
+            ) : (
+              selected.map((area) => (
+                <span
+                  key={area}
+                  className="inline-flex items-center gap-1.5 bg-[#edf2f0] text-[#1d4b34] text-[14px] font-['Source_Sans_3'] rounded-md px-2 py-1"
+                >
+                  {area}
+                  <X
+                    className="size-3.5 cursor-pointer"
+                    strokeWidth={2}
+                    onClick={(e) => remove(area, e)}
+                  />
+                </span>
+              ))
+            )}
+          </span>
+          {open ? (
+            <ChevronUp className="size-4 text-[#666666] shrink-0" strokeWidth={1.5} />
+          ) : (
+            <ChevronDown className="size-4 text-[#666666] shrink-0" strokeWidth={1.5} />
+          )}
+        </button>
+
+        {open && (
+          <div className="absolute z-20 mt-1 w-full bg-white border border-[#E5E5E5] rounded-lg shadow-lg py-1 max-h-72 overflow-y-auto">
+            {PRACTICE_AREAS.map((area) => {
+              const isSelected = selected.includes(area);
+              return (
+                <button
+                  key={area}
+                  type="button"
+                  onClick={() => toggle(area)}
+                  className="w-full flex items-center justify-between px-4 py-2.5 text-[15px] font-['Source_Sans_3'] text-[#212223] hover:bg-gray-50 transition-colors text-left"
+                >
+                  {area}
+                  {isSelected && (
+                    <Check className="size-4 text-[#1d4b34]" strokeWidth={2.5} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -157,16 +263,7 @@ function ProfilePanel() {
       <Card>
         <SectionHeading>Professional information</SectionHeading>
         <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-          <div>
-            <FieldLabel>Practice area</FieldLabel>
-            <button className="w-full min-h-11 bg-white border border-[#d2d2d2] rounded-lg px-3 flex items-center justify-between hover:border-gray-400 transition-colors">
-              <span className="inline-flex items-center gap-1.5 bg-[#f0f2f1] text-[#314b3e] text-[14px] font-['Source_Sans_3'] rounded-md px-2 py-1">
-                Litigation
-                <X className="size-3.5" strokeWidth={2} />
-              </span>
-              <ChevronDown className="size-4 text-[#666666]" strokeWidth={1.5} />
-            </button>
-          </div>
+          <PracticeAreaSelect />
           <SelectField label="Role" value="Associate Attorney" />
         </div>
       </Card>
