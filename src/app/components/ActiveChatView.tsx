@@ -670,7 +670,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         setCpcDocsAffected(docsAffected || 3);
         setCpcClausesAffected(clausesAffected || 12);
         setCpcImpactLevel(impactLevel || 'High');
-        sessionStorage.removeItem('pendingCPCWorkflow');
+        // NOTE: do NOT removeItem here. The Layout double-mounts the page, so a
+        // discarded mount removing this would starve the surviving mount.
+        // ChatPage clears it on a delayed timer instead.
         console.log('[v0] processChat: CPC data loaded from sessionStorage');
       } else {
         // Default values if no data
@@ -1095,7 +1097,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
             setCpcDocsAffected(docsAffected);
             setCpcClausesAffected(clausesAffected);
             setCpcImpactLevel(impactLevel);
-            sessionStorage.removeItem('pendingCPCWorkflow');
+            // NOTE: cleared by ChatPage on a delayed timer (double-mount safe).
           }
         }
       } else if ((userPromptLower.includes('scan') || userPromptLower.includes('check') || userPromptLower.includes('identify')) &&

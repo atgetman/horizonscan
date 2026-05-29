@@ -72,6 +72,7 @@ export function ChatPage() {
     if (!cpcReentry) return;
     const t = setTimeout(() => {
       sessionStorage.removeItem('pendingCPCData');
+      sessionStorage.removeItem('pendingCPCWorkflow');
     }, 4000);
     return () => clearTimeout(t);
   }, [cpcReentry]);
