@@ -3,7 +3,7 @@ import { Plus, Bell } from 'lucide-react';
 import { MonitoringCard, Monitor } from './MonitoringCard';
 import { MonitoringSetupModal } from './MonitoringSetupModal';
 import { MonitoringResultsViewer, MonitoringResult, MonitoringFinding } from './MonitoringResultsViewer';
-import { Toggle } from '../ui/Toggle';
+import { Toggle } from '../ui/SegmentedToggle';
 import { Toast } from '../Toast';
 import { useMonitoring } from '../../contexts/MonitoringContext';
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, ExternalLink, Download, FileText } from 'lucide-react';
-import { Toggle } from '../ui/Toggle';
+import { Toggle } from '../ui/SegmentedToggle';
 
 export interface MonitoringResult {
   id: string;

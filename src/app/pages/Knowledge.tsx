@@ -5,7 +5,7 @@ import { PromptDrawer } from "../components/PromptDrawer";
 import { MultiSelect } from "../components/MultiSelect";
 import { SingleSelect } from "../components/SingleSelect";
 import { CardDropdownMenu } from "../components/CardDropdownMenu";
-import { Toggle } from "../components/ui/Toggle";
+import { Toggle } from "../components/ui/SegmentedToggle";
 import { NewSkillModal } from "../components/NewSkillModal";
 import { EditSkillModal } from "../components/EditSkillModal";
 import { ShareSkillModal } from "../components/ShareSkillModal";

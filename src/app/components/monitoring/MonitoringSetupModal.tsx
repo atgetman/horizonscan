@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { Monitor } from './MonitoringCard';
-import { Toggle } from '../ui/Toggle';
+import { Toggle } from '../ui/SegmentedToggle';
 
 interface MonitoringSetupModalProps {
   isOpen: boolean;
