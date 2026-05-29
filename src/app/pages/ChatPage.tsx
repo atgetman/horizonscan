@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { createPortal } from 'react-dom';
-import { ChevronDown, Share, Edit, FolderInput, Trash2, X } from 'lucide-react';
+import { ChevronDown, Share, Edit, FolderInput, Trash2, X, Bell, Save, ExternalLink } from 'lucide-react';
 import { ActiveChatView } from '../components/ActiveChatView';
 import { generateChatTitle } from '../services/ChatService';
 import { Dropdown, DropdownItem } from '../components/ui/Dropdown';
@@ -96,16 +96,46 @@ export function ChatPage() {
         role: 'assistant',
         isFigmaContent: true,
         text: (
-          <div className="flex flex-col gap-3">
-            <p className="text-[15px] leading-[1.5] text-[#212223]">
+          <div className="flex flex-col gap-4 max-w-[800px] mr-auto w-full">
+            <div className="text-[15px] text-[#212223] leading-relaxed">
               {`I ran a regulatory horizon scan across federal and state sources and identified ${cpcReentry.regulation}, which may impact your M&A contract templates.`}
-            </p>
+            </div>
             <button
               onClick={openRegulatoryTable}
-              className="self-start flex items-center gap-2 rounded-lg border border-[#E5E5E5] bg-white px-3 py-2 text-[13px] font-medium text-[#212223] hover:bg-[#F7F7F7] transition-colors"
+              className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors"
             >
-              <span className="size-2 rounded-full bg-amber-500" />
-              {'M&A regulatory findings'}
+              <div aria-hidden="true" className="absolute border border-[#8a8a8a] border-solid inset-0 pointer-events-none rounded-[8px]" />
+              <div className="flex flex-row items-center size-full">
+                <div className="content-center flex flex-wrap gap-[4px_8px] items-center pr-[12px] py-[8px] relative size-full">
+                  <div className="flex-[1_0_0] min-w-px relative">
+                    <div className="flex flex-row items-center size-full">
+                      <div className="content-stretch flex gap-[8px] items-center pl-[8px] relative size-full">
+                        <div className="content-stretch flex items-center justify-center max-h-[28px] max-w-[28px] relative shrink-0 size-[28px]">
+                          <div className="relative">
+                            <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} />
+                            <div className="absolute top-0 right-0 size-2 bg-[#DE6633] rounded-full border border-white" />
+                          </div>
+                        </div>
+                        <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative">
+                          <div className="content-stretch flex items-center relative w-full">
+                            <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Clario:Medium',sans-serif] justify-center leading-[0] min-w-px not-italic overflow-hidden relative text-[#212223] text-[16px] text-ellipsis whitespace-nowrap">
+                              <p className="leading-[1.5] overflow-hidden text-ellipsis text-left">M&A regulatory findings</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
+                      <Save className="size-4 text-[#1d4b34]" strokeWidth={1.5} />
+                    </div>
+                    <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
+                      <ExternalLink className="size-4 text-[#212223]" strokeWidth={1.5} />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </button>
           </div>
         ),
