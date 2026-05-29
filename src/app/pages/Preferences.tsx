@@ -44,7 +44,7 @@ export function Preferences() {
 
       {/* Content column */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl px-12 pt-[50px] pb-16">
+        <div className="max-w-[1100px] mx-auto px-[32px] pt-[50px] pb-16">
           {activeTab === "profile" && <ProfilePanel />}
           {activeTab === "appearance" && <AppearancePanel />}
           {activeTab === "notifications" && <NotificationsPanel />}
