@@ -127,22 +127,36 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-function TextField({ label, defaultValue }: { label: string; defaultValue: string }) {
+function TextField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
   return (
     <div>
       <FieldLabel>{label}</FieldLabel>
       <input
         type="text"
-        defaultValue={defaultValue}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         className="w-full h-11 bg-white border border-[#d2d2d2] rounded-lg px-3.5 text-[15px] font-['Source_Sans_3'] text-[#212223] focus:outline-none focus:border-gray-400"
       />
     </div>
   );
 }
 
-function PracticeAreaSelect() {
+function PracticeAreaSelect({
+  selected,
+  onChange,
+}: {
+  selected: string[];
+  onChange: (value: string[]) => void;
+}) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<string[]>(["Litigation"]);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -156,14 +170,16 @@ function PracticeAreaSelect() {
   }, []);
 
   const toggle = (area: string) => {
-    setSelected((prev) =>
-      prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area]
+    onChange(
+      selected.includes(area)
+        ? selected.filter((a) => a !== area)
+        : [...selected, area]
     );
   };
 
   const remove = (area: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setSelected((prev) => prev.filter((a) => a !== area));
+    onChange(selected.filter((a) => a !== area));
   };
 
   return (
@@ -234,14 +250,15 @@ function PracticeAreaSelect() {
 function SelectField({
   label,
   options,
-  defaultValue,
+  value,
+  onChange,
 }: {
   label: string;
   options: string[];
-  defaultValue: string;
+  value: string;
+  onChange: (value: string) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(defaultValue);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -266,7 +283,7 @@ function SelectField({
             open ? "border-[#1D4B34]" : "border-[#d2d2d2] hover:border-gray-400"
           )}
         >
-          <span>{selected}</span>
+          <span>{value}</span>
           {open ? (
             <ChevronUp className="size-4 text-[#666666] shrink-0" strokeWidth={1.5} />
           ) : (
@@ -281,13 +298,13 @@ function SelectField({
                 key={option}
                 type="button"
                 onClick={() => {
-                  setSelected(option);
+                  onChange(option);
                   setOpen(false);
                 }}
                 className="w-full flex items-center justify-between px-4 py-2.5 text-[15px] font-['Source_Sans_3'] text-[#212223] hover:bg-gray-50 transition-colors text-left"
               >
                 {option}
-                {selected === option && (
+                {value === option && (
                   <Check className="size-4 text-[#1d4b34]" strokeWidth={2.5} />
                 )}
               </button>
@@ -301,9 +318,42 @@ function SelectField({
 
 /* ---------------- Profile ---------------- */
 
+type ProfileForm = {
+  name: string;
+  email: string;
+  title: string;
+  organization: string;
+  practiceAreas: string[];
+  role: string;
+  region: string;
+  language: string;
+};
+
+const INITIAL_PROFILE: ProfileForm = {
+  name: "Alex Johnson",
+  email: "alex.johnson@lawfirm.com",
+  title: "Senior Associate",
+  organization: "Hartwell & Partners LLP",
+  practiceAreas: ["Litigation"],
+  role: "Lawyer",
+  region: "United States",
+  language: "English (US)",
+};
+
 function ProfilePanel() {
+  const [savedForm, setSavedForm] = useState<ProfileForm>(INITIAL_PROFILE);
+  const [form, setForm] = useState<ProfileForm>(INITIAL_PROFILE);
+
+  const isDirty = JSON.stringify(form) !== JSON.stringify(savedForm);
+
+  const update = <K extends keyof ProfileForm>(key: K, value: ProfileForm[K]) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
+
+  const handleSave = () => setSavedForm(form);
+  const handleDiscard = () => setForm(savedForm);
+
   return (
-    <>
+    <div className={clsx(isDirty && "pb-24")}>
       <PanelTitle>Profile</PanelTitle>
 
       <Card>
@@ -331,29 +381,77 @@ function ProfilePanel() {
       <Card>
         <SectionHeading>Personal information</SectionHeading>
         <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-          <TextField label="Name" defaultValue="Alex Johnson" />
-          <TextField label="Email" defaultValue="alex.johnson@lawfirm.com" />
-          <TextField label="Title" defaultValue="Senior Associate" />
-          <TextField label="Organization" defaultValue="Hartwell & Partners LLP" />
+          <TextField label="Name" value={form.name} onChange={(v) => update("name", v)} />
+          <TextField label="Email" value={form.email} onChange={(v) => update("email", v)} />
+          <TextField label="Title" value={form.title} onChange={(v) => update("title", v)} />
+          <TextField
+            label="Organization"
+            value={form.organization}
+            onChange={(v) => update("organization", v)}
+          />
         </div>
       </Card>
 
       <Card>
         <SectionHeading>Professional information</SectionHeading>
         <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-          <PracticeAreaSelect />
-          <SelectField label="Role" options={ROLE_OPTIONS} defaultValue="Lawyer" />
+          <PracticeAreaSelect
+            selected={form.practiceAreas}
+            onChange={(v) => update("practiceAreas", v)}
+          />
+          <SelectField
+            label="Role"
+            options={ROLE_OPTIONS}
+            value={form.role}
+            onChange={(v) => update("role", v)}
+          />
         </div>
       </Card>
 
       <Card>
         <SectionHeading>Region &amp; language</SectionHeading>
         <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-          <SelectField label="Region" options={REGION_OPTIONS} defaultValue="United States" />
-          <SelectField label="Language" options={LANGUAGE_OPTIONS} defaultValue="English (US)" />
+          <SelectField
+            label="Region"
+            options={REGION_OPTIONS}
+            value={form.region}
+            onChange={(v) => update("region", v)}
+          />
+          <SelectField
+            label="Language"
+            options={LANGUAGE_OPTIONS}
+            value={form.language}
+            onChange={(v) => update("language", v)}
+          />
         </div>
       </Card>
-    </>
+
+      {isDirty && (
+        <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-[#E5E5E5] bg-white/95 backdrop-blur-sm">
+          <div className="max-w-[1100px] mx-auto px-[32px] py-3.5 flex items-center justify-between gap-4">
+            <p className="text-[14px] font-['Source_Sans_3'] text-[#666666]">
+              You have unsaved changes.
+            </p>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleDiscard}
+                className="h-10 px-4 rounded-lg border border-[#d2d2d2] bg-white text-[15px] font-['Source_Sans_3'] font-medium text-[#212223] hover:bg-gray-50 transition-colors"
+              >
+                Discard
+              </button>
+              <button
+                type="button"
+                onClick={handleSave}
+                className="h-10 px-5 rounded-lg bg-[#1D4B34] text-[15px] font-['Source_Sans_3'] font-medium text-white hover:bg-[#163b29] transition-colors"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
