@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Radar, ArrowUpRight, X } from "lucide-react";
+import { Bell, ArrowUpRight, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useNavigate } from "react-router";
 
@@ -37,14 +37,8 @@ export function HorizonScanToast() {
 
     window.addEventListener("horizonScanAlert", handleAlert);
 
-    // Demo: surface a sample alert shortly after load so the pattern is visible.
-    const timer = window.setTimeout(() => {
-      window.dispatchEvent(new CustomEvent("horizonScanAlert"));
-    }, 2500);
-
     return () => {
       window.removeEventListener("horizonScanAlert", handleAlert);
-      window.clearTimeout(timer);
     };
   }, []);
 
@@ -62,15 +56,15 @@ export function HorizonScanToast() {
         {alert && (
           <motion.div
             key={alert.id}
-            initial={{ opacity: 0, y: 16, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.98 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="pointer-events-auto w-[340px] bg-white border border-[#E5E5E5] rounded-xl shadow-lg p-4 font-['Source_Sans_3']"
           >
             <div className="flex items-start gap-3">
-              <div className="size-6 rounded-full bg-[#E8F0EC] flex items-center justify-center shrink-0 mt-0.5">
-                <Radar className="size-3.5 text-[#1D4B34]" strokeWidth={2} />
+              <div className="size-6 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 mt-0.5">
+                <Bell className="size-3.5 text-amber-600" strokeWidth={2} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-[1.35]">
