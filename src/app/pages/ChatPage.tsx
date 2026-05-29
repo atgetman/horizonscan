@@ -35,35 +35,46 @@ export function ChatPage() {
   const titleRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Synchronously detect a CPC re-entry BEFORE the first render so we never
-  // re-run the original prompt's thinking flow. When the user clicks "Initiate
-  // CPC" from the artifact/table view we navigate back to this chat route,
-  // which remounts the page. We read the pending CPC payload here (once) and
-  // use it to seed a recap of the prior scan, then trigger only the CPC flow.
-  const cpcReentryRef = useRef<{ regulation: string; docsAffected: number; clausesAffected: number; impactLevel: string } | null | undefined>(undefined);
-  if (cpcReentryRef.current === undefined) {
+  // Detect a CPC re-entry. When the user clicks "Initiate CPC" from the
+  // artifact/table view we navigate back to this chat route. The Layout wraps
+  // the routed page in <AnimatePresence mode="wait"> keyed by pathname, which
+  // mounts ChatPage TWICE (the first mount is discarded for the enter
+  // animation, the second is the one the user actually sees). So we must NOT
+  // destructively consume `pendingCPCData` during render — otherwise the
+  // discarded first mount eats it and the surviving second mount falls back to
+  // re-running the original prompt. Instead we read it purely here (both mounts
+  // see it) and clear it later in an effect.
+  const [cpcReentry] = useState<{ regulation: string; docsAffected: number; clausesAffected: number; impactLevel: string } | null>(() => {
     try {
       const pendingData = sessionStorage.getItem('pendingCPCData');
       if (pendingData) {
         const parsed = JSON.parse(pendingData);
-        sessionStorage.removeItem('pendingCPCData');
         // Persist workflow data so ActiveChatView's CPC flow can read it.
         sessionStorage.setItem('pendingCPCWorkflow', JSON.stringify({
           docsAffected: parsed.docsAffected,
           clausesAffected: parsed.clausesAffected,
           impactLevel: parsed.impactLevel,
         }));
-        cpcReentryRef.current = parsed;
-      } else {
-        cpcReentryRef.current = null;
+        return parsed;
       }
     } catch (e) {
       console.warn('[v0] ChatPage: failed to read pending CPC data', e);
-      cpcReentryRef.current = null;
     }
-  }
-  const cpcReentry = cpcReentryRef.current;
+    return null;
+  });
   const cpcPromptText = cpcReentry ? `Initiate Cross-Product Clause analysis for: ${cpcReentry.regulation}` : '';
+
+  // Clear the pending CPC payload after the double-mount transition has settled
+  // (and after the surviving mount has already captured it at init time). This
+  // prevents a later, unrelated visit to this chat from falsely re-triggering
+  // CPC, without racing the discarded/surviving mount swap.
+  useEffect(() => {
+    if (!cpcReentry) return;
+    const t = setTimeout(() => {
+      sessionStorage.removeItem('pendingCPCData');
+    }, 4000);
+    return () => clearTimeout(t);
+  }, [cpcReentry]);
 
   const openRegulatoryTable = () => {
     sessionStorage.setItem('regulatoryTableSourceTabId', chatId || '');
