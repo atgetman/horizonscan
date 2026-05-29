@@ -232,8 +232,8 @@ function ProfilePanel() {
         <SectionHeading>Photo</SectionHeading>
         <div className="flex items-center gap-5">
           <div className="relative">
-            <div className="size-20 rounded-full bg-[#1D4B34] flex items-center justify-center text-white text-[24px] font-['Source_Sans_3'] font-medium">
-              AJ
+            <div className="size-20 rounded-full bg-[#1D4B34] flex items-center justify-center text-white text-[24px] font-['Clario'] font-medium">
+              AG
             </div>
             <div className="absolute bottom-0 right-0 size-7 bg-white border border-[#E5E5E5] rounded-full flex items-center justify-center shadow-sm">
               <Camera className="size-3.5 text-[#666666]" strokeWidth={1.5} />
