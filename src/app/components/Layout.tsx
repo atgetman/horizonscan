@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { OnboardingPopover } from "./OnboardingPopover";
+import { HorizonScanToast } from "./HorizonScanToast";
 import ToggleActive from "../../imports/Container-3417-18";
 import ToggleInactive from "../../imports/Container-3417-35";
 
@@ -190,6 +191,9 @@ export function Layout() {
         onNext={handleNextOnboarding}
         onSnooze={handleSnoozeOnboarding}
       />
+
+      {/* Inline Horizon Scan notification toast */}
+      <HorizonScanToast />
     </div>
     </DndProvider>
   );
