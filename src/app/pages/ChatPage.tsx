@@ -32,54 +32,76 @@ export function ChatPage() {
   const [skillToSave, setSkillToSave] = useState<any>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-  const [initialMessages, setInitialMessages] = useState<any[] | undefined>(undefined);
-  const [cpcPrompt, setCpcPrompt] = useState<string>('');
-  const [appendCPCToExisting, setAppendCPCToExisting] = useState(false); // Signal to append CPC without remounting
   const titleRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Check for pending CPC data from StandaloneViewPage
-  useEffect(() => {
-    const checkPendingCPC = () => {
+  // Synchronously detect a CPC re-entry BEFORE the first render so we never
+  // re-run the original prompt's thinking flow. When the user clicks "Initiate
+  // CPC" from the artifact/table view we navigate back to this chat route,
+  // which remounts the page. We read the pending CPC payload here (once) and
+  // use it to seed a recap of the prior scan, then trigger only the CPC flow.
+  const cpcReentryRef = useRef<{ regulation: string; docsAffected: number; clausesAffected: number; impactLevel: string } | null | undefined>(undefined);
+  if (cpcReentryRef.current === undefined) {
+    try {
       const pendingData = sessionStorage.getItem('pendingCPCData');
       if (pendingData) {
-        console.log('[v0] ChatPage: Found pending CPC data!');
-        const { regulation, docsAffected, clausesAffected, impactLevel } = JSON.parse(pendingData);
-        console.log('[v0] CPC data:', { regulation, docsAffected, clausesAffected, impactLevel });
-
-        // Clear the pending data
+        const parsed = JSON.parse(pendingData);
         sessionStorage.removeItem('pendingCPCData');
-
-        // Create CPC user message text
-        const cpcPromptText = `Initiate Cross-Product Clause analysis for: ${regulation}`;
-
-        // Store workflow data for ActiveChatView to use
+        // Persist workflow data so ActiveChatView's CPC flow can read it.
         sessionStorage.setItem('pendingCPCWorkflow', JSON.stringify({
-          docsAffected,
-          clausesAffected,
-          impactLevel
+          docsAffected: parsed.docsAffected,
+          clausesAffected: parsed.clausesAffected,
+          impactLevel: parsed.impactLevel,
         }));
-        console.log('[v0] ChatPage: Stored CPC workflow data in sessionStorage');
-
-        // Set the CPC prompt to trigger workflow - WITHOUT remounting
-        setCpcPrompt(cpcPromptText);
-        
-        // Signal to ActiveChatView to append CPC instead of restarting
-        setAppendCPCToExisting(true);
-        
-        // DO NOT remount - let ActiveChatView handle appending via the appendCPCToExisting prop
-        // REMOVED: setChatKey(prev => prev + 1)
+        cpcReentryRef.current = parsed;
+      } else {
+        cpcReentryRef.current = null;
       }
-    };
+    } catch (e) {
+      console.warn('[v0] ChatPage: failed to read pending CPC data', e);
+      cpcReentryRef.current = null;
+    }
+  }
+  const cpcReentry = cpcReentryRef.current;
+  const cpcPromptText = cpcReentry ? `Initiate Cross-Product Clause analysis for: ${cpcReentry.regulation}` : '';
 
-    // Check immediately
-    checkPendingCPC();
+  const openRegulatoryTable = () => {
+    sessionStorage.setItem('regulatoryTableSourceTabId', chatId || '');
+    navigate(`/chat?open=${encodeURIComponent('M&A regulatory findings')}&type=regulatory-table&from=${chatId}`);
+  };
 
-    // Also check after a short delay in case we just navigated back
-    const timer = setTimeout(checkPendingCPC, 100);
-
-    return () => clearTimeout(timer);
-  }, [chatId, initialPrompt]);
+  // Seed the thread with a recap of the prior regulatory scan so the CPC flow
+  // appears to continue the existing conversation (length > 1 also tells
+  // ActiveChatView to skip re-running the original prompt simulation).
+  // React nodes are safe here because this prop is passed in memory, never
+  // serialized to sessionStorage.
+  const [initialMessages] = useState<any[] | undefined>(() => {
+    if (!cpcReentry) return undefined;
+    const originalPrompt = initialPrompt || 'Can you scan for any regulatory changes that might affect our M&A contract templates?';
+    return [
+      { role: 'user', text: originalPrompt, attachments: [] },
+      {
+        role: 'assistant',
+        isFigmaContent: true,
+        text: (
+          <div className="flex flex-col gap-3">
+            <p className="text-[15px] leading-[1.5] text-[#212223]">
+              {`I ran a regulatory horizon scan across federal and state sources and identified ${cpcReentry.regulation}, which may impact your M&A contract templates.`}
+            </p>
+            <button
+              onClick={openRegulatoryTable}
+              className="self-start flex items-center gap-2 rounded-lg border border-[#E5E5E5] bg-white px-3 py-2 text-[13px] font-medium text-[#212223] hover:bg-[#F7F7F7] transition-colors"
+            >
+              <span className="size-2 rounded-full bg-amber-500" />
+              {'M&A regulatory findings'}
+            </button>
+          </div>
+        ),
+      },
+    ];
+  });
+  const [cpcPrompt] = useState<string>(cpcPromptText);
+  const [appendCPCToExisting, setAppendCPCToExisting] = useState<boolean>(!!cpcReentry);
 
   // Listen for skill share events
   useEffect(() => {
@@ -230,7 +252,7 @@ export function ChatPage() {
         {/* Chat View */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <ActiveChatView
-            prompt={cpcPrompt || initialPrompt}
+            prompt={initialPrompt}
             attachments={[]}
             onNewPrompt={() => {}}
             isSkillCreation={isSkillCreation}
@@ -238,19 +260,13 @@ export function ChatPage() {
             currentTabId={chatId}
             appendCPCPrompt={appendCPCToExisting ? cpcPrompt : undefined}
             onCPCAppended={() => setAppendCPCToExisting(false)}
-            onMessagesChange={(messages) => {
-              // Save messages to sessionStorage so we can append CPC messages later
-              const messagesKey = `chat_${chatId}_messages`;
-              sessionStorage.setItem(messagesKey, JSON.stringify(messages));
-            }}
             onOpenTab={(item: any) => {
               if (item.type === 'skill') {
                 setSkillInPanel(item);
                 setSkillPanelOpen(true);
               } else if (item.type === 'regulatory-table') {
                 // Navigate to workspace-agnostic standalone view, passing the chat ID
-                sessionStorage.setItem('regulatoryTableSourceTabId', chatId || '');
-                navigate(`/chat?open=${encodeURIComponent(item.name)}&type=regulatory-table&from=${chatId}`);
+                openRegulatoryTable();
               }
             }}
           />

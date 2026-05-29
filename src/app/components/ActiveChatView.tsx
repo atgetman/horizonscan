@@ -607,38 +607,40 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   }, [messages]);
 
   // Handle appending CPC workflow to existing chat without remounting
+  const hasAppendedCPCRef = useRef(false);
   useEffect(() => {
-    if (appendCPCPrompt && appendCPCPrompt.length > 0) {
+    if (appendCPCPrompt && appendCPCPrompt.length > 0 && !hasAppendedCPCRef.current) {
+      hasAppendedCPCRef.current = true;
       console.log('[v0] ActiveChatView: Appending CPC prompt to existing chat:', appendCPCPrompt);
-      
-      // Add the CPC user message to existing messages
+
+      // Build the new history explicitly from the current messages (on a CPC
+      // re-entry these are the seeded recap messages). Append the CPC user
+      // message, then drive the workflow OUTSIDE of any setState updater so the
+      // side-effecting processChatHybrid call runs reliably (updaters must be
+      // pure and may be invoked twice in StrictMode).
       const cpcMessage = { role: 'user' as const, text: appendCPCPrompt, attachments: [] };
-      
-      setMessages(prev => {
-        const updated = [...prev, cpcMessage];
-        console.log('[v0] ActiveChatView: Messages after CPC append:', updated.length);
-        return updated;
-      });
-      
-      // Trigger the CPC workflow by calling processChatHybrid with the new message
-      // Use a small delay to ensure state is updated
-      setTimeout(() => {
-        setMessages(prev => {
-          // Add placeholder for assistant response
-          if (prev.length > 0 && prev[prev.length - 1].role === 'user') {
-            // Trigger the hybrid mode workflow
-            processChatHybrid(prev).catch(err => {
-              console.error('[v0] processChatHybrid error (CPC append):', err);
-            });
-          }
-          return prev;
-        });
-      }, 100);
-      
+      const nextHistory = [...messages, cpcMessage];
+      setMessages(nextHistory);
+
       // Notify parent that CPC has been appended
       onCPCAppended?.();
+
+      // Trigger the CPC workflow once the new user message has rendered.
+      // Use the same processing function the component uses for follow-ups so
+      // it matches the active mode (ChatPage defaults to 'chatgpt').
+      safeSetTimeout(() => {
+        if (mode === 'hybrid') {
+          processChatHybrid(nextHistory).catch(err => {
+            console.error('[v0] processChatHybrid error (CPC append):', err);
+          });
+        } else {
+          Promise.resolve(processChat(nextHistory)).catch(err => {
+            console.error('[v0] processChat error (CPC append):', err);
+          });
+        }
+      }, 200);
     }
-  }, [appendCPCPrompt, onCPCAppended]);
+  }, [appendCPCPrompt]);
 
   const processChat = useCallback(async (history: any[]) => {
     // Clear any existing timers before starting new workflow
