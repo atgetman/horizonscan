@@ -2230,7 +2230,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   </div>
   <button
   onClick={() => {
-  onOpenTab?.({ name: `CPC Analysis - ${cpcRegulation}`, type: 'doc' });
+  onOpenTab?.({ name: `CPC Analysis - ${cpcRegulation}`, type: 'cpc-redlines' });
   }}
   className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors"
   >
@@ -2323,7 +2323,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   clausesAffected={cpcClausesAffected}
   impactLevel={cpcImpactLevel}
   onReviewRedlines={() => {
-  onOpenTab?.({ name: `CPC Redlines - ${cpcRegulation}`, type: 'doc' });
+  onOpenTab?.({ name: `CPC Redlines - ${cpcRegulation}`, type: 'cpc-redlines' });
   }}
   onAcceptAllRedlines={() => {
   console.log('Accept all redlines clicked');
