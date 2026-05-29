@@ -32,7 +32,22 @@ export function ChatPage() {
   const [skillToSave, setSkillToSave] = useState<any>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-  const [initialMessages, setInitialMessages] = useState<any[] | undefined>(undefined);
+  const [initialMessages, setInitialMessages] = useState<any[] | undefined>(() => {
+    // Restore prior conversation so navigating back into this chat (e.g. to run
+    // CPC) does NOT re-run the original prompt's thinking flow from scratch.
+    try {
+      const saved = sessionStorage.getItem(`chat_${chatId}_messages`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 1) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn('[v0] ChatPage: failed to restore saved messages', e);
+    }
+    return undefined;
+  });
   const [cpcPrompt, setCpcPrompt] = useState<string>('');
   const [appendCPCToExisting, setAppendCPCToExisting] = useState(false); // Signal to append CPC without remounting
   const titleRef = useRef<HTMLButtonElement>(null);
