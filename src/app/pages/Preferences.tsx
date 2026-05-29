@@ -432,21 +432,31 @@ function ProfilePanel() {
             <p className="text-[14px] font-['Source_Sans_3'] text-[#666666]">
               You have unsaved changes.
             </p>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleDiscard}
-                className="h-10 px-4 rounded-lg border border-[#d2d2d2] bg-white text-[15px] font-['Source_Sans_3'] font-medium text-[#212223] hover:bg-gray-50 transition-colors"
-              >
-                Discard
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
-                className="h-10 px-5 rounded-lg bg-[#1D4B34] text-[15px] font-['Source_Sans_3'] font-medium text-white hover:bg-[#163b29] transition-colors"
-              >
-                Save changes
-              </button>
+            <div className="flex items-center justify-end gap-3">
+              <div className="bg-white content-stretch flex items-start justify-center min-h-[32px] relative rounded-[8px] shrink-0 group hover:bg-[#edf2f0]">
+                <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px]" />
+                <button
+                  type="button"
+                  onClick={handleDiscard}
+                  className="content-stretch flex gap-[8px] h-[32px] items-center justify-center px-[8px] py-[4px] relative rounded-[4px] shrink-0"
+                >
+                  <div className="flex flex-col font-['Clario'] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#212223] group-hover:text-[#1d4b34] text-[15px] whitespace-nowrap">
+                    <p className="leading-[1.35]">Discard</p>
+                  </div>
+                </button>
+              </div>
+              <div className="bg-[#1d4b34] content-stretch flex items-start justify-center min-h-[32px] relative rounded-[8px] shrink-0 hover:bg-[#3d5e4d] transition-colors">
+                <div aria-hidden="true" className="absolute border border-[#1d4b34] border-solid inset-[-1px] pointer-events-none rounded-[9px]" />
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  className="content-stretch flex gap-[8px] h-[32px] items-center justify-center px-[8px] py-[4px] relative rounded-[4px] shrink-0"
+                >
+                  <div className="flex flex-col font-['Clario'] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#fcfcfc] text-[15px] whitespace-nowrap">
+                    <p className="leading-[1.35]">Save changes</p>
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
