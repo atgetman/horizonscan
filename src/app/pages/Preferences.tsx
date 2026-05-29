@@ -16,11 +16,13 @@ export function Preferences() {
   return (
     <div className="flex-1 h-full flex bg-[#FCFCFC] overflow-hidden">
       {/* Left nav column */}
-      <div className="w-[340px] shrink-0 border-r border-[#E5E5E5] flex flex-col pt-[50px] px-8">
-        <h1 className="text-[32px] font-['Clario'] font-medium text-[#314b3e] leading-[1.1] mb-8">
-          Preferences
-        </h1>
-        <nav className="flex flex-col gap-1">
+      <div className="w-[280px] min-[1440px]:w-[328px] bg-[#fcfcfc] border-r border-[#E5E5E5] flex flex-col shrink-0">
+        <div className="px-4 pt-6 pb-4">
+          <h2 className="text-[20px] font-medium text-[#212223] leading-snug">
+            Preferences
+          </h2>
+        </div>
+        <nav className="px-2 flex flex-col gap-1">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
             return (
@@ -58,9 +60,9 @@ export function Preferences() {
 
 function PanelTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-[26px] font-['Clario'] font-medium text-[#212223] leading-[1.1] mb-8">
+    <h1 className="text-[32px] font-['Clario'] font-medium text-[#314b3e] leading-[1.1] mb-8">
       {children}
-    </h2>
+    </h1>
   );
 }
 
