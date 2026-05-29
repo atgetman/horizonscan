@@ -427,11 +427,8 @@ function ProfilePanel() {
       </Card>
 
       {isDirty && (
-        <div className="fixed bottom-0 left-[280px] min-[1440px]:left-[328px] right-0 z-30 border-t border-[#E5E5E5] bg-white/95 backdrop-blur-sm">
-          <div className="max-w-[1100px] mx-auto px-[32px] py-3.5 flex items-center justify-between gap-4">
-            <p className="text-[14px] font-['Source_Sans_3'] text-[#666666]">
-              You have unsaved changes.
-            </p>
+        <div className="fixed bottom-0 left-[340px] min-[1440px]:left-[388px] right-0 z-30 border-t border-[#E5E5E5] bg-white/95 backdrop-blur-sm">
+          <div className="max-w-[1100px] mx-auto px-[32px] py-3.5 flex items-center justify-end gap-4">
             <div className="flex items-center justify-end gap-3">
               <div className="bg-white content-stretch flex items-start justify-center min-h-[32px] relative rounded-[8px] shrink-0 group hover:bg-[#edf2f0]">
                 <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px]" />
