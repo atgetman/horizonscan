@@ -28,13 +28,13 @@ export function Preferences() {
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 className={clsx(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] font-['Source_Sans_3'] transition-colors text-left",
+                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors text-left",
                   isActive
-                    ? "bg-[#f0f2f1] text-[#212223] font-medium"
-                    : "text-[#666666] hover:bg-gray-100"
+                    ? "bg-gray-100 text-[#212223] font-semibold"
+                    : "text-[#212223] hover:bg-gray-100 font-normal"
                 )}
               >
-                <item.icon className="size-[18px]" strokeWidth={1.5} />
+                <item.icon className="size-[18px] shrink-0" strokeWidth={1.5} />
                 {item.label}
               </button>
             );

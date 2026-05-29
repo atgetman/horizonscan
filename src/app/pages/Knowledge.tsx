@@ -2383,82 +2383,82 @@ export function Knowledge() {
           </h2>
         </div>
 
-        <nav>
+        <nav className="px-2 flex flex-col gap-1">
           <button
             onClick={() => setActiveSection('dashboard')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'dashboard'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <LayoutDashboard className="size-4 shrink-0" />
+            <LayoutDashboard className="size-[18px] shrink-0" />
             <span>Dashboard</span>
           </button>
           <button
             onClick={() => setActiveSection('instructions')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'instructions'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <Brain className="size-4 shrink-0" />
+            <Brain className="size-[18px] shrink-0" />
             <span>Instructions</span>
           </button>
           <button
             onClick={() => setActiveSection('custom-skills')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'custom-skills'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <Blocks className="size-4 shrink-0" />
+            <Blocks className="size-[18px] shrink-0" />
             <span>Custom skills</span>
           </button>
           <button
             onClick={() => setActiveSection('model-documents')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'model-documents'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <FileBadge className="size-4 shrink-0" />
+            <FileBadge className="size-[18px] shrink-0" />
             <span>Model documents</span>
           </button>
           <button
             onClick={() => setActiveSection('prompts')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'prompts'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <MessageCircleQuestion className="size-4 shrink-0" />
+            <MessageCircleQuestion className="size-[18px] shrink-0" />
             <span>Prompts</span>
           </button>
           <button
             onClick={() => setActiveSection('question-sets')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'question-sets'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <Sheet className="size-4 shrink-0" />
+            <Sheet className="size-[18px] shrink-0" />
             <span>Question sets</span>
           </button>
           <button
             onClick={() => setActiveSection('monitoring-alerts')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'monitoring-alerts'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <Bell className="size-4 shrink-0" />
+            <Bell className="size-[18px] shrink-0" />
             <span>Monitoring & alerts</span>
           </button>
         </nav>
