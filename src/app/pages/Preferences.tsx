@@ -427,7 +427,7 @@ function ProfilePanel() {
       </Card>
 
       {isDirty && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-[#E5E5E5] bg-white/95 backdrop-blur-sm">
+        <div className="fixed bottom-0 left-[280px] min-[1440px]:left-[328px] right-0 z-30 border-t border-[#E5E5E5] bg-white/95 backdrop-blur-sm">
           <div className="max-w-[1100px] mx-auto px-[32px] py-3.5 flex items-center justify-between gap-4">
             <p className="text-[14px] font-['Source_Sans_3'] text-[#666666]">
               You have unsaved changes.
