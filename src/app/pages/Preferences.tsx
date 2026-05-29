@@ -6,17 +6,39 @@ type PreferenceTab = "profile" | "appearance" | "notifications";
 
 const PRACTICE_AREAS = [
   "Litigation",
-  "Corporate",
+  "Corporate Law",
+  "Contracts",
   "Intellectual Property",
-  "Employment",
+  "Employment Law",
   "Real Estate",
-  "Tax",
-  "Criminal Defense",
-  "Family Law",
-  "Immigration",
-  "Bankruptcy",
-  "Healthcare",
-  "Environmental",
+  "Tax Law",
+  "Regulatory Compliance",
+  "M&A",
+];
+
+const ROLE_OPTIONS = [
+  "Lawyer",
+  "Knowledge Manager",
+  "Admin",
+  "Judge",
+  "Paralegal",
+  "Compliance Officer",
+];
+
+const REGION_OPTIONS = [
+  "United States",
+  "United Kingdom",
+  "Canada",
+  "Australia",
+  "European Union",
+];
+
+const LANGUAGE_OPTIONS = [
+  "English (US)",
+  "English (UK)",
+  "Spanish",
+  "French",
+  "German",
 ];
 
 const navItems: { id: PreferenceTab; label: string; icon: typeof User }[] = [
@@ -209,14 +231,70 @@ function PracticeAreaSelect() {
   );
 }
 
-function SelectField({ label, value }: { label: string; value: string }) {
+function SelectField({
+  label,
+  options,
+  defaultValue,
+}: {
+  label: string;
+  options: string[];
+  defaultValue: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(defaultValue);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div>
       <FieldLabel>{label}</FieldLabel>
-      <button className="w-full h-11 bg-white border border-[#d2d2d2] rounded-lg px-3.5 flex items-center justify-between text-[15px] font-['Source_Sans_3'] text-[#212223] hover:border-gray-400 transition-colors">
-        <span>{value}</span>
-        <ChevronDown className="size-4 text-[#666666]" strokeWidth={1.5} />
-      </button>
+      <div className="relative" ref={ref}>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className={clsx(
+            "w-full h-11 bg-white border rounded-lg px-3.5 flex items-center justify-between text-[15px] font-['Source_Sans_3'] text-[#212223] transition-colors",
+            open ? "border-[#1D4B34]" : "border-[#d2d2d2] hover:border-gray-400"
+          )}
+        >
+          <span>{selected}</span>
+          {open ? (
+            <ChevronUp className="size-4 text-[#666666] shrink-0" strokeWidth={1.5} />
+          ) : (
+            <ChevronDown className="size-4 text-[#666666] shrink-0" strokeWidth={1.5} />
+          )}
+        </button>
+
+        {open && (
+          <div className="absolute z-20 mt-1 w-full bg-white border border-[#E5E5E5] rounded-lg shadow-lg py-1 max-h-72 overflow-y-auto">
+            {options.map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => {
+                  setSelected(option);
+                  setOpen(false);
+                }}
+                className="w-full flex items-center justify-between px-4 py-2.5 text-[15px] font-['Source_Sans_3'] text-[#212223] hover:bg-gray-50 transition-colors text-left"
+              >
+                {option}
+                {selected === option && (
+                  <Check className="size-4 text-[#1d4b34]" strokeWidth={2.5} />
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -264,15 +342,15 @@ function ProfilePanel() {
         <SectionHeading>Professional information</SectionHeading>
         <div className="grid grid-cols-2 gap-x-6 gap-y-5">
           <PracticeAreaSelect />
-          <SelectField label="Role" value="Associate Attorney" />
+          <SelectField label="Role" options={ROLE_OPTIONS} defaultValue="Lawyer" />
         </div>
       </Card>
 
       <Card>
         <SectionHeading>Region &amp; language</SectionHeading>
         <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-          <SelectField label="Region" value="United States" />
-          <SelectField label="Language" value="English (US)" />
+          <SelectField label="Region" options={REGION_OPTIONS} defaultValue="United States" />
+          <SelectField label="Language" options={LANGUAGE_OPTIONS} defaultValue="English (US)" />
         </div>
       </Card>
     </>
