@@ -738,7 +738,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       setArtifactName('Document Analysis');
       setArtifactCategory('Analysis');
     } else if (detectedType === 'cpc-analysis') {
-      setArtifactName('Cross-Product Clause Analysis');
+      setArtifactName('Cross-product clause analysis');
       setArtifactCategory('CPC Analysis');
     } else if (detectedType === 'regulatory-scan') {
       setArtifactName('M&A regulatory findings');
@@ -2248,7 +2248,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative">
   <div className="content-stretch flex items-center relative w-full">
   <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Clario:Medium',sans-serif] justify-center leading-[0] min-w-px not-italic overflow-hidden relative text-[#212223] text-[16px] text-ellipsis whitespace-nowrap">
-  <p className="leading-[1.5] overflow-hidden text-ellipsis text-left">Cross-Product Clause Analysis</p>
+  <p className="leading-[1.5] overflow-hidden text-ellipsis text-left">Cross-product clause analysis</p>
   </div>
   </div>
   </div>
