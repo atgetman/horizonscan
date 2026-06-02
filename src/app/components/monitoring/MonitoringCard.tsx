@@ -60,7 +60,7 @@ export function MonitoringCard({
           <h3 className="text-[15px] font-['Clario'] font-semibold text-[#212223] leading-tight mb-1">
             {monitor.topic}
           </h3>
-          <p className="text-[13px] text-gray-500 line-clamp-2 mb-2">
+          <p className="text-[13px] font-['Source_Sans_3'] font-normal text-gray-500 line-clamp-2 mb-2">
             {monitor.criteria}
           </p>
           <div className="flex gap-1.5 items-center">
