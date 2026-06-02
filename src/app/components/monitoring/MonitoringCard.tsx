@@ -57,7 +57,7 @@ export function MonitoringCard({
           />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-[15px] font-['Clario'] font-semibold text-[#212223] leading-tight mb-1">
+          <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight mb-1">
             {monitor.topic}
           </h3>
           <p className="text-[13px] font-['Source_Sans_3'] font-normal text-gray-500 line-clamp-2 mb-2">
