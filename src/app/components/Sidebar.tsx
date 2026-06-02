@@ -196,7 +196,9 @@ export function Sidebar() {
             >
               <Bell className="size-[18px]" strokeWidth={1.5} />
               {unreadCount > 0 && (
-                <div className="absolute top-1.5 right-1.5 size-2 bg-[#dc2626] border border-white rounded-full" />
+                <div className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 flex items-center justify-center bg-[#dc2626] border border-white rounded-full text-white text-[10px] font-['Source_Sans_3'] font-semibold leading-none">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </div>
               )}
             </button>
           </TooltipTrigger>

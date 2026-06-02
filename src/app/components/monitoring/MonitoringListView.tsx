@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import { Plus, Bell } from 'lucide-react';
 import { MonitoringCard, Monitor } from './MonitoringCard';
 import { MonitoringSetupModal } from './MonitoringSetupModal';
 import { MonitoringResultsViewer, MonitoringResult, MonitoringFinding } from './MonitoringResultsViewer';
+import { AlertFeedCard, FiredAlert } from './AlertFeedCard';
 import { Toggle } from '../ui/SegmentedToggle';
 import { Toast } from '../Toast';
 import { useMonitoring } from '../../contexts/MonitoringContext';
@@ -122,10 +124,65 @@ const INITIAL_MONITORS: Monitor[] = [
   },
 ];
 
+// Mock fired-alert feed data
+const MOCK_FIRED_ALERTS: FiredAlert[] = [
+  {
+    id: 'fired-1',
+    category: 'regulatory',
+    title: 'New SEC climate disclosure rules may affect your M&A templates',
+    body: 'Updated disclosure requirements could require changes to representations and warranties in Project Atlas.',
+    sourceType: 'Regulatory',
+    matterName: 'Project Atlas',
+    topic: 'SEC Climate Disclosure',
+    matterPath: '/workspace/project-atlas',
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    isRead: false,
+  },
+  {
+    id: 'fired-2',
+    category: 'deadline',
+    title: 'Filing deadline approaching for Hart-Scott-Rodino notification',
+    body: 'The HSR waiting period response is due in 5 days for the Meridian acquisition.',
+    sourceType: 'Deadline',
+    matterName: 'Meridian Acquisition',
+    topic: 'HSR Filing',
+    matterPath: '/workspace/meridian-acquisition',
+    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+    isRead: false,
+  },
+  {
+    id: 'fired-3',
+    category: 'contract',
+    title: 'Counterparty proposed redlines to the master services agreement',
+    body: 'Three clauses were modified, including the limitation of liability provision in the Northwind MSA.',
+    sourceType: 'Contract',
+    matterName: 'Northwind MSA',
+    topic: 'Limitation of Liability',
+    matterPath: '/workspace/northwind-msa',
+    timestamp: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(),
+    isRead: true,
+  },
+  {
+    id: 'fired-4',
+    category: 'regulatory',
+    title: 'Second Circuit decision refines minimum contacts analysis',
+    body: 'A new ruling may impact personal jurisdiction arguments in the Castellano litigation.',
+    sourceType: 'Regulatory',
+    matterName: 'Castellano Litigation',
+    topic: 'Personal Jurisdiction',
+    matterPath: '/workspace/castellano-litigation',
+    timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    isRead: true,
+  },
+];
+
 export function MonitoringListView({ availablePracticeAreas }: MonitoringListViewProps) {
   const { savedAlerts } = useMonitoring();
+  const navigate = useNavigate();
 
   // Monitoring list view component
+  const [activeTab, setActiveTab] = useState<'alerts' | 'monitors'>('alerts');
+  const [firedAlerts, setFiredAlerts] = useState<FiredAlert[]>(MOCK_FIRED_ALERTS);
   const [monitors, setMonitors] = useState<Monitor[]>(INITIAL_MONITORS);
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
   const [editingMonitor, setEditingMonitor] = useState<Monitor | null>(null);
@@ -199,6 +256,23 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
     setIsSetupModalOpen(true);
   };
 
+  const handleReviewAlert = (alert: FiredAlert) => {
+    setFiredAlerts(prev => prev.map(a => a.id === alert.id ? { ...a, isRead: true } : a));
+    navigate(alert.matterPath);
+  };
+
+  const handleDismissAlert = (id: string) => {
+    setFiredAlerts(prev => prev.filter(a => a.id !== id));
+    setToastMessage('Alert dismissed.');
+    setShowToast(true);
+  };
+
+  const handleSnoozeAlert = (id: string) => {
+    setFiredAlerts(prev => prev.map(a => a.id === id ? { ...a, isRead: true } : a));
+    setToastMessage('Alert snoozed for 7 days.');
+    setShowToast(true);
+  };
+
   const filteredMonitors = monitors.filter(monitor => {
     if (filterStatus === 'all') return true;
     return monitor.status === filterStatus;
@@ -210,61 +284,105 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
   return (
     <div className="max-w-[1100px] mx-auto px-[32px] pt-[50px]">
       <div className="flex items-center justify-between mb-7">
-        <h1 className="text-[32px] font-['Clario'] font-medium text-[#314b3e] leading-[1.1]">Monitoring & alerts</h1>
-        <button
-          onClick={handleCreateNew}
-          className="h-9 px-4 flex items-center gap-2 bg-[#314b3e] rounded-lg text-[14px] font-['Clario'] font-medium text-white hover:bg-[#3d5e4d] transition-colors"
-        >
-          <Plus className="size-4" />
-          New monitor
-        </button>
-      </div>
-
-      <div className="mb-6">
-        <Toggle
-          value={filterStatus}
-          onChange={(value) => setFilterStatus(value as 'all' | 'active' | 'paused')}
-          options={[
-            { value: 'all', label: 'All' },
-            { value: 'active', label: 'Active' },
-            { value: 'paused', label: 'Paused' },
-          ]}
-        />
-      </div>
-
-      {filteredMonitors.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full text-center px-4">
-          <div className="w-16 h-16 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
-            <Bell className="w-8 h-8 text-[#999]" />
-          </div>
-          <h3 className="text-[16px] font-medium text-[#1F1F1F] mb-2">
-            No monitors yet
-          </h3>
-          <p className="text-[14px] text-[#666] mb-6 max-w-md">
-            Set up monitoring to get notified about new legal developments relevant to your practice areas.
-          </p>
+        <h1 className="text-[32px] font-['Clario'] font-medium text-[#314b3e] leading-[1.1]">Alerts</h1>
+        {activeTab === 'monitors' && (
           <button
             onClick={handleCreateNew}
             className="h-9 px-4 flex items-center gap-2 bg-[#314b3e] rounded-lg text-[14px] font-['Clario'] font-medium text-white hover:bg-[#3d5e4d] transition-colors"
           >
             <Plus className="size-4" />
-            Create your first monitor
+            New monitor
           </button>
-        </div>
+        )}
+      </div>
+
+      {/* Top-level tabs */}
+      <div className="mb-6">
+        <Toggle
+          value={activeTab}
+          onChange={(value) => setActiveTab(value as 'alerts' | 'monitors')}
+          options={[
+            { value: 'alerts', label: 'Alerts' },
+            { value: 'monitors', label: 'Monitors' },
+          ]}
+        />
+      </div>
+
+      {activeTab === 'alerts' ? (
+        firedAlerts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center text-center px-4 py-16">
+            <div className="w-16 h-16 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
+              <Bell className="w-8 h-8 text-[#999]" />
+            </div>
+            <h3 className="text-[16px] font-['Clario'] font-medium text-[#1F1F1F] mb-2">
+              No alerts
+            </h3>
+            <p className="text-[14px] font-['Source_Sans_3'] text-[#666] max-w-md">
+              When your monitors detect new developments, fired alerts will appear here.
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {firedAlerts.map((alert) => (
+              <AlertFeedCard
+                key={alert.id}
+                alert={alert}
+                onReview={handleReviewAlert}
+                onDismiss={handleDismissAlert}
+                onSnooze={handleSnoozeAlert}
+              />
+            ))}
+          </div>
+        )
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {filteredMonitors.map((monitor) => (
-            <MonitoringCard
-              key={monitor.id}
-              monitor={monitor}
-              onEdit={handleEdit}
-              onPause={handlePause}
-              onResume={handleResume}
-              onDelete={handleDelete}
-              onViewResults={handleViewResults}
+        <>
+          <div className="mb-6">
+            <Toggle
+              value={filterStatus}
+              onChange={(value) => setFilterStatus(value as 'all' | 'active' | 'paused')}
+              options={[
+                { value: 'all', label: 'All' },
+                { value: 'active', label: 'Active' },
+                { value: 'paused', label: 'Paused' },
+              ]}
             />
-          ))}
-        </div>
+          </div>
+
+          {filteredMonitors.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center px-4">
+              <div className="w-16 h-16 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
+                <Bell className="w-8 h-8 text-[#999]" />
+              </div>
+              <h3 className="text-[16px] font-medium text-[#1F1F1F] mb-2">
+                No monitors yet
+              </h3>
+              <p className="text-[14px] text-[#666] mb-6 max-w-md">
+                Set up monitoring to get notified about new legal developments relevant to your practice areas.
+              </p>
+              <button
+                onClick={handleCreateNew}
+                className="h-9 px-4 flex items-center gap-2 bg-[#314b3e] rounded-lg text-[14px] font-['Clario'] font-medium text-white hover:bg-[#3d5e4d] transition-colors"
+              >
+                <Plus className="size-4" />
+                Create your first monitor
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {filteredMonitors.map((monitor) => (
+                <MonitoringCard
+                  key={monitor.id}
+                  monitor={monitor}
+                  onEdit={handleEdit}
+                  onPause={handlePause}
+                  onResume={handleResume}
+                  onDelete={handleDelete}
+                  onViewResults={handleViewResults}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
       {/* Setup Modal */}
