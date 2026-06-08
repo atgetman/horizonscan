@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { ChevronDown, ChevronUp, ExternalLink, Bell } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface TopFinding {
   regulation: string;
@@ -34,6 +35,21 @@ export function RegulatoryScanSummary({
   onViewAffectedClauses
 }: RegulatoryScanSummaryProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['what-found']));
+  // Inline "Alert saved" confirmation strip (triggered by the Save as alert button)
+  const [showAlertSavedStrip, setShowAlertSavedStrip] = useState(false);
+  const [showFrequencyChips, setShowFrequencyChips] = useState(false);
+  const [monitoringFrequency, setMonitoringFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
+  const alertStripTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleSaveAsAlert = () => {
+    setShowFrequencyChips(false);
+    setShowAlertSavedStrip(true);
+    if (alertStripTimerRef.current) clearTimeout(alertStripTimerRef.current);
+    alertStripTimerRef.current = setTimeout(() => {
+      setShowAlertSavedStrip(false);
+      setShowFrequencyChips(false);
+    }, 4000);
+  };
 
   const toggleSection = (section: string) => {
     const newExpanded = new Set(expandedSections);
@@ -255,6 +271,74 @@ export function RegulatoryScanSummary({
                 Always consult with legal counsel before making compliance decisions.
               </p>
             </div>
+          )}
+        </div>
+
+        {/* Save as alert action + inline confirmation strip */}
+        <div className="pt-4">
+          {!showAlertSavedStrip ? (
+            <button
+              onClick={handleSaveAsAlert}
+              className="h-9 px-4 flex items-center gap-2 bg-[#1d4b34] rounded-lg text-[14px] font-['Clario'] font-medium text-white hover:bg-[#153a28] transition-colors"
+            >
+              <Bell className="size-4" strokeWidth={1.5} />
+              Save as alert
+            </button>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+              className="w-full"
+            >
+              <div className="flex items-center gap-[12px] flex-wrap w-full bg-[#EDF2F0] rounded-[8px] px-[12px] py-[8px]">
+                <div className="flex items-center gap-[8px] shrink-0">
+                  <Bell className="size-4 text-[#1d4b34]" strokeWidth={2} />
+                  <span className="text-[14px] font-['Source_Sans_3'] text-[#212223]">
+                    {`Alert saved — ${monitoringFrequency} digest`}
+                  </span>
+                </div>
+
+                {!showFrequencyChips ? (
+                  <button
+                    onClick={() => {
+                      setShowFrequencyChips(true);
+                      if (alertStripTimerRef.current) clearTimeout(alertStripTimerRef.current);
+                    }}
+                    className="text-[13px] font-['Clario'] font-medium text-[#1d4b34] hover:text-[#163f2b] transition-colors shrink-0"
+                  >
+                    Change frequency
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-[6px] flex-wrap shrink-0">
+                    {(['daily', 'weekly', 'monthly'] as const).map((freq) => (
+                      <button
+                        key={freq}
+                        onClick={() => setMonitoringFrequency(freq)}
+                        className={`h-[24px] px-[10px] flex items-center text-[13px] font-['Source_Sans_3'] rounded-full border transition-colors capitalize ${
+                          monitoringFrequency === freq
+                            ? 'bg-[#1d4b34] border-[#1d4b34] text-white'
+                            : 'bg-white border-[#8a8a8a] text-[#212223] hover:bg-[#dde7e2]'
+                        }`}
+                      >
+                        {freq}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <button
+                  onClick={() => {
+                    if (alertStripTimerRef.current) clearTimeout(alertStripTimerRef.current);
+                    setShowAlertSavedStrip(false);
+                    setShowFrequencyChips(false);
+                  }}
+                  className="ml-auto h-[24px] px-[12px] flex items-center text-[13px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors shrink-0"
+                >
+                  Done
+                </button>
+              </div>
+            </motion.div>
           )}
         </div>
       </div>

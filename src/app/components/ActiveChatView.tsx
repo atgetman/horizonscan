@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import svgPaths from '../../imports/svg-1wkqh0ufu9';
-import { FileText, Folder, Table, X, MessageCircleQuestion, ChevronUp, ChevronDown, ChevronRight, Search, BookOpen, Scale, FileCheck, ClipboardList, NotebookPen, Copy, Minimize2, MoreHorizontal, Download, ExternalLink, Share2, FolderInput, Trash2, Sparkles, CheckCircle2, Bell, Save, Circle, CircleDot } from 'lucide-react';
+import { FileText, Folder, Table, X, MessageCircleQuestion, ChevronUp, ChevronDown, ChevronRight, Search, BookOpen, Scale, FileCheck, ClipboardList, NotebookPen, Copy, Minimize2, MoreHorizontal, Download, ExternalLink, Share2, FolderInput, Trash2, Sparkles, CheckCircle2, Bell, Circle, CircleDot } from 'lucide-react';
 import { PromptInput } from './PromptInput';
 import { SkillClarifyingQuestions } from './SkillClarifyingQuestions';
 import { SkillBuildingMessage } from './SkillBuildingMessage';
@@ -13,7 +13,6 @@ import { getReasoningContent, getSourceContent } from '../utils/chatReasoningCon
 import { DynamicReasoningSteps } from './chat/DynamicReasoningSteps';
 import { DynamicSourceItems } from './chat/DynamicSourceItems';
 import { HorizonScanResults, RegulatoryScanSummary } from './regulatory';
-import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 import { CPCHandoffScreen } from './CPCHandoffScreen';
 import { CPCScanSummary } from './regulatory/CPCScanSummary';
 
@@ -546,11 +545,6 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [sourceContent, setSourceContent] = useState(getSourceContent('draft', ''));
   const [showMonitoringPrompt, setShowMonitoringPrompt] = useState(true);
   const [showMonitoringConfirmation, setShowMonitoringConfirmation] = useState(false);
-  const [monitoringFrequency, setMonitoringFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
-  // Inline "Alert saved" confirmation strip (replaces the old popover)
-  const [showAlertSavedStrip, setShowAlertSavedStrip] = useState(false);
-  const [showFrequencyChips, setShowFrequencyChips] = useState(false);
-  const alertStripTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [prepWorkItems, setPrepWorkItems] = useState<Array<{title: string; type: string}>>([]);
   const [cpcRegulation, setCpcRegulation] = useState('');
   const [cpcDocsAffected, setCpcDocsAffected] = useState(0);
@@ -2505,31 +2499,6 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                           </div>
                         </div>
                         <div className="flex items-center gap-1 shrink-0">
-                          <div className="relative">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    // Open the inline confirmation strip below the toolbar.
-                                    setShowFrequencyChips(false);
-                                    setShowAlertSavedStrip(true);
-                                    if (alertStripTimerRef.current) clearTimeout(alertStripTimerRef.current);
-                                    alertStripTimerRef.current = setTimeout(() => {
-                                      setShowAlertSavedStrip(false);
-                                      setShowFrequencyChips(false);
-                                    }, 4000);
-                                  }}
-                                  className="content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] transition-colors bg-[rgba(255,255,255,0)] hover:bg-[#F5F5F5]"
-                                >
-                                  <Save className="size-4 text-[#1d4b34]" strokeWidth={1.5} />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent side="top" sideOffset={4}>
-                                Save as alert
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
                           <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
                             <ExternalLink className="size-4 text-[#212223]" strokeWidth={1.5} />
                           </div>
@@ -2537,64 +2506,6 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                       </div>
                     </div>
                   </div>
-
-                  {/* Inline alert-saved confirmation strip (appears just below the toolbar) */}
-                  {showAlertSavedStrip && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="content-stretch flex flex-col gap-[8px] items-start w-full"
-                    >
-                      <div className="flex items-center gap-[12px] flex-wrap w-full bg-[#F0FDF4] border border-[#BBF7D0] rounded-[8px] px-[12px] py-[8px]">
-                        <div className="flex items-center gap-[8px] shrink-0">
-                          <Bell className="size-4 text-[#16A34A]" strokeWidth={2} />
-                          <span className="text-[14px] font-['Source_Sans_3'] text-[#212223]">
-                            {`Alert saved — ${monitoringFrequency} digest`}
-                          </span>
-                        </div>
-
-                        {!showFrequencyChips ? (
-                          <button
-                            onClick={() => {
-                              setShowFrequencyChips(true);
-                              if (alertStripTimerRef.current) clearTimeout(alertStripTimerRef.current);
-                            }}
-                            className="text-[13px] font-['Clario'] font-medium text-[#1d4b34] hover:text-[#163f2b] transition-colors shrink-0"
-                          >
-                            Change frequency
-                          </button>
-                        ) : (
-                          <div className="flex items-center gap-[6px] flex-wrap shrink-0">
-                            {(['daily', 'weekly', 'monthly'] as const).map((freq) => (
-                              <button
-                                key={freq}
-                                onClick={() => setMonitoringFrequency(freq)}
-                                className={`h-[24px] px-[10px] flex items-center text-[13px] font-['Source_Sans_3'] rounded-full border transition-colors capitalize ${
-                                  monitoringFrequency === freq
-                                    ? 'bg-[#1d4b34] border-[#1d4b34] text-white'
-                                    : 'bg-white border-[#8a8a8a] text-[#212223] hover:bg-[#edf2f0]'
-                                }`}
-                              >
-                                {freq}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-
-                        <button
-                          onClick={() => {
-                            if (alertStripTimerRef.current) clearTimeout(alertStripTimerRef.current);
-                            setShowAlertSavedStrip(false);
-                            setShowFrequencyChips(false);
-                          }}
-                          className="ml-auto h-[24px] px-[12px] flex items-center text-[13px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors shrink-0"
-                        >
-                          Done
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
 
                   {/* Supporting documents */}
                   <div className="content-stretch flex flex-col gap-[8px] items-start pt-[12px] w-full">
