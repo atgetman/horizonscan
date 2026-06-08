@@ -2461,7 +2461,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                       <p className="leading-[1.5]">Regulatory scan results</p>
                     </div>
                   </div>
-                  <button
+                  <div
+                    role="button"
+                    tabIndex={0}
                     onClick={() => {
                       // Store the current tab ID for CPC to navigate back to
                       if (currentTabId) {
@@ -2469,7 +2471,16 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                       }
                       onOpenTab?.({ name: 'M&A regulatory findings', type: 'regulatory-table' });
                     }}
-                    className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (currentTabId) {
+                          sessionStorage.setItem('regulatoryTableSourceTabId', currentTabId);
+                        }
+                        onOpenTab?.({ name: 'M&A regulatory findings', type: 'regulatory-table' });
+                      }
+                    }}
+                    className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors cursor-pointer"
                   >
                     <div aria-hidden="true" className="absolute border border-[#8a8a8a] border-solid inset-0 pointer-events-none rounded-[8px]" />
                     <div className="flex flex-row items-center size-full">
