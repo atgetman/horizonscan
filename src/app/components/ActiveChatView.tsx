@@ -1994,8 +1994,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                            </span>
                          </div>
 
-                         {/* Figma Content */}
-                         {msg.text}
+                         {/* Figma Content (skip the plain topic title string) */}
+                         {typeof msg.text === 'string' ? null : msg.text}
                        </div>
                    ) : (
                        <div className="flex flex-col gap-3 w-full">
