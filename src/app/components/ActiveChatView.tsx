@@ -2687,6 +2687,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                 onViewAffectedClauses={() => {
                   console.log('View affected clauses');
                 }}
+                monitoringFrequency={monitoringFrequency}
+                onSelectFrequency={setMonitoringFrequency}
                 onSaveAsAlert={() => {
                   setShowMonitoringPrompt(false);
                   setShowMonitoringConfirmation(true);
