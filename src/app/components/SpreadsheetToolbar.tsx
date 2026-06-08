@@ -15,15 +15,16 @@ interface SpreadsheetToolbarProps {
 }
 
 export function SpreadsheetToolbar({ isChatOpen, onToggleChat, isCommentsOpen = false, onToggleComments, isHistoryOpen = false, onToggleHistory }: SpreadsheetToolbarProps) {
-    const { addAlert } = useMonitoring();
+    const { savedAlerts, addAlert } = useMonitoring();
+    const regulatoryAlert = savedAlerts.find(a => a.sourceType === 'regulatory-table');
+    const alertSaved = Boolean(regulatoryAlert);
     const [textWrap, setTextWrap] = useState<"truncate" | "wrap">("truncate");
     const [showFrequencyMenu, setShowFrequencyMenu] = useState(false);
     const [selectedFrequency, setSelectedFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
     const [showConfirmation, setShowConfirmation] = useState(false);
-    const [alertSaved, setAlertSaved] = useState(false);
 
     const handleSaveAlert = () => {
-        // Create the alert
+        // Create the alert (shared across surfaces via MonitoringContext)
         addAlert({
             topic: 'M&A Regulatory Updates - Project Atlas',
             criteria: 'Monitor regulatory changes affecting M&A transactions including antitrust guidelines, SPAC disclosure rules, CFIUS requirements, and other merger-related regulations',
@@ -38,7 +39,6 @@ export function SpreadsheetToolbar({ isChatOpen, onToggleChat, isCommentsOpen = 
         });
 
         setShowFrequencyMenu(false);
-        setAlertSaved(true);
         setShowConfirmation(true);
         setTimeout(() => setShowConfirmation(false), 3000);
     };
