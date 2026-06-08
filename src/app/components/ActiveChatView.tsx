@@ -478,11 +478,36 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
   console.log('🎬 ActiveChatView rendering with initialMessages:', initialMessages);
 
+  // Restore a previously-completed regulatory scan for this chat. The completed
+  // view is purely state-driven (taskType/showArtifact/dropdowns/streamedIntro/
+  // isStreamingComplete) and was never persisted, so closing the table tab
+  // remounted this component and re-ran the whole thinking simulation. We
+  // snapshot the finished state to sessionStorage on completion and restore it
+  // here on mount so the chat returns to its completed result instantly.
+  // (Skip when this is a CPC re-entry — that path seeds its own initialMessages.)
+  const [restoredScan] = useState<{ introText: string; topic: string } | null>(() => {
+    try {
+      if (!currentTabId) return null;
+      if (initialMessages && initialMessages.length > 1) return null;
+      const raw = sessionStorage.getItem(`chat_${currentTabId}_completedScan`);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [messages, setMessages] = useState<{role: 'user' | 'assistant', text: string | React.ReactNode, attachments?: StagedItem[], isFigmaContent?: boolean, workflowData?: {showReasoning?: boolean, showSources?: boolean, showPreparing?: boolean, documentTitle?: string, artifactIntro?: string, artifactDescription?: string}}[]>(
-    initialMessages || [{ role: 'user', text: prompt, attachments }]
+    initialMessages ||
+    (restoredScan
+      ? [
+          { role: 'user', text: prompt, attachments },
+          { role: 'assistant', text: restoredScan.topic || 'Regulatory Changes', isFigmaContent: true },
+        ]
+      : [{ role: 'user', text: prompt, attachments }])
   );
 
   console.log('📨 ActiveChatView messages state:', messages);
+
   const [showThinking, setShowThinking] = useState(false);
   const [stagedFiles, setStagedFiles] = useState<StagedItem[]>([]);
   const [showReasoningDropdown, setShowReasoningDropdown] = useState(false);
@@ -500,22 +525,22 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [isPreparingExpanded, setIsPreparingExpanded] = useState(false);
   const [preparingItems, setPreparingItems] = useState<number>(0);
   const [isPreparingLoading, setIsPreparingLoading] = useState(false);
-  const [showArtifact, setShowArtifact] = useState(false);
+  const [showArtifact, setShowArtifact] = useState(!!restoredScan);
   const [showCreating, setShowCreating] = useState(false);
   const [showCreatingDropdown, setShowCreatingDropdown] = useState(false);
   const [isCreatingExpanded, setIsCreatingExpanded] = useState(false);
   const [creatingItems, setCreatingItems] = useState<number>(0);
   const [isContentGenerating, setIsContentGenerating] = useState(false);
-  const [streamedIntroText, setStreamedIntroText] = useState('');
+  const [streamedIntroText, setStreamedIntroText] = useState(restoredScan?.introText || '');
   const [streamedDescText, setStreamedDescText] = useState('');
-  const [isStreamingComplete, setIsStreamingComplete] = useState(false);
+  const [isStreamingComplete, setIsStreamingComplete] = useState(!!restoredScan);
   const [showOpeningMessage, setShowOpeningMessage] = useState(false);
   const [hasDocumentOpened, setHasDocumentOpened] = useState(false);
   const [artifactName, setArtifactName] = useState('Motion to Dismiss');
   const [artifactCategory, setArtifactCategory] = useState('Motion');
   const [artifactSummary, setArtifactSummary] = useState('');
   const [showPreparingFinalOutput, setShowPreparingFinalOutput] = useState(false);
-  const [taskType, setTaskType] = useState<'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis'>('draft'); // Track task type
+  const [taskType, setTaskType] = useState<'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis'>(restoredScan ? 'regulatory-scan' : 'draft'); // Track task type
   const [researchTopic, setResearchTopic] = useState('');
   const [reasoningContent, setReasoningContent] = useState(getReasoningContent('draft', ''));
   const [sourceContent, setSourceContent] = useState(getSourceContent('draft', ''));
@@ -910,7 +935,21 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                               // Mark streaming as complete after description finishes
                                               safeSetTimeout(() => {
                                                 setIsStreamingComplete(true);
-                                                
+
+                                                // Persist a completed regulatory scan so closing the
+                                                // table tab and returning to this chat restores the
+                                                // result instead of re-running the thinking simulation.
+                                                if (detectedType === 'regulatory-scan' && currentTabId) {
+                                                  try {
+                                                    sessionStorage.setItem(
+                                                      `chat_${currentTabId}_completedScan`,
+                                                      JSON.stringify({ introText })
+                                                    );
+                                                  } catch (e) {
+                                                    console.warn('[v0] Failed to persist completed scan', e);
+                                                  }
+                                                }
+
                                                 // Update messages with complete assistant response
                                                 setMessages(prev => {
                                                   const updated = [...prev];
@@ -1507,6 +1546,19 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                     setIsStreamingComplete(true);
                     setIsContentGenerating(false);
                     onThinkingChange?.(false);
+                    // Persist the completed scan so closing the table tab and
+                    // returning to this chat restores the result instead of
+                    // re-running the entire thinking simulation.
+                    if (currentTabId) {
+                      try {
+                        sessionStorage.setItem(
+                          `chat_${currentTabId}_completedScan`,
+                          JSON.stringify({ introText })
+                        );
+                      } catch (e) {
+                        console.warn('[v0] Failed to persist completed scan', e);
+                      }
+                    }
                   }, 300);
                 }
               }, 5);
@@ -1694,6 +1746,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   }, [isStreamingComplete]); // Only depend on isStreamingComplete, not messages!
 
   useEffect(() => {
+    // If we restored a completed scan for this chat, don't re-run the simulation.
+    if (restoredScan) {
+        return;
+    }
     // If we have initial messages (restored state), don't run the simulation
     if (initialMessages && initialMessages.length > 1) {
         return;
