@@ -943,7 +943,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                                   try {
                                                     sessionStorage.setItem(
                                                       `chat_${currentTabId}_completedScan`,
-                                                      JSON.stringify({ introText })
+                                                      JSON.stringify({ introText, topic })
                                                     );
                                                   } catch (e) {
                                                     console.warn('[v0] Failed to persist completed scan', e);
@@ -1553,7 +1553,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                       try {
                         sessionStorage.setItem(
                           `chat_${currentTabId}_completedScan`,
-                          JSON.stringify({ introText })
+                          JSON.stringify({ introText, topic })
                         );
                       } catch (e) {
                         console.warn('[v0] Failed to persist completed scan', e);
@@ -1725,6 +1725,53 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
   // Track if artifact has been added to outputs
   const hasAddedArtifactRef = useRef(false);
+
+  // Rehydrate the completed regulatory-scan view when restoring from a snapshot.
+  // The completed layout depends on many granular dropdown/content states that
+  // are normally set by the simulation; we set their final (collapsed, done)
+  // values once on mount so closing the table tab returns to the finished
+  // result instead of replaying the thinking animation.
+  const hasRestoredScanRef = useRef(false);
+  useEffect(() => {
+    if (!restoredScan || hasRestoredScanRef.current) return;
+    hasRestoredScanRef.current = true;
+
+    setResearchTopic(restoredScan.topic || 'Regulatory Changes');
+    setReasoningContent(getReasoningContent('regulatory-scan', restoredScan.topic || 'Regulatory Changes'));
+    setSourceContent(getSourceContent('regulatory-scan', restoredScan.topic || 'Regulatory Changes'));
+
+    // Reasoning row — visible, collapsed, complete
+    setShowReasoningDropdown(true);
+    setIsReasoningExpanded(false);
+    setReasoningSteps(5);
+    setIsReasoningLoading(false);
+
+    // Search results row — visible, collapsed, complete
+    setShowSearching(true);
+    setShowSourcesDropdown(true);
+    setIsSourcesExpanded(false);
+    setSourcesItems(6);
+    setIsSourcesLoading(false);
+
+    // Preliminary materials row — visible, collapsed, complete
+    setShowPreparing(true);
+    setShowPreparingDropdown(true);
+    setIsPreparingExpanded(false);
+    setIsPreparingLoading(false);
+    setPrepWorkItems([
+      { title: 'Identified jurisdictions and practice areas from workspace', type: 'analysis' },
+      { title: 'Searched Westlaw for proposed and final regulations', type: 'research' },
+      { title: 'Searched Practical Law for M&A guidance and practice notes', type: 'research' },
+      { title: 'Evaluating impact on workspace documents', type: 'analysis' },
+    ]);
+    setPreparingItems(4);
+
+    // Thinking / generating states off — we're showing the finished result
+    setShowThinking(false);
+    setShowPreparingFinalOutput(false);
+    setIsContentGenerating(false);
+    onThinkingChange?.(false);
+  }, [restoredScan]);
 
   // Add artifact to outputs when the assistant response is complete
   useEffect(() => {
