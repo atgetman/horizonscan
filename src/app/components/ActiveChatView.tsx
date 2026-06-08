@@ -2536,7 +2536,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                         </div>
                       </div>
                     </div>
-                  </button>
+                  </div>
 
                   {/* Inline alert-saved confirmation strip (appears just below the toolbar) */}
                   {showAlertSavedStrip && (
