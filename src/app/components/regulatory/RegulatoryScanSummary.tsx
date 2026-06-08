@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { ChevronDown, ChevronUp, ExternalLink, Bell } from 'lucide-react';
 
 interface TopFinding {
   regulation: string;
@@ -13,6 +13,7 @@ interface RegulatoryScanSummaryProps {
   topFindings: TopFinding[];
   documentsAffected: number;
   onViewAffectedClauses?: () => void;
+  onSaveAsAlert?: () => void;
 }
 
 const impactColors = {
@@ -31,7 +32,8 @@ export function RegulatoryScanSummary({
   highestImpact,
   topFindings,
   documentsAffected,
-  onViewAffectedClauses
+  onViewAffectedClauses,
+  onSaveAsAlert
 }: RegulatoryScanSummaryProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['what-found']));
 
@@ -256,6 +258,17 @@ export function RegulatoryScanSummary({
               </p>
             </div>
           )}
+        </div>
+
+        {/* Save as alert action */}
+        <div className="pt-4">
+          <button
+            onClick={onSaveAsAlert}
+            className="h-9 px-4 flex items-center gap-2 bg-[#1d4b34] rounded-lg text-[14px] font-['Clario'] font-medium text-white hover:bg-[#153a28] transition-colors"
+          >
+            <Bell className="size-4" strokeWidth={1.5} />
+            Save as alert
+          </button>
         </div>
       </div>
     </div>

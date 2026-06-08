@@ -2687,6 +2687,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                 onViewAffectedClauses={() => {
                   console.log('View affected clauses');
                 }}
+                onSaveAsAlert={() => {
+                  setShowMonitoringPrompt(false);
+                  setShowMonitoringConfirmation(true);
+                }}
               />
             )}
 
@@ -2717,7 +2721,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
             )}
 
             {/* Monitoring confirmation - shown after user clicks to set up monitoring */}
-            {streamedDescText && streamedDescText.length > 0 && !isContentGenerating && showMonitoringConfirmation && (
+            {streamedIntroText && streamedIntroText.length > 0 && !isContentGenerating && showMonitoringConfirmation && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
