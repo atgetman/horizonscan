@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink, Bell } from 'lucide-react';
+import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
 interface TopFinding {
   regulation: string;
@@ -13,9 +13,6 @@ interface RegulatoryScanSummaryProps {
   topFindings: TopFinding[];
   documentsAffected: number;
   onViewAffectedClauses?: () => void;
-  monitoringFrequency?: 'daily' | 'weekly' | 'monthly';
-  onSelectFrequency?: (frequency: 'daily' | 'weekly' | 'monthly') => void;
-  onSaveAsAlert?: () => void;
 }
 
 const impactColors = {
@@ -34,13 +31,9 @@ export function RegulatoryScanSummary({
   highestImpact,
   topFindings,
   documentsAffected,
-  onViewAffectedClauses,
-  monitoringFrequency = 'weekly',
-  onSelectFrequency,
-  onSaveAsAlert
+  onViewAffectedClauses
 }: RegulatoryScanSummaryProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['what-found']));
-  const [showFrequencyMenu, setShowFrequencyMenu] = useState(false);
 
   const toggleSection = (section: string) => {
     const newExpanded = new Set(expandedSections);
@@ -263,75 +256,6 @@ export function RegulatoryScanSummary({
               </p>
             </div>
           )}
-        </div>
-
-        {/* Save as alert action */}
-        <div className="pt-4">
-          <div className="relative inline-block">
-            <button
-              onClick={() => setShowFrequencyMenu(!showFrequencyMenu)}
-              className="h-9 px-4 flex items-center gap-2 bg-[#1d4b34] rounded-lg text-[14px] font-['Clario'] font-medium text-white hover:bg-[#153a28] transition-colors"
-            >
-              <Bell className="size-4" strokeWidth={1.5} />
-              Save as alert
-            </button>
-
-            {/* Frequency menu dropdown - matches header save flow */}
-            {showFrequencyMenu && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowFrequencyMenu(false)} />
-                <div className="absolute left-0 bottom-[calc(100%+4px)] bg-white rounded-[8px] z-50 min-w-[200px]">
-                  <div className="flex flex-col items-start overflow-clip p-[12px] relative rounded-[inherit] gap-[12px]">
-                    {/* Header */}
-                    <div className="font-['Source_Sans_3'] font-semibold text-[15px] text-[#212223] text-left">
-                      Select frequency
-                    </div>
-
-                    {/* Radio options */}
-                    <div className="flex flex-col gap-[12px] w-full">
-                      {(['daily', 'weekly', 'monthly'] as const).map((freq) => (
-                        <button
-                          key={freq}
-                          onClick={() => onSelectFrequency?.(freq)}
-                          className="flex gap-[8px] items-center relative shrink-0 w-full text-left"
-                        >
-                          <div className={`relative rounded-[88px] shrink-0 size-[16px] ${
-                            monitoringFrequency === freq ? 'bg-[#1d4b34]' : 'bg-white'
-                          }`}>
-                            <div className="flex items-center justify-center overflow-clip relative rounded-[inherit] size-full">
-                              <div className="flex items-center justify-center relative shrink-0">
-                                {monitoringFrequency === freq && (
-                                  <div className="size-[6px] bg-white rounded-full" />
-                                )}
-                              </div>
-                            </div>
-                            <div aria-hidden="true" className={`absolute border border-solid inset-[-1px] pointer-events-none rounded-[89px] ${
-                              monitoringFrequency === freq ? 'border-[#1d4b34]' : 'border-[#8a8a8a]'
-                            }`} />
-                          </div>
-                          <div className="font-['Source_Sans_3'] font-normal text-[#212223] text-[15px] leading-[1.5] text-left capitalize">
-                            {freq}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Save alert button */}
-                    <button
-                      onClick={() => {
-                        setShowFrequencyMenu(false);
-                        onSaveAsAlert?.();
-                      }}
-                      className="w-full h-[32px] px-[12px] py-[6px] flex items-center justify-center text-[14px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors"
-                    >
-                      Save alert
-                    </button>
-                  </div>
-                  <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px] shadow-[0px_4px_12px_4px_rgba(31,31,31,0.1)]" />
-                </div>
-              </>
-            )}
-          </div>
         </div>
       </div>
     </div>

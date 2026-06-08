@@ -547,7 +547,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [showMonitoringPrompt, setShowMonitoringPrompt] = useState(true);
   const [showMonitoringConfirmation, setShowMonitoringConfirmation] = useState(false);
   const [monitoringFrequency, setMonitoringFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
-  const [showFrequencyMenu, setShowFrequencyMenu] = useState(false);
+  // Inline "Alert saved" confirmation strip (replaces the old popover)
+  const [showAlertSavedStrip, setShowAlertSavedStrip] = useState(false);
+  const [showFrequencyChips, setShowFrequencyChips] = useState(false);
+  const alertStripTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [prepWorkItems, setPrepWorkItems] = useState<Array<{title: string; type: string}>>([]);
   const [cpcRegulation, setCpcRegulation] = useState('');
   const [cpcDocsAffected, setCpcDocsAffected] = useState(0);
@@ -2497,11 +2500,16 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setShowFrequencyMenu(!showFrequencyMenu);
+                                    // Open the inline confirmation strip below the toolbar.
+                                    setShowFrequencyChips(false);
+                                    setShowAlertSavedStrip(true);
+                                    if (alertStripTimerRef.current) clearTimeout(alertStripTimerRef.current);
+                                    alertStripTimerRef.current = setTimeout(() => {
+                                      setShowAlertSavedStrip(false);
+                                      setShowFrequencyChips(false);
+                                    }, 4000);
                                   }}
-                                  className={`content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] transition-colors ${
-                                    showFrequencyMenu ? 'bg-[#edf2f0]' : 'bg-[rgba(255,255,255,0)] hover:bg-[#F5F5F5]'
-                                  }`}
+                                  className="content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] transition-colors bg-[rgba(255,255,255,0)] hover:bg-[#F5F5F5]"
                                 >
                                   <Save className="size-4 text-[#1d4b34]" strokeWidth={1.5} />
                                 </button>
@@ -2510,109 +2518,6 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                 Save as alert
                               </TooltipContent>
                             </Tooltip>
-
-                            {/* Frequency menu dropdown */}
-                            {showFrequencyMenu && (
-                              <>
-                                <div className="fixed inset-0 z-40" onClick={() => setShowFrequencyMenu(false)} />
-                                <div className="absolute right-0 top-[calc(100%+4px)] bg-white rounded-[8px] z-50 min-w-[200px]">
-                        <div className="flex flex-col items-start overflow-clip p-[12px] relative rounded-[inherit] gap-[12px]">
-                          {/* Header */}
-                          <div className="font-['Source_Sans_3'] font-semibold text-[15px] text-[#212223] text-left">
-                            Select frequency
-                          </div>
-
-                          {/* Radio options */}
-                          <div className="flex flex-col gap-[12px] w-full">
-                            {/* Daily option */}
-                            <button
-                              onClick={() => setMonitoringFrequency('daily')}
-                              className="flex gap-[8px] items-center relative shrink-0 w-full text-left"
-                            >
-                              <div className={`relative rounded-[88px] shrink-0 size-[16px] ${
-                                monitoringFrequency === 'daily' ? 'bg-[#1d4b34]' : 'bg-white'
-                              }`}>
-                                <div className="flex items-center justify-center overflow-clip relative rounded-[inherit] size-full">
-                                  <div className="flex items-center justify-center relative shrink-0">
-                                    {monitoringFrequency === 'daily' && (
-                                      <div className="size-[6px] bg-white rounded-full" />
-                                    )}
-                                  </div>
-                                </div>
-                                <div aria-hidden="true" className={`absolute border border-solid inset-[-1px] pointer-events-none rounded-[89px] ${
-                                  monitoringFrequency === 'daily' ? 'border-[#1d4b34]' : 'border-[#8a8a8a]'
-                                }`} />
-                              </div>
-                              <div className="font-['Source_Sans_3'] font-normal text-[#212223] text-[15px] leading-[1.5] text-left">
-                                Daily
-                              </div>
-                            </button>
-
-                            {/* Weekly option */}
-                            <button
-                              onClick={() => setMonitoringFrequency('weekly')}
-                              className="flex gap-[8px] items-center relative shrink-0 w-full text-left"
-                            >
-                              <div className={`relative rounded-[88px] shrink-0 size-[16px] ${
-                                monitoringFrequency === 'weekly' ? 'bg-[#1d4b34]' : 'bg-white'
-                              }`}>
-                                <div className="flex items-center justify-center overflow-clip relative rounded-[inherit] size-full">
-                                  <div className="flex items-center justify-center relative shrink-0">
-                                    {monitoringFrequency === 'weekly' && (
-                                      <div className="size-[6px] bg-white rounded-full" />
-                                    )}
-                                  </div>
-                                </div>
-                                <div aria-hidden="true" className={`absolute border border-solid inset-[-1px] pointer-events-none rounded-[89px] ${
-                                  monitoringFrequency === 'weekly' ? 'border-[#1d4b34]' : 'border-[#8a8a8a]'
-                                }`} />
-                              </div>
-                              <div className="font-['Source_Sans_3'] font-normal text-[#212223] text-[15px] leading-[1.5] text-left">
-                                Weekly
-                              </div>
-                            </button>
-
-                            {/* Monthly option */}
-                            <button
-                              onClick={() => setMonitoringFrequency('monthly')}
-                              className="flex gap-[8px] items-center relative shrink-0 w-full text-left"
-                            >
-                              <div className={`relative rounded-[88px] shrink-0 size-[16px] ${
-                                monitoringFrequency === 'monthly' ? 'bg-[#1d4b34]' : 'bg-white'
-                              }`}>
-                                <div className="flex items-center justify-center overflow-clip relative rounded-[inherit] size-full">
-                                  <div className="flex items-center justify-center relative shrink-0">
-                                    {monitoringFrequency === 'monthly' && (
-                                      <div className="size-[6px] bg-white rounded-full" />
-                                    )}
-                                  </div>
-                                </div>
-                                <div aria-hidden="true" className={`absolute border border-solid inset-[-1px] pointer-events-none rounded-[89px] ${
-                                  monitoringFrequency === 'monthly' ? 'border-[#1d4b34]' : 'border-[#8a8a8a]'
-                                }`} />
-                              </div>
-                              <div className="font-['Source_Sans_3'] font-normal text-[#212223] text-[15px] leading-[1.5] text-left">
-                                Monthly
-                              </div>
-                            </button>
-                          </div>
-
-                          {/* Save alert button */}
-                          <button
-                            onClick={() => {
-                              setShowFrequencyMenu(false);
-                              setShowMonitoringPrompt(false);
-                              setShowMonitoringConfirmation(true);
-                            }}
-                            className="w-full h-[32px] px-[12px] py-[6px] flex items-center justify-center text-[14px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors"
-                          >
-                            Save alert
-                          </button>
-                        </div>
-                        <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px] shadow-[0px_4px_12px_4px_rgba(31,31,31,0.1)]" />
-                      </div>
-                    </>
-                  )}
                           </div>
                           <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
                             <ExternalLink className="size-4 text-[#212223]" strokeWidth={1.5} />
@@ -2621,6 +2526,64 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                       </div>
                     </div>
                   </button>
+
+                  {/* Inline alert-saved confirmation strip (appears just below the toolbar) */}
+                  {showAlertSavedStrip && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="content-stretch flex flex-col gap-[8px] items-start w-full"
+                    >
+                      <div className="flex items-center gap-[12px] flex-wrap w-full bg-[#F0FDF4] border border-[#BBF7D0] rounded-[8px] px-[12px] py-[8px]">
+                        <div className="flex items-center gap-[8px] shrink-0">
+                          <Bell className="size-4 text-[#16A34A]" strokeWidth={2} />
+                          <span className="text-[14px] font-['Source_Sans_3'] text-[#212223]">
+                            {`Alert saved — ${monitoringFrequency} digest`}
+                          </span>
+                        </div>
+
+                        {!showFrequencyChips ? (
+                          <button
+                            onClick={() => {
+                              setShowFrequencyChips(true);
+                              if (alertStripTimerRef.current) clearTimeout(alertStripTimerRef.current);
+                            }}
+                            className="text-[13px] font-['Clario'] font-medium text-[#1d4b34] hover:text-[#163f2b] transition-colors shrink-0"
+                          >
+                            Change frequency
+                          </button>
+                        ) : (
+                          <div className="flex items-center gap-[6px] flex-wrap shrink-0">
+                            {(['daily', 'weekly', 'monthly'] as const).map((freq) => (
+                              <button
+                                key={freq}
+                                onClick={() => setMonitoringFrequency(freq)}
+                                className={`h-[24px] px-[10px] flex items-center text-[13px] font-['Source_Sans_3'] rounded-full border transition-colors capitalize ${
+                                  monitoringFrequency === freq
+                                    ? 'bg-[#1d4b34] border-[#1d4b34] text-white'
+                                    : 'bg-white border-[#8a8a8a] text-[#212223] hover:bg-[#edf2f0]'
+                                }`}
+                              >
+                                {freq}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        <button
+                          onClick={() => {
+                            if (alertStripTimerRef.current) clearTimeout(alertStripTimerRef.current);
+                            setShowAlertSavedStrip(false);
+                            setShowFrequencyChips(false);
+                          }}
+                          className="ml-auto h-[24px] px-[12px] flex items-center text-[13px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors shrink-0"
+                        >
+                          Done
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
 
                   {/* Supporting documents */}
                   <div className="content-stretch flex flex-col gap-[8px] items-start pt-[12px] w-full">
@@ -2686,12 +2649,6 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                 documentsAffected={25}
                 onViewAffectedClauses={() => {
                   console.log('View affected clauses');
-                }}
-                monitoringFrequency={monitoringFrequency}
-                onSelectFrequency={setMonitoringFrequency}
-                onSaveAsAlert={() => {
-                  setShowMonitoringPrompt(false);
-                  setShowMonitoringConfirmation(true);
                 }}
               />
             )}
