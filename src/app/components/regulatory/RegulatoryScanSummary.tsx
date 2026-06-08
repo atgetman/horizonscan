@@ -302,7 +302,7 @@ export function RegulatoryScanSummary({
                 <div className="flex items-center gap-[8px] min-w-0">
                   <CheckCircle2 className="size-[18px] text-[#1d4b34] shrink-0" strokeWidth={2} />
                   <span className="text-[14px] font-['Source_Sans_3'] text-[#1d4b34]">
-                    {'Alert saved — '}
+                    {'Alert saved: '}
                     <strong className="font-semibold">{`${monitoringFrequency} digest`}</strong>
                   </span>
                 </div>
@@ -345,10 +345,6 @@ export function RegulatoryScanSummary({
                   </button>
                 </div>
               </div>
-
-              <p className="mt-2 text-[13px] font-['Source_Sans_3'] text-[#666]">
-                {`You'll receive a ${monitoringFrequency} digest when these findings change.`}
-              </p>
             </motion.div>
           )}
         </div>
