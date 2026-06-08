@@ -2575,11 +2575,11 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
             {streamedIntroText && streamedIntroText.length > 0 && (
               <RegulatoryScanSummary
                 totalFindings={3}
-                highestImpact="Critical"
+                highestImpact="High"
                 topFindings={[
-                  { regulation: 'SEC Climate Disclosure Rules', impact: 'Critical' as const, deadline: 'Jan 1, 2027' },
+                  { regulation: 'SEC Climate Disclosure Rules', impact: 'High' as const, deadline: 'Jan 1, 2027' },
                   { regulation: 'CFPB Consumer Data Rights Rule', impact: 'High' as const, deadline: 'Apr 1, 2027' },
-                  { regulation: 'FTC Non-Compete Ban Amendments', impact: 'High' as const, deadline: 'TBD (Pending)' }
+                  { regulation: 'FTC Non-Compete Ban Amendments', impact: 'Medium' as const, deadline: 'TBD (Pending)' }
                 ]}
                 documentsAffected={25}
                 onViewAffectedClauses={() => {

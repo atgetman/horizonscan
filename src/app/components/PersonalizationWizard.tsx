@@ -16,6 +16,29 @@ const ROLE_OPTIONS = [
   'Compliance Officer'
 ] as const;
 
+const FIRM_TYPES = [
+  'Solo practitioner',
+  'Small firm (2–50 attorneys)',
+  'Large firm (50+ attorneys)',
+  'In-house legal team',
+  'Government or public sector',
+  'Other'
+] as const;
+
+const JURISDICTIONS = [
+  'Federal',
+  'California',
+  'New York',
+  'Texas',
+  'Florida',
+  'Delaware',
+  'Illinois',
+  'EU',
+  'United Kingdom',
+  'Canada',
+  'All US jurisdictions'
+] as const;
+
 const PRACTICE_AREAS = [
   { id: 'litigation', label: 'Litigation', icon: Scale },
   { id: 'corporate', label: 'Corporate Law', icon: Building2 },
@@ -46,10 +69,12 @@ const MONITORING_TOPICS = [
 ] as const;
 
 export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWizardProps) {
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1);
   const [name, setName] = useState('Dan Barnard');
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [selectedFirmType, setSelectedFirmType] = useState<string | null>(null);
   const [selectedPracticeAreas, setSelectedPracticeAreas] = useState<string[]>([]);
+  const [selectedJurisdictions, setSelectedJurisdictions] = useState<string[]>([]);
   const [selectedMonitoringTopics, setSelectedMonitoringTopics] = useState<string[]>([]);
 
   const handleNameSubmit = () => {
@@ -82,10 +107,20 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
     );
   };
 
+  const handleJurisdictionToggle = (jurisdiction: string) => {
+    setSelectedJurisdictions(prev =>
+      prev.includes(jurisdiction)
+        ? prev.filter(j => j !== jurisdiction)
+        : [...prev, jurisdiction]
+    );
+  };
+
   const handleComplete = () => {
     // Store the preferences
     localStorage.setItem('cocounsel-user-roles', JSON.stringify(selectedRoles));
+    localStorage.setItem('cocounsel-user-firm-type', selectedFirmType ?? '');
     localStorage.setItem('cocounsel-user-practice-areas', JSON.stringify(selectedPracticeAreas));
+    localStorage.setItem('cocounsel-user-jurisdictions', JSON.stringify(selectedJurisdictions));
     localStorage.setItem('cocounsel-monitoring-topics', JSON.stringify(selectedMonitoringTopics));
     localStorage.setItem('personalizationCompleted', 'true');
     onComplete();
@@ -236,6 +271,54 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   {/* Question text */}
                   <div className="mb-6">
                     <h2 className="text-[24px] leading-[1.4] text-[#1F1F1F] font-light">
+                      What best describes where you work?
+                    </h2>
+                  </div>
+
+                  {/* Firm type selection - full-width rows */}
+                  <div className="space-y-2 mb-6">
+                    {FIRM_TYPES.map((firmType) => (
+                      <button
+                        key={firmType}
+                        onClick={() => setSelectedFirmType(firmType)}
+                        className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all ${
+                          selectedFirmType === firmType
+                            ? 'bg-[#e8f2ed] border-[#1d4b34] text-[#1d4b34]'
+                            : 'bg-white border-[#E0DDD7] hover:border-[#C5C1B8] text-[#1F1F1F]'
+                        }`}
+                      >
+                        <span className="text-[16px]">{firmType}</span>
+                        {selectedFirmType === firmType && (
+                          <Check className="w-4 h-4" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Continue button */}
+                  <button
+                    onClick={() => setStep(4)}
+                    disabled={!selectedFirmType}
+                    className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
+                      selectedFirmType
+                        ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
+                        : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
+                    }`}
+                  >
+                    Continue
+                  </button>
+                </motion.div>
+              ) : step === 4 ? (
+                <motion.div
+                  key="step4"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                >
+                  {/* Question text */}
+                  <div className="mb-6">
+                    <h2 className="text-[24px] leading-[1.4] text-[#1F1F1F] font-light">
                       Which practice areas are you interested in?
                     </h2>
                     <p className="text-[15px] text-[#666] mt-2">
@@ -263,7 +346,7 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
 
                   {/* Continue button */}
                   <button
-                    onClick={() => setStep(4)}
+                    onClick={() => setStep(5)}
                     disabled={selectedPracticeAreas.length === 0}
                     className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
                       selectedPracticeAreas.length > 0
@@ -274,9 +357,57 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                     Continue
                   </button>
                 </motion.div>
+              ) : step === 5 ? (
+                <motion.div
+                  key="step5"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                >
+                  {/* Question text */}
+                  <div className="mb-6">
+                    <h2 className="text-[24px] leading-[1.4] text-[#1F1F1F] font-light">
+                      Which jurisdictions do you primarily work in?
+                    </h2>
+                    <p className="text-[15px] text-[#666] mt-2">
+                      CoCounsel will prioritise developments from these jurisdictions
+                    </p>
+                  </div>
+
+                  {/* Jurisdiction selection - wrapped pill layout */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {JURISDICTIONS.map((jurisdiction) => (
+                      <button
+                        key={jurisdiction}
+                        onClick={() => handleJurisdictionToggle(jurisdiction)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-full border-2 transition-all ${
+                          selectedJurisdictions.includes(jurisdiction)
+                            ? 'bg-[#e8f2ed] border-[#1d4b34] text-[#1d4b34]'
+                            : 'bg-white border-[#E0DDD7] hover:border-[#C5C1B8] text-[#1F1F1F]'
+                        }`}
+                      >
+                        <span className="text-[14px]">{jurisdiction}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Continue button */}
+                  <button
+                    onClick={() => setStep(6)}
+                    disabled={selectedJurisdictions.length === 0}
+                    className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
+                      selectedJurisdictions.length > 0
+                        ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
+                        : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
+                    }`}
+                  >
+                    Continue
+                  </button>
+                </motion.div>
               ) : (
                 <motion.div
-                  key="step4"
+                  key="step6"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}

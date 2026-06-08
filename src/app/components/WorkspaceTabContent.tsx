@@ -195,7 +195,7 @@ export function WorkspaceTabContent({
                         type: 'TR Product',
                         summary: 'New climate-related disclosure requirements for public companies',
                         rationale: 'Affects M&A due diligence processes and disclosure schedules in acquisition agreements',
-                        impact: 'Critical',
+                        impact: 'High',
                         relevance: 95,
                         complianceDeadline: 'Jan 1, 2027'
                       },

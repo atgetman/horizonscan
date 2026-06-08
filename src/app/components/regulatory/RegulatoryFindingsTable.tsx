@@ -8,7 +8,7 @@ interface RegulatoryFinding {
   type: 'TR Product' | 'Reuters News' | 'Web Source';
   summary: string;
   rationale: string;
-  impact: 'Critical' | 'High' | 'Medium' | 'Low';
+  impact: 'High' | 'Medium' | 'Low';
   relevance: number; // 0-100
   complianceDeadline: string;
 }
@@ -20,11 +20,6 @@ interface RegulatoryFindingsTableProps {
 }
 
 const impactConfig = {
-  Critical: {
-    bgColor: 'bg-[#FEE2E2]',
-    textColor: 'text-[#991B1B]',
-    borderColor: 'border-[#FCA5A5]'
-  },
   High: {
     bgColor: 'bg-[#FEF3C7]',
     textColor: 'text-[#92400E]',
@@ -65,7 +60,7 @@ export function RegulatoryFindingsTable({ findings, onSaveAsAlert, onSaveScan }:
     impactFilter === 'all' || f.impact === impactFilter
   ).sort((a, b) => {
     if (sortBy === 'impact') {
-      const impactOrder = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+      const impactOrder = { High: 0, Medium: 1, Low: 2 };
       return impactOrder[a.impact] - impactOrder[b.impact];
     } else if (sortBy === 'relevance') {
       return b.relevance - a.relevance;
@@ -87,7 +82,6 @@ export function RegulatoryFindingsTable({ findings, onSaveAsAlert, onSaveScan }:
               className="appearance-none bg-white border border-[#E5E5E5] rounded-md px-3 py-1.5 pr-8 text-[13px] font-['Source_Sans_3'] text-[#212223] cursor-pointer hover:border-[#8a8a8a] transition-colors"
             >
               <option value="all">All Impact Levels</option>
-              <option value="Critical">Critical</option>
               <option value="High">High</option>
               <option value="Medium">Medium</option>
               <option value="Low">Low</option>
