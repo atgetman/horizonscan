@@ -805,6 +805,19 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     setShowPreparingFinalOutput(false);
     onThinkingChange?.(true);
 
+    // Surface a proactive Horizon Scan notification mid-task (slides up while
+    // the user is working, rather than appearing immediately on load).
+    safeSetTimeout(() => {
+      window.dispatchEvent(
+        new CustomEvent("horizonScanAlert", {
+          detail: {
+            title: "Documents impacted in M&A Diligence",
+            detail: "3 documents affected by new SEC guidance",
+          },
+        })
+      );
+    }, 6000);
+
     try {
         // Add placeholder for assistant response
         setMessages(prev => {
@@ -1059,14 +1072,14 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     setArtifactSummary('');
     onThinkingChange?.(true);
 
-    // Surface an inline Horizon Scan notification mid-task (slides up while
+    // Surface a proactive Horizon Scan notification mid-task (slides up while
     // the user is working, rather than appearing immediately on load).
     safeSetTimeout(() => {
       window.dispatchEvent(
         new CustomEvent("horizonScanAlert", {
           detail: {
-            title: "New Horizon Scan results",
-            detail: "A scan impacted Employment Agreement and 2 other files",
+            title: "Documents impacted in M&A Diligence",
+            detail: "3 documents affected by new SEC guidance",
           },
         })
       );
