@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ExternalLink, ChevronDown } from 'lucide-react';
+import { ExternalLink, ChevronDown, Check } from 'lucide-react';
+import { useMonitoring } from '../../contexts/MonitoringContext';
 
 interface RegulatoryFinding {
   id: string;
@@ -55,6 +56,26 @@ const typeConfig = {
 export function RegulatoryFindingsTable({ findings, onSaveAsAlert, onSaveScan }: RegulatoryFindingsTableProps) {
   const [impactFilter, setImpactFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('impact');
+  const { savedAlerts, addAlert } = useMonitoring();
+  const alertSaved = savedAlerts.some(a => a.sourceType === 'regulatory-table');
+
+  const handleSaveAsAlert = () => {
+    if (!alertSaved) {
+      addAlert({
+        topic: 'M&A Regulatory Updates',
+        criteria: 'Monitor regulatory changes affecting M&A transactions',
+        frequency: 'weekly',
+        practiceAreas: ['Corporate', 'M&A'],
+        jurisdictions: ['Federal', 'Multi-jurisdictional'],
+        status: 'active',
+        lastScan: 'Just now',
+        nextScan: '7 days',
+        alertCount: 0,
+        sourceType: 'regulatory-table'
+      });
+    }
+    onSaveAsAlert?.();
+  };
 
   const filteredFindings = findings.filter(f =>
     impactFilter === 'all' || f.impact === impactFilter
@@ -110,10 +131,16 @@ export function RegulatoryFindingsTable({ findings, onSaveAsAlert, onSaveScan }:
         <div className="flex items-center gap-2">
           {onSaveAsAlert && (
             <button
-              onClick={onSaveAsAlert}
-              className="h-[24px] px-[8px] py-[4px] flex items-center gap-1.5 text-[14px] font-['Clario'] font-medium text-[#1d4b34] rounded-[4px] border border-transparent hover:bg-[#edf2f0] hover:border-[#8a8a8a] transition-all"
+              onClick={handleSaveAsAlert}
+              disabled={alertSaved}
+              className={`h-[24px] px-[8px] py-[4px] flex items-center gap-1.5 text-[14px] font-['Clario'] font-medium rounded-[4px] border transition-all ${
+                alertSaved
+                  ? 'text-[#1d4b34] border-transparent cursor-not-allowed'
+                  : 'text-[#1d4b34] border-transparent hover:bg-[#edf2f0] hover:border-[#8a8a8a]'
+              }`}
             >
-              Save as alert
+              {alertSaved && <Check className="size-3.5" strokeWidth={2} />}
+              {alertSaved ? 'Alert saved' : 'Save as alert'}
             </button>
           )}
           {onSaveScan && (

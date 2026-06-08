@@ -127,14 +127,16 @@ export function SpreadsheetToolbar({ isChatOpen, onToggleChat, isCommentsOpen = 
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <button
-                            onClick={() => setShowFrequencyMenu(!showFrequencyMenu)}
+                            onClick={() => !alertSaved && setShowFrequencyMenu(!showFrequencyMenu)}
+                            disabled={alertSaved}
                             className={clsx(
                                 "flex items-center gap-2 rounded text-[13px] transition-colors px-[10px] py-[4px]",
+                                alertSaved ? "text-[#1d4b34] cursor-not-allowed" :
                                 showFrequencyMenu ? "bg-[#edf2f0] text-[#1d4b34]" : "hover:bg-[#E5E5E5] text-[#212223]"
                             )}
                         >
-                            <Save className="size-3.5" strokeWidth={1.5} />
-                            <span>{alertSaved ? 'Edit frequency' : 'Save as alert'}</span>
+                            {alertSaved ? <Check className="size-3.5" strokeWidth={2} /> : <Save className="size-3.5" strokeWidth={1.5} />}
+                            <span>{alertSaved ? 'Alert saved' : 'Save as alert'}</span>
                         </button>
                     </TooltipTrigger>
                     <TooltipContent side="top" sideOffset={4}>
