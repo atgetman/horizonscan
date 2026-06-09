@@ -814,7 +814,13 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         new CustomEvent("horizonScanAlert", {
           detail: {
             title: "Documents impacted in M&A Diligence",
-            detail: "3 documents affected by new SEC guidance",
+            detail: "New SEC guidance affects 3 documents in Project Atlas",
+            workspace: "Project Atlas - M&A Due Diligence",
+            documents: [
+              { name: "Stock Purchase Agreement.docx", clause: "Reps & Warranties §3.2", impact: "high" },
+              { name: "Disclosure Schedules.docx", clause: "Material Contracts", impact: "medium" },
+              { name: "Merger Agreement.docx", clause: "Closing Conditions §7.1", impact: "low" },
+            ],
           },
         })
       );
@@ -1081,7 +1087,13 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         new CustomEvent("horizonScanAlert", {
           detail: {
             title: "Documents impacted in M&A Diligence",
-            detail: "3 documents affected by new SEC guidance",
+            detail: "New SEC guidance affects 3 documents in Project Atlas",
+            workspace: "Project Atlas - M&A Due Diligence",
+            documents: [
+              { name: "Stock Purchase Agreement.docx", clause: "Reps & Warranties §3.2", impact: "high" },
+              { name: "Disclosure Schedules.docx", clause: "Material Contracts", impact: "medium" },
+              { name: "Merger Agreement.docx", clause: "Closing Conditions §7.1", impact: "low" },
+            ],
           },
         })
       );
