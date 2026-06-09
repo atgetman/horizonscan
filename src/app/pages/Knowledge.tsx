@@ -18,6 +18,8 @@ import { Toast } from "../components/Toast";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { clsx } from "clsx";
 import { MonitoringListView } from "../components/monitoring/MonitoringListView";
+import { MonitoringCard, Monitor } from "../components/monitoring/MonitoringCard";
+import { MonitoringSetupModal } from "../components/monitoring/MonitoringSetupModal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -735,6 +737,41 @@ export function Knowledge() {
   const [toastMessage, setToastMessage] = useState('');
   const [isImportSkillModalOpen, setIsImportSkillModalOpen] = useState(false);
 
+  // Dashboard monitoring preview state
+  const [dashboardEditMonitor, setDashboardEditMonitor] = useState<Monitor | null>(null);
+  const [isDashboardMonitorModalOpen, setIsDashboardMonitorModalOpen] = useState(false);
+  const [dismissedMonitorIds, setDismissedMonitorIds] = useState<string[]>([]);
+  const [monitorOverrides, setMonitorOverrides] = useState<Record<string, Partial<Monitor>>>({});
+
+  const handleDashboardEditMonitor = (monitor: Monitor) => {
+    setDashboardEditMonitor(monitor);
+    setIsDashboardMonitorModalOpen(true);
+  };
+  const handleDashboardSaveMonitor = (monitor: Partial<Monitor>) => {
+    if (monitor.id) {
+      setMonitorOverrides(prev => ({ ...prev, [monitor.id as string]: monitor }));
+    }
+    setIsDashboardMonitorModalOpen(false);
+    setDashboardEditMonitor(null);
+    setToastMessage('Monitor updated.');
+    setShowToast(true);
+  };
+  const handleDashboardPauseMonitor = (id: string) => {
+    setMonitorOverrides(prev => ({ ...prev, [id]: { ...prev[id], status: 'paused' } }));
+    setToastMessage('Monitor paused.');
+    setShowToast(true);
+  };
+  const handleDashboardResumeMonitor = (id: string) => {
+    setMonitorOverrides(prev => ({ ...prev, [id]: { ...prev[id], status: 'active' } }));
+    setToastMessage('Monitor resumed.');
+    setShowToast(true);
+  };
+  const handleDashboardDeleteMonitor = (id: string) => {
+    setDismissedMonitorIds(prev => [...prev, id]);
+    setToastMessage('Monitor deleted.');
+    setShowToast(true);
+  };
+
   // Reopen panel when navigating to Knowledge route
   useEffect(() => {
     setIsKnowledgePanelOpen(true);
@@ -993,8 +1030,81 @@ export function Knowledge() {
     // Filter skills by scope
     const scopedSkills = skills.filter(s => s.scope === activeScope).slice(0, 4);
 
+    // Build monitor preview cards for the dashboard
+    const personalDefaultMonitors: Monitor[] = [
+      {
+        id: 'dash-personal-1',
+        topic: 'Personal jurisdiction developments',
+        criteria: 'Second Circuit cases on minimum contacts analysis',
+        frequency: 'weekly',
+        practiceAreas: ['Litigation'],
+        jurisdictions: ['Federal', 'New York'],
+        status: 'active',
+        lastScan: '2 days ago',
+        alertCount: 3,
+        createdDate: '2026-04-15',
+      },
+      {
+        id: 'dash-personal-2',
+        topic: 'GDPR enforcement actions',
+        criteria: 'EU data protection authority guidance and decisions',
+        frequency: 'daily',
+        practiceAreas: ['Corporate'],
+        jurisdictions: [],
+        status: 'active',
+        lastScan: 'today',
+        alertCount: 1,
+        createdDate: '2026-03-20',
+      },
+    ];
+    const firmDefaultMonitors: Monitor[] = [
+      {
+        id: 'dash-firm-1',
+        topic: 'SEC Disclosure Requirements',
+        criteria: 'Updates to Regulation S-K and Form 10-K requirements',
+        frequency: 'daily',
+        practiceAreas: ['Corporate'],
+        jurisdictions: ['Federal'],
+        status: 'active',
+        lastScan: '1 day ago',
+        alertCount: 2,
+        createdDate: '2026-04-01',
+      },
+      {
+        id: 'dash-firm-2',
+        topic: 'Employment Law Updates',
+        criteria: 'Federal and state wage and hour law changes',
+        frequency: 'weekly',
+        practiceAreas: ['Employment'],
+        jurisdictions: ['Federal'],
+        status: 'active',
+        lastScan: '3 days ago',
+        alertCount: 0,
+        createdDate: '2026-03-10',
+      },
+    ];
+    const savedAlertMonitors: Monitor[] = savedAlerts.slice(0, 2).map(alert => ({
+      id: alert.id,
+      topic: alert.topic,
+      criteria: alert.criteria,
+      frequency: (alert.frequency === 'instant' ? 'real-time' : alert.frequency) as Monitor['frequency'],
+      practiceAreas: alert.practiceAreas,
+      jurisdictions: alert.jurisdictions,
+      status: alert.status,
+      lastScan: alert.lastScan?.toLowerCase(),
+      alertCount: alert.alertCount,
+      createdDate: alert.createdDate,
+    }));
+
+    const baseMonitors = activeScope === 'personal'
+      ? [...savedAlertMonitors, ...(savedAlerts.length >= 2 ? [] : personalDefaultMonitors)].slice(0, 2)
+      : firmDefaultMonitors;
+    const dashboardMonitors = baseMonitors
+      .filter(m => !dismissedMonitorIds.includes(m.id))
+      .map(m => ({ ...m, ...monitorOverrides[m.id] }) as Monitor);
+
     return (
-    <div className="max-w-5xl mx-auto px-8 pt-[50px] pb-8">
+    <div className="max-w-[1100px] mx-auto px-[32px] pt-[50px] pb-8">
       <div className="mb-7">
         <h1 className="text-[32px] font-['Clario'] font-medium text-[#314b3e] leading-[1.1]">Dashboard</h1>
       </div>
@@ -1803,150 +1913,18 @@ export function Knowledge() {
             <ChevronRight className="size-4" />
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          {activeScope === 'personal' ? (
-            <>
-              {/* Show saved M&A alerts first */}
-              {savedAlerts.slice(0, 2).map(alert => (
-                <div
-                  key={alert.id}
-                  className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                  onClick={() => setActiveSection('monitoring-alerts')}
-                >
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="flex items-center justify-center shrink-0 pt-0.5">
-                      <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1">{alert.topic}</h3>
-                      <p className="text-[13px] text-gray-500 mb-3 line-clamp-2">{alert.criteria}</p>
-                      <div className="flex gap-1.5 items-center">
-                        <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                          <p className="leading-[1.2]">Last scan {alert.lastScan.toLowerCase()}</p>
-                        </div>
-                        <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                        <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full capitalize">{alert.frequency}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {/* Show default alerts if no saved alerts or to fill the grid */}
-              {savedAlerts.length === 0 && (
-                <>
-                  <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                    onClick={() => setActiveSection('monitoring-alerts')}
-                  >
-                    <div className="flex items-start gap-3 mb-2">
-                      <div className="flex items-center justify-center shrink-0 pt-0.5">
-                        <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1">Personal jurisdiction developments</h3>
-                        <p className="text-[13px] text-gray-500 mb-3">Second Circuit cases on minimum contacts analysis</p>
-                        <div className="flex gap-1.5 items-center">
-                          <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                            <p className="leading-[1.2]">Last scan 2 days ago</p>
-                          </div>
-                          <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                          <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">3 new</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                    onClick={() => setActiveSection('monitoring-alerts')}
-                  >
-                    <div className="flex items-start gap-3 mb-2">
-                      <div className="flex items-center justify-center shrink-0 pt-0.5">
-                        <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1">GDPR enforcement actions</h3>
-                        <p className="text-[13px] text-gray-500 mb-3">EU data protection authority guidance and decisions</p>
-                        <div className="flex gap-1.5 items-center">
-                          <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                            <p className="leading-[1.2]">Last scan today</p>
-                          </div>
-                          <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                          <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">1 new</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {savedAlerts.length === 1 && (
-                <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                  onClick={() => setActiveSection('monitoring-alerts')}
-                >
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="flex items-center justify-center shrink-0 pt-0.5">
-                      <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1">Personal jurisdiction developments</h3>
-                      <p className="text-[13px] text-gray-500 mb-3">Second Circuit cases on minimum contacts analysis</p>
-                      <div className="flex gap-1.5 items-center">
-                        <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                          <p className="leading-[1.2]">Last scan 2 days ago</p>
-                        </div>
-                        <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                        <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">3 new</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                onClick={() => setActiveSection('monitoring-alerts')}
-              >
-                <div className="flex items-start gap-3 mb-2">
-                  <div className="flex items-center justify-center shrink-0 pt-0.5">
-                    <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1">SEC Disclosure Requirements</h3>
-                    <p className="text-[13px] text-gray-500 mb-3">Updates to Regulation S-K and Form 10-K requirements</p>
-                    <div className="flex gap-1.5 items-center">
-                      <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                        <p className="leading-[1.2]">Last scan 1 day ago</p>
-                      </div>
-                      <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                      <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">2 new</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                onClick={() => setActiveSection('monitoring-alerts')}
-              >
-                <div className="flex items-start gap-3 mb-2">
-                  <div className="flex items-center justify-center shrink-0 pt-0.5">
-                    <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">Employment Law Updates</h3>
-                    <p className="text-[13px] text-gray-500 mb-3">Federal and state wage and hour law changes</p>
-                    <div className="flex gap-1.5 items-center">
-                      <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                        <p className="leading-[1.2]">Last scan 3 days ago</p>
-                      </div>
-                      <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                      <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">Active</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {dashboardMonitors.map((monitor) => (
+            <MonitoringCard
+              key={monitor.id}
+              monitor={monitor}
+              onEdit={handleDashboardEditMonitor}
+              onPause={handleDashboardPauseMonitor}
+              onResume={handleDashboardResumeMonitor}
+              onDelete={handleDashboardDeleteMonitor}
+              onViewResults={() => setActiveSection('monitoring-alerts')}
+            />
+          ))}
         </div>
       </div>
     </div>
