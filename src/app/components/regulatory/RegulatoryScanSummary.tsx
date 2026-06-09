@@ -346,7 +346,6 @@ export function RegulatoryScanSummary({
             >
               <div className="flex items-center gap-[12px] flex-wrap w-full bg-[#EDF2F0] rounded-[8px] px-[12px] py-[10px]">
                 <div className="flex items-center gap-[8px] min-w-0">
-                  <CheckCircle2 className="size-[18px] text-[#1d4b34] shrink-0" strokeWidth={2} />
                   <span className="text-[14px] font-['Source_Sans_3'] text-[#1d4b34]">
                     {"You'll get "}
                     <strong className="font-semibold">{`${monitoringFrequency} alerts`}</strong>
