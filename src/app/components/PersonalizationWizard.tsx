@@ -25,19 +25,59 @@ const FIRM_TYPES = [
   'Other'
 ] as const;
 
-const JURISDICTIONS = [
-  'Federal',
-  'California',
-  'New York',
-  'Texas',
-  'Florida',
-  'Delaware',
-  'Illinois',
-  'EU',
-  'United Kingdom',
-  'Canada',
-  'All US jurisdictions'
-] as const;
+interface JurisdictionRegion {
+  id: string;
+  label: string;
+  jurisdictions: string[];
+  moreJurisdictions?: string[];
+}
+
+const JURISDICTION_REGIONS: JurisdictionRegion[] = [
+  {
+    id: 'us',
+    label: 'United States',
+    jurisdictions: [
+      'Federal', 'All states', 'California', 'New York', 'Texas', 'Florida',
+      'Illinois', 'Delaware', 'New Jersey', 'Pennsylvania', 'Georgia',
+      'Washington', 'Massachusetts', 'Virginia', 'Colorado', 'Arizona',
+      'Nevada', 'Ohio', 'Michigan', 'Minnesota', 'North Carolina',
+      'Maryland', 'District of Columbia', 'Puerto Rico',
+    ],
+    moreJurisdictions: [
+      'Alabama', 'Alaska', 'Arkansas', 'Connecticut', 'Hawaii', 'Idaho',
+      'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine',
+      'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'New Hampshire',
+      'New Mexico', 'North Dakota', 'Oklahoma', 'Oregon', 'Rhode Island',
+      'South Carolina', 'South Dakota', 'Tennessee', 'Utah', 'Vermont',
+      'West Virginia', 'Wisconsin', 'Wyoming',
+    ],
+  },
+  {
+    id: 'canada',
+    label: 'Canada',
+    jurisdictions: ['Federal', 'Ontario', 'British Columbia', 'Quebec', 'Alberta'],
+  },
+  {
+    id: 'uk',
+    label: 'United Kingdom',
+    jurisdictions: ['England & Wales', 'Scotland', 'Northern Ireland'],
+  },
+  {
+    id: 'eu',
+    label: 'European Union',
+    jurisdictions: ['EU-wide', 'Germany', 'France', 'Netherlands', 'Ireland', 'Luxembourg', 'Spain', 'Italy'],
+  },
+  {
+    id: 'apac',
+    label: 'Asia Pacific',
+    jurisdictions: ['Australia (Federal)', 'New South Wales', 'Victoria', 'Singapore', 'Hong Kong', 'Japan'],
+  },
+  {
+    id: 'other',
+    label: 'Other',
+    jurisdictions: ['UAE (DIFC)', 'India'],
+  },
+];
 
 const PRACTICE_AREAS = [
   { id: 'litigation', label: 'Litigation', icon: Scale },
@@ -74,6 +114,8 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [selectedFirmType, setSelectedFirmType] = useState<string | null>(null);
   const [selectedPracticeAreas, setSelectedPracticeAreas] = useState<string[]>([]);
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [expandedMoreStates, setExpandedMoreStates] = useState<string[]>([]);
   const [selectedJurisdictions, setSelectedJurisdictions] = useState<string[]>([]);
   const [selectedMonitoringTopics, setSelectedMonitoringTopics] = useState<string[]>([]);
 
@@ -104,6 +146,22 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
       prev.includes(topic)
         ? prev.filter(t => t !== topic)
         : [...prev, topic]
+    );
+  };
+
+  const handleRegionToggle = (regionId: string) => {
+    setSelectedRegions(prev =>
+      prev.includes(regionId)
+        ? prev.filter(r => r !== regionId)
+        : [...prev, regionId]
+    );
+  };
+
+  const handleMoreStatesToggle = (regionId: string) => {
+    setExpandedMoreStates(prev =>
+      prev.includes(regionId)
+        ? prev.filter(r => r !== regionId)
+        : [...prev, regionId]
     );
   };
 
@@ -335,6 +393,101 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   {/* Question text */}
                   <div className="mb-6">
                     <h2 className="text-[24px] leading-[1.4] text-[#1F1F1F] font-light">
+                      Which jurisdictions do you primarily work in?
+                    </h2>
+                    <p className="text-[15px] text-[#666] mt-2">
+                      CoCounsel will prioritise developments from these jurisdictions
+                    </p>
+                  </div>
+
+                  {/* Level 1 — Region pills (always visible) */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {JURISDICTION_REGIONS.map((region) => (
+                      <button
+                        key={region.id}
+                        onClick={() => handleRegionToggle(region.id)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-full border-2 transition-all ${
+                          selectedRegions.includes(region.id)
+                            ? 'bg-[#e8f2ed] border-[#1d4b34] text-[#1d4b34]'
+                            : 'bg-white border-[#E0DDD7] hover:border-[#C5C1B8] text-[#1F1F1F]'
+                        }`}
+                      >
+                        <span className="text-[14px] font-medium">{region.label}</span>
+                        {selectedRegions.includes(region.id) && <Check className="w-3.5 h-3.5" />}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Level 2 — Jurisdiction pills for each selected region */}
+                  <div className="max-h-[340px] overflow-y-auto mb-6">
+                    {JURISDICTION_REGIONS.filter((region) => selectedRegions.includes(region.id)).map((region) => {
+                      const showMore = expandedMoreStates.includes(region.id);
+                      const visibleJurisdictions = showMore && region.moreJurisdictions
+                        ? [...region.jurisdictions, ...region.moreJurisdictions]
+                        : region.jurisdictions;
+                      return (
+                        <div key={region.id} className="mb-4 last:mb-0">
+                          <p className="text-[12px] font-medium uppercase tracking-wide text-[#999] mb-2">
+                            {region.label}
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {visibleJurisdictions.map((jurisdiction) => {
+                              const value = `${region.id}:${jurisdiction}`;
+                              return (
+                                <button
+                                  key={value}
+                                  onClick={() => handleJurisdictionToggle(value)}
+                                  className={`flex items-center gap-2 px-3 py-2 rounded-full border-2 transition-all ${
+                                    selectedJurisdictions.includes(value)
+                                      ? 'bg-[#e8f2ed] border-[#1d4b34] text-[#1d4b34]'
+                                      : 'bg-white border-[#E0DDD7] hover:border-[#C5C1B8] text-[#1F1F1F]'
+                                  }`}
+                                >
+                                  <span className="text-[14px]">{jurisdiction}</span>
+                                </button>
+                              );
+                            })}
+                            {region.moreJurisdictions && (
+                              <button
+                                onClick={() => handleMoreStatesToggle(region.id)}
+                                className="flex items-center gap-2 px-3 py-2 rounded-full border-2 border-dashed border-[#E0DDD7] hover:border-[#C5C1B8] text-[#666] transition-all"
+                              >
+                                <span className="text-[14px]">{showMore ? 'Show fewer states' : 'More states'}</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Continue button */}
+                  <div className="flex items-center justify-between w-full">
+                    <BackButton />
+                    <button
+                      onClick={() => setStep(5)}
+                      disabled={selectedJurisdictions.length === 0}
+                      className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
+                        selectedJurisdictions.length > 0
+                          ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
+                          : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
+                      }`}
+                    >
+                      Continue
+                    </button>
+                  </div>
+                </motion.div>
+              ) : step === 5 ? (
+                <motion.div
+                  key="step5"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                >
+                  {/* Question text */}
+                  <div className="mb-6">
+                    <h2 className="text-[24px] leading-[1.4] text-[#1F1F1F] font-light">
                       Which practice areas are you interested in?
                     </h2>
                     <p className="text-[15px] text-[#666] mt-2">
@@ -364,61 +517,10 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   <div className="flex items-center justify-between w-full">
                     <BackButton />
                     <button
-                      onClick={() => setStep(5)}
+                      onClick={() => setStep(6)}
                       disabled={selectedPracticeAreas.length === 0}
                       className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
                         selectedPracticeAreas.length > 0
-                          ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
-                          : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
-                      }`}
-                    >
-                      Continue
-                    </button>
-                  </div>
-                </motion.div>
-              ) : step === 5 ? (
-                <motion.div
-                  key="step5"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
-                >
-                  {/* Question text */}
-                  <div className="mb-6">
-                    <h2 className="text-[24px] leading-[1.4] text-[#1F1F1F] font-light">
-                      Which jurisdictions do you primarily work in?
-                    </h2>
-                    <p className="text-[15px] text-[#666] mt-2">
-                      CoCounsel will prioritise developments from these jurisdictions
-                    </p>
-                  </div>
-
-                  {/* Jurisdiction selection - wrapped pill layout */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {JURISDICTIONS.map((jurisdiction) => (
-                      <button
-                        key={jurisdiction}
-                        onClick={() => handleJurisdictionToggle(jurisdiction)}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-full border-2 transition-all ${
-                          selectedJurisdictions.includes(jurisdiction)
-                            ? 'bg-[#e8f2ed] border-[#1d4b34] text-[#1d4b34]'
-                            : 'bg-white border-[#E0DDD7] hover:border-[#C5C1B8] text-[#1F1F1F]'
-                        }`}
-                      >
-                        <span className="text-[14px]">{jurisdiction}</span>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Continue button */}
-                  <div className="flex items-center justify-between w-full">
-                    <BackButton />
-                    <button
-                      onClick={() => setStep(6)}
-                      disabled={selectedJurisdictions.length === 0}
-                      className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
-                        selectedJurisdictions.length > 0
                           ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
                           : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
                       }`}
