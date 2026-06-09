@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import {
-  X,
   Check,
   FileText,
   ChevronDown,
@@ -26,8 +25,6 @@ interface ClauseRow {
 }
 
 interface CPCRedlinePanelProps {
-  isOpen: boolean;
-  onClose: () => void;
   regulation: string;
   onAcceptAll?: () => void;
 }
@@ -120,7 +117,7 @@ const CLAUSE_ROWS: ClauseRow[] = [
 type Status = 'pending' | 'accepted';
 type StatusFilter = 'all' | 'pending' | 'accepted';
 
-export function CPCRedlinePanel({ isOpen, onClose, regulation, onAcceptAll }: CPCRedlinePanelProps) {
+export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProps) {
   const [statuses, setStatuses] = useState<Record<string, Status>>({});
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
@@ -132,8 +129,6 @@ export function CPCRedlinePanel({ isOpen, onClose, regulation, onAcceptAll }: CP
     () => Array.from(new Set(CLAUSE_ROWS.map((r) => r.category))),
     [],
   );
-
-  if (!isOpen) return null;
 
   const statusFor = (id: string): Status => statuses[id] ?? 'pending';
 
@@ -192,28 +187,7 @@ export function CPCRedlinePanel({ isOpen, onClose, regulation, onAcceptAll }: CP
   };
 
   return (
-    <div className="w-[720px] shrink-0 border-l border-[#E5E5E5] bg-white flex flex-col h-full">
-      {/* Header */}
-      <div className="shrink-0 border-b border-[#E5E5E5] px-6 py-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex flex-col gap-1 min-w-0">
-            <h2 className="text-[18px] font-['Clario'] font-medium text-[#212223] leading-tight">
-              Cross-product clause analysis
-            </h2>
-            <p className="text-[13px] font-['Source_Sans_3'] text-[#666] truncate">
-              {regulation}
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="flex items-center justify-center size-8 rounded-lg hover:bg-[#F0F2F1] text-[#666] hover:text-[#212223] transition-colors shrink-0"
-            aria-label="Close clause analysis panel"
-          >
-            <X className="size-4" />
-          </button>
-        </div>
-      </div>
-
+    <div className="w-full h-full bg-white flex flex-col">
       {/* Toolbar */}
       <div className="shrink-0 border-b border-[#E5E5E5] bg-[#FCFCFC] px-4 py-2 flex items-center gap-2 flex-wrap">
         {/* Filter by status */}
@@ -273,6 +247,8 @@ export function CPCRedlinePanel({ isOpen, onClose, regulation, onAcceptAll }: CP
           <AlertTriangle className="size-2.5 text-white" />
         </div>
         <span className="text-[13px] font-['Source_Sans_3'] text-[#1F1F1F]">
+          {regulation && <span className="font-semibold">{regulation}</span>}
+          {regulation && <span className="text-[#666] mx-2">·</span>}
           <span className="font-semibold">{`${totalClauses} clauses across ${documentCount} documents`}</span>
           <span className="text-[#666] mx-2">·</span>
           <span>{`Compliance deadline ${COMPLIANCE_DEADLINE}`}</span>

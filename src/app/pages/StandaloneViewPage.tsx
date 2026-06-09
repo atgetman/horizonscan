@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, useParams } from 'react-router';
 import { X, ChevronDown } from 'lucide-react';
 import { MARegulatoryTable } from '../components/regulatory';
+import { CPCRedlinePanel } from '../components/regulatory/CPCRedlinePanel';
 import { SpreadsheetToolbar } from '../components/SpreadsheetToolbar';
 
 export function StandaloneViewPage() {
@@ -143,6 +144,10 @@ export function StandaloneViewPage() {
       <div className="flex-1 overflow-hidden">
         {typeParam === 'regulatory-table' ? (
           <MARegulatoryTable />
+        ) : typeParam === 'cpc-redlines' ? (
+          <CPCRedlinePanel
+            regulation={sessionStorage.getItem('cpcRedlineRegulation') || ''}
+          />
         ) : typeParam === 'table' ? (
           <div className="p-8 text-center text-gray-500">
             Table view for "{openParam}" would go here

@@ -2343,7 +2343,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   </div>
   <button
   onClick={() => {
-  onOpenTab?.({ name: `CPC Analysis - ${cpcRegulation}`, type: 'cpc-redlines' });
+  onOpenTab?.({ name: `Cross-product clause analysis`, type: 'cpc-redlines', regulation: cpcRegulation });
   }}
   className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors"
   >

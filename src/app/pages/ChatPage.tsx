@@ -9,7 +9,6 @@ import { ShareModal } from '../components/ShareModal';
 import { ShareSkillModal } from '../components/ShareSkillModal';
 import { ShareConfirmationModal } from '../components/ShareConfirmationModal';
 import { SkillDetailPanel } from '../components/SkillDetailPanel';
-import { CPCRedlinePanel } from '../components/regulatory/CPCRedlinePanel';
 import { SaveSkillModal } from '../components/SaveSkillModal';
 import { Toast } from '../components/Toast';
 
@@ -29,8 +28,6 @@ export function ChatPage() {
   const [skillToShare, setSkillToShare] = useState<any>(null);
   const [skillPanelOpen, setSkillPanelOpen] = useState(false);
   const [skillInPanel, setSkillInPanel] = useState<any>(null);
-  const [cpcRedlinePanelOpen, setCpcRedlinePanelOpen] = useState(false);
-  const [cpcRedlineRegulation, setCpcRedlineRegulation] = useState('');
   const [saveSkillModalOpen, setSaveSkillModalOpen] = useState(false);
   const [skillToSave, setSkillToSave] = useState<any>(null);
   const [showToast, setShowToast] = useState(false);
@@ -310,10 +307,11 @@ export function ChatPage() {
                 setSkillInPanel(item);
                 setSkillPanelOpen(true);
               } else if (item.type === 'cpc-redlines') {
-                // Open the redlined suggestions in a side panel
-                setCpcRedlineRegulation(item.name?.replace(/^CPC (Redlines|Analysis) - /, '') || '');
-                setSkillPanelOpen(false);
-                setCpcRedlinePanelOpen(true);
+                // Open the clause analysis in a full-page tab (mirrors the
+                // regulatory-table tabular view). Closing it returns to chat.
+                const regulation = item.regulation || item.name?.replace(/^CPC (Redlines|Analysis) - /, '') || '';
+                sessionStorage.setItem('cpcRedlineRegulation', regulation);
+                navigate(`/chat?open=${encodeURIComponent('Cross-product clause analysis')}&type=cpc-redlines&from=${chatId}`);
               } else if (item.type === 'regulatory-table') {
                 // Navigate to workspace-agnostic standalone view, passing the chat ID
                 openRegulatoryTable();
@@ -353,19 +351,6 @@ export function ChatPage() {
               }}
             />
           </div>
-        )}
-
-        {/* CPC Redline Panel - slides in from right */}
-        {cpcRedlinePanelOpen && (
-          <CPCRedlinePanel
-            isOpen={cpcRedlinePanelOpen}
-            onClose={() => setCpcRedlinePanelOpen(false)}
-            regulation={cpcRedlineRegulation}
-            onAcceptAll={() => {
-              setToastMessage('All redlines accepted');
-              setShowToast(true);
-            }}
-          />
         )}
       </div>
 

@@ -1,37 +1,12 @@
 import { useEffect, useState } from "react";
-import { ArrowUpRight, X } from "lucide-react";
+import { ArrowUpRight, X, Bell } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useNavigate } from "react-router";
-import svgPaths from "../../imports/svg-1wkqh0ufu9";
 
 export interface HorizonScanAlert {
   id: string;
   title: string;
   detail: string;
-}
-
-const AGENT_MARK_PATHS = [
-  "p37580740", "p20148880", "p3c433c00", "pea82d00", "p38cb7f00",
-  "p154c6e00", "p16b47400", "p10dd9f00", "p287133f0", "p5e1d900",
-  "pd01f8c0", "p3aa1ff80", "pb176790", "p1dc50600", "p304ab800",
-  "pfe8800", "p6131b80", "p924cb00", "p131ab400", "pa197b00",
-  "p3bc9d900", "p194d1c80", "pa4ca400", "p3d0aa680", "p115b9f80",
-  "p12ebfd00", "p15c7d400", "p4d2e200",
-] as const;
-
-/** The orange CoCounsel agent mark, reused from the chat header. */
-function AgentMark() {
-  return (
-    <div className="relative shrink-0 size-[20px]" aria-hidden="true">
-      <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
-        <g>
-          {AGENT_MARK_PATHS.map((key) => (
-            <path key={key} d={(svgPaths as Record<string, string>)[key]} fill="#D64000" />
-          ))}
-        </g>
-      </svg>
-    </div>
-  );
 }
 
 /**
@@ -89,7 +64,7 @@ export function HorizonScanToast() {
           >
             <div className="flex items-start gap-2.5">
               <div className="mt-0.5">
-                <AgentMark />
+                <Bell className="size-5 text-[#f59e0b] shrink-0" strokeWidth={1.75} aria-hidden="true" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-[1.35] pr-4">
