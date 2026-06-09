@@ -258,7 +258,7 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Continue button */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between w-full">
                     <BackButton />
                     <button
                       onClick={() => setStep(3)}
@@ -309,7 +309,7 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Continue button */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between w-full">
                     <BackButton />
                     <button
                       onClick={() => setStep(4)}
@@ -361,7 +361,7 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Continue button */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between w-full">
                     <BackButton />
                     <button
                       onClick={() => setStep(5)}
@@ -412,7 +412,7 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Continue button */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between w-full">
                     <BackButton />
                     <button
                       onClick={() => setStep(6)}
@@ -487,25 +487,27 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Skip or Continue */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between w-full">
                     <BackButton />
-                    <button
-                      onClick={handleComplete}
-                      className="px-6 py-3 rounded-full text-[15px] font-medium text-[#666] hover:text-[#1F1F1F] transition-colors"
-                    >
-                      Skip for now
-                    </button>
-                    <button
-                      onClick={handleComplete}
-                      disabled={selectedMonitoringTopics.length === 0}
-                      className={`flex-1 px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
-                        selectedMonitoringTopics.length > 0
-                          ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
-                          : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
-                      }`}
-                    >
-                      Start working
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={handleComplete}
+                        className="px-6 py-3 rounded-full text-[15px] font-medium text-[#666] hover:text-[#1F1F1F] transition-colors"
+                      >
+                        Skip for now
+                      </button>
+                      <button
+                        onClick={handleComplete}
+                        disabled={selectedMonitoringTopics.length === 0}
+                        className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
+                          selectedMonitoringTopics.length > 0
+                            ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
+                            : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
+                        }`}
+                      >
+                        Start working
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               )}
