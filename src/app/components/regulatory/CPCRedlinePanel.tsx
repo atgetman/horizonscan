@@ -172,6 +172,9 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
   const totalClauses = filteredRows.length;
   const documentCount = new Set(filteredRows.map((r) => r.documentName)).size;
   const pendingCount = CLAUSE_ROWS.filter((r) => statusFor(r.id) === 'pending').length;
+  const pendingDocCount = new Set(
+    CLAUSE_ROWS.filter((r) => statusFor(r.id) === 'pending').map((r) => r.documentName),
+  ).size;
 
   // Download label depends on how many distinct documents are in view.
   const downloadLabel = documentCount <= 1 ? 'Download .docx' : 'Download all as .zip';
@@ -262,10 +265,10 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
             <AlertTriangle className="size-5 text-[#AB3300] shrink-0 mt-0.5" strokeWidth={2} />
             <div className="flex-1">
               <p className="font-['Clario'] font-semibold text-[14px] text-[#212223] mb-1">
-                {`Accept all ${pendingCount} pending ${pendingCount === 1 ? 'clause' : 'clauses'}?`}
+                {`Accept all ${pendingCount} pending ${pendingCount === 1 ? 'redline' : 'redlines'} across ${pendingDocCount} ${pendingDocCount === 1 ? 'document' : 'documents'}?`}
               </p>
               <p className="font-['Source_Sans_3'] text-[13px] text-[#666] leading-[1.5] mb-3">
-                This applies every pending suggested redline at once and cannot be undone in a single step. Review individual clauses first if you need to make exceptions.
+                This cannot be undone. Review individual clauses first if you need to make exceptions.
               </p>
               <div className="flex items-center gap-2">
                 <button
@@ -291,11 +294,10 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
         {/* Column headers */}
         <div className="flex sticky top-0 z-10 bg-[#F5F5F5] border-b border-[#E5E5E5] text-[12px] font-['Source_Sans_3'] font-semibold text-[#4A4A4A]">
           <div className="w-7 shrink-0 border-r border-[#E5E5E5]" />
-          <div className="w-[170px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Document name</div>
-          <div className="w-[120px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Category</div>
-          <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Section</div>
-          <div className="flex-1 min-w-[160px] border-r border-[#E5E5E5] px-2 py-1.5">Issue</div>
-          <div className="w-[200px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Suggested redline</div>
+          <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Document name</div>
+          <div className="w-[200px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Section</div>
+          <div className="flex-1 min-w-[200px] border-r border-[#E5E5E5] px-2 py-1.5">Issue</div>
+          <div className="w-[120px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Suggested redline</div>
           <div className="w-[110px] shrink-0 px-2 py-1.5">Status</div>
         </div>
 
@@ -354,21 +356,25 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
                             <ChevronRight className="size-3.5 text-[#666]" strokeWidth={2} />
                           )}
                         </div>
-                        <div className="w-[170px] shrink-0 border-r border-[#E5E5E5] px-2 py-2 flex items-start gap-1.5">
+                        <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-2 flex items-start gap-1.5">
                           <FileText className="size-3.5 text-[#8a8a8a] shrink-0 mt-0.5" strokeWidth={1.5} />
                           <span className="line-clamp-2">{row.documentName}</span>
                         </div>
-                        <div className="w-[120px] shrink-0 border-r border-[#E5E5E5] px-2 py-2">
-                          {row.category}
-                        </div>
-                        <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-2">
+                        <div className="w-[200px] shrink-0 border-r border-[#E5E5E5] px-2 py-2">
                           <span className="line-clamp-2">{row.section}</span>
                         </div>
-                        <div className="flex-1 min-w-[160px] border-r border-[#E5E5E5] px-2 py-2">
+                        <div className="flex-1 min-w-[200px] border-r border-[#E5E5E5] px-2 py-2">
                           <span className="line-clamp-2 text-[#666]">{row.issue}</span>
                         </div>
-                        <div className="w-[200px] shrink-0 border-r border-[#E5E5E5] px-2 py-2">
-                          <span className="line-clamp-2 text-[#166534]">{row.suggested}</span>
+                        <div className="w-[120px] shrink-0 border-r border-[#E5E5E5] px-2 py-2">
+                          <span className="inline-flex items-center gap-1 text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34]">
+                            {isExpanded ? (
+                              <ChevronDown className="size-3.5" strokeWidth={2} />
+                            ) : (
+                              <ChevronRight className="size-3.5" strokeWidth={2} />
+                            )}
+                            View redline
+                          </span>
                         </div>
                         <div className="w-[110px] shrink-0 px-2 py-2">
                           <span

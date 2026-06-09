@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { createPortal } from 'react-dom';
-import { ChevronDown, Share, Edit, FolderInput, Trash2, X, Bell, Save, ExternalLink } from 'lucide-react';
+import { ChevronDown, Share, Edit, FolderInput, Trash2, X, Bell, ExternalLink } from 'lucide-react';
 import { ActiveChatView } from '../components/ActiveChatView';
 import { generateChatTitle } from '../services/ChatService';
 import { Dropdown, DropdownItem } from '../components/ui/Dropdown';
@@ -127,9 +127,6 @@ export function ChatPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
-                    <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
-                      <Save className="size-4 text-[#1d4b34]" strokeWidth={1.5} />
-                    </div>
                     <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
                       <ExternalLink className="size-4 text-[#212223]" strokeWidth={1.5} />
                     </div>
