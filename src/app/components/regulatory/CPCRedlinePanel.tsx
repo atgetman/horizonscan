@@ -124,6 +124,10 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [showAcceptConfirm, setShowAcceptConfirm] = useState(false);
+  // Inline editing of the suggested replacement text.
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draft, setDraft] = useState('');
+  const [editedSuggestions, setEditedSuggestions] = useState<Record<string, string>>({});
 
   const categories = useMemo(
     () => Array.from(new Set(CLAUSE_ROWS.map((r) => r.category))),
@@ -134,6 +138,35 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
 
   const setStatus = (id: string, status: Status) => {
     setStatuses((prev) => ({ ...prev, [id]: status }));
+  };
+
+  // Resolve the suggested replacement text, preferring any user edit.
+  const suggestionFor = (row: ClauseRow) => editedSuggestions[row.id] ?? row.suggested;
+
+  const startEditing = (row: ClauseRow) => {
+    setEditingId(row.id);
+    setDraft(suggestionFor(row));
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setDraft('');
+  };
+
+  const saveEditing = (row: ClauseRow) => {
+    const trimmed = draft.trim();
+    setEditedSuggestions((prev) => {
+      const next = { ...prev };
+      if (trimmed === '' || trimmed === row.suggested) {
+        // No meaningful change — fall back to the original suggestion.
+        delete next[row.id];
+      } else {
+        next[row.id] = trimmed;
+      }
+      return next;
+    });
+    setEditingId(null);
+    setDraft('');
   };
 
   const toggleRow = (id: string) => {
@@ -395,12 +428,29 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
 
                             {/* Suggested replacement - success treatment, no strikethrough */}
                             <div>
-                              <p className="text-[12px] font-['Source_Sans_3'] font-semibold text-[#666] mb-1">
-                                Suggested replacement
-                              </p>
-                              <p className="text-[14px] font-['Source_Sans_3'] leading-relaxed text-[#1F1F1F] bg-[#F0FDF4] border-l-4 border-[#BBF7D0] rounded-r-md px-3 py-2">
-                                {row.suggested}
-                              </p>
+                              <div className="flex items-center justify-between mb-1">
+                                <p className="text-[12px] font-['Source_Sans_3'] font-semibold text-[#666]">
+                                  Suggested replacement
+                                </p>
+                                {editedSuggestions[row.id] && editingId !== row.id && (
+                                  <span className="text-[11px] font-['Source_Sans_3'] text-[#8a8a8a] italic">
+                                    Edited
+                                  </span>
+                                )}
+                              </div>
+                              {editingId === row.id ? (
+                                <textarea
+                                  value={draft}
+                                  onChange={(e) => setDraft(e.target.value)}
+                                  autoFocus
+                                  rows={4}
+                                  className="w-full text-[14px] font-['Source_Sans_3'] leading-relaxed text-[#1F1F1F] bg-white border border-[#1d4b34] rounded-md px-3 py-2 resize-y focus:outline-none focus:ring-1 focus:ring-[#1d4b34]"
+                                />
+                              ) : (
+                                <p className="text-[14px] font-['Source_Sans_3'] leading-relaxed text-[#1F1F1F] bg-[#F0FDF4] border-l-4 border-[#BBF7D0] rounded-r-md px-3 py-2">
+                                  {suggestionFor(row)}
+                                </p>
+                              )}
                             </div>
 
                             {/* Explanation */}
@@ -414,24 +464,41 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
                             </div>
 
                             {/* Actions */}
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => setStatus(row.id, 'accepted')}
-                                disabled={status === 'accepted'}
-                                className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#1d4b34] hover:bg-[#153a28] disabled:opacity-40 disabled:hover:bg-[#1d4b34] text-white text-[13px] font-['Clario'] font-medium rounded-md transition-colors"
-                              >
-                                <Check className="size-3.5" />
-                                {status === 'accepted' ? 'Accepted' : 'Accept'}
-                              </button>
-                              <button className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#F9FAFB] text-[#212223] text-[13px] font-['Clario'] font-medium rounded-md border border-[#D2D2D2] transition-colors">
-                                <Pencil className="size-3.5" />
-                                Edit
-                              </button>
-                              <button className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#F9FAFB] text-[#212223] text-[13px] font-['Clario'] font-medium rounded-md border border-[#D2D2D2] transition-colors">
-                                <Sparkles className="size-3.5" />
-                                Explain change
-                              </button>
-                            </div>
+                            {editingId === row.id ? (
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => saveEditing(row)}
+                                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#1d4b34] hover:bg-[#153a28] text-white text-[13px] font-['Clario'] font-medium rounded-md transition-colors"
+                                >
+                                  <Check className="size-3.5" />
+                                  Save
+                                </button>
+                                <button
+                                  onClick={cancelEditing}
+                                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#F9FAFB] text-[#212223] text-[13px] font-['Clario'] font-medium rounded-md border border-[#D2D2D2] transition-colors"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => setStatus(row.id, 'accepted')}
+                                  disabled={status === 'accepted'}
+                                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#1d4b34] hover:bg-[#153a28] disabled:opacity-40 disabled:hover:bg-[#1d4b34] text-white text-[13px] font-['Clario'] font-medium rounded-md transition-colors"
+                                >
+                                  <Check className="size-3.5" />
+                                  {status === 'accepted' ? 'Accepted' : 'Accept'}
+                                </button>
+                                <button
+                                  onClick={() => startEditing(row)}
+                                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#F9FAFB] text-[#212223] text-[13px] font-['Clario'] font-medium rounded-md border border-[#D2D2D2] transition-colors"
+                                >
+                                  <Pencil className="size-3.5" />
+                                  Edit
+                                </button>
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
