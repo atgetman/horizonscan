@@ -1,6 +1,5 @@
-import { ChevronDown, ChevronUp, FileText, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { ChevronDown, ChevronUp, FileText, CheckCircle2, AlertTriangle, Radar } from 'lucide-react';
 import { useState } from 'react';
-import { clsx } from 'clsx';
 
 interface CPCHandoffScreenProps {
   regulation: string;
@@ -12,6 +11,8 @@ interface CPCHandoffScreenProps {
 
 export function CPCHandoffScreen({ regulation, docsAffected, clausesAffected, impactLevel, onOpenRegulation }: CPCHandoffScreenProps) {
   const [expandedSection, setExpandedSection] = useState<string | null>('what-checked');
+  const [showAcceptConfirm, setShowAcceptConfirm] = useState(false);
+  const [redlinesAccepted, setRedlinesAccepted] = useState(false);
 
   const toggleSection = (section: string) => {
     setExpandedSection(expandedSection === section ? null : section);
@@ -19,6 +20,19 @@ export function CPCHandoffScreen({ regulation, docsAffected, clausesAffected, im
 
   return (
     <div className="flex flex-col gap-3 w-full">
+      {/* Carrying-forward context pill — confirms regulatory context auto-carried into CPC */}
+      <div className="flex items-center gap-2 px-3 py-2 bg-[#FFF8E5] border border-[#F5D6A3] rounded-lg w-fit">
+        <Radar className="size-3.5 text-[#AB3300] shrink-0" strokeWidth={2} />
+        <span className="text-[13px] font-['Source_Sans_3'] text-[#7A4A00]">
+          {'Carrying forward: '}
+          <span className="font-semibold">{regulation}</span>
+          {' · '}
+          <span className="font-semibold">{impactLevel} impact</span>
+          {' · '}
+          <span className="font-semibold">{`${docsAffected} documents`}</span>
+        </span>
+      </div>
+
       {/* System Action Line */}
       <div className="flex items-center gap-2 text-[13px] text-[#666]">
         <div className="w-1 h-1 rounded-full bg-[#1d4b34]" />
@@ -266,13 +280,59 @@ export function CPCHandoffScreen({ regulation, docsAffected, clausesAffected, im
       </div>
 
       {/* Footer Actions */}
-      <div className="flex items-center gap-3 pt-2">
-        <button className="h-[32px] px-[12px] py-[6px] flex items-center justify-center text-[14px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors">
-          Review redlines
-        </button>
-        <button className="h-[32px] px-[12px] py-[6px] flex items-center justify-center text-[14px] font-['Clario'] font-medium text-[#1d4b34] bg-white border border-[#8a8a8a] rounded-[4px] hover:bg-[#F5F5F5] transition-colors">
-          Accept all redlines
-        </button>
+      <div className="flex flex-col gap-3 pt-2">
+        {!showAcceptConfirm ? (
+          <div className="flex items-center gap-3">
+            <button className="h-[32px] px-[12px] py-[6px] flex items-center justify-center text-[14px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors">
+              Review redlines
+            </button>
+            {redlinesAccepted ? (
+              <span className="h-[32px] px-[12px] py-[6px] flex items-center gap-1.5 text-[14px] font-['Clario'] font-medium text-[#1d4b34]">
+                <CheckCircle2 className="size-4" strokeWidth={2} />
+                {`All ${clausesAffected} redlines accepted`}
+              </span>
+            ) : (
+              <button
+                onClick={() => setShowAcceptConfirm(true)}
+                className="h-[32px] px-[12px] py-[6px] flex items-center justify-center text-[14px] font-['Clario'] font-medium text-[#1d4b34] bg-white border border-[#8a8a8a] rounded-[4px] hover:bg-[#F5F5F5] transition-colors"
+              >
+                Accept all redlines
+              </button>
+            )}
+          </div>
+        ) : (
+          /* Inline confirmation for high-consequence bulk action */
+          <div className="bg-[#FFF8E5] border border-[#F5D6A3] rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="size-5 text-[#AB3300] shrink-0 mt-0.5" strokeWidth={2} />
+              <div className="flex-1">
+                <p className="font-['Clario'] font-semibold text-[14px] text-[#212223] mb-1">
+                  {`Accept all ${clausesAffected} redlines across ${docsAffected} documents?`}
+                </p>
+                <p className="font-['Source_Sans_3'] text-[13px] text-[#666] leading-[1.5] mb-3">
+                  This bulk action applies every suggested change at once and cannot be undone in a single step. Review individual redlines first if you need to make exceptions.
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setRedlinesAccepted(true);
+                      setShowAcceptConfirm(false);
+                    }}
+                    className="h-[32px] px-[12px] py-[6px] flex items-center justify-center text-[14px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors"
+                  >
+                    Yes, accept all
+                  </button>
+                  <button
+                    onClick={() => setShowAcceptConfirm(false)}
+                    className="h-[32px] px-[12px] py-[6px] flex items-center justify-center text-[14px] font-['Clario'] font-medium text-[#212223] bg-white border border-[#8a8a8a] rounded-[4px] hover:bg-[#F5F5F5] transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
