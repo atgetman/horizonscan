@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Monitor } from './MonitoringCard';
 import { Toggle } from '../ui/SegmentedToggle';
@@ -154,6 +154,27 @@ export function MonitoringSetupModal({
   const [selectedSources, setSelectedSources] = useState<string[]>(
     editingMonitor?.sources ?? [...SOURCE_OPTIONS]
   );
+
+  // The modal stays mounted in its parents and only toggles `isOpen`, so the
+  // useState initializers above run once (when editingMonitor was null). Re-sync
+  // all fields each time the modal opens so edit mode reflects the chosen monitor.
+  useEffect(() => {
+    if (!isOpen) return;
+    setTopic(editingMonitor?.topic || '');
+    setCriteria(editingMonitor?.criteria || '');
+    setFrequency(editingMonitor?.frequency || 'daily');
+    setSelectedPracticeAreas(
+      editingMonitor?.practiceAreas ?? getDefaultPracticeAreas(availablePracticeAreas)
+    );
+    const jurisdictions = editingMonitor?.jurisdictions
+      ? namespaceJurisdictions(editingMonitor.jurisdictions)
+      : getDefaultJurisdictions();
+    setSelectedJurisdictions(jurisdictions);
+    setSelectedRegions(getDefaultRegions(jurisdictions));
+    setExpandedMoreStates([]);
+    setSelectedSources(editingMonitor?.sources ?? [...SOURCE_OPTIONS]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, editingMonitor]);
 
   const handleRegionToggle = (regionId: string) => {
     setSelectedRegions((prev) =>
