@@ -297,7 +297,6 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
           <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Document name</div>
           <div className="w-[200px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Section</div>
           <div className="flex-1 min-w-[200px] border-r border-[#E5E5E5] px-2 py-1.5">Issue</div>
-          <div className="w-[120px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5">Suggested redline</div>
           <div className="w-[110px] shrink-0 px-2 py-1.5">Status</div>
         </div>
 
@@ -366,16 +365,6 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
                         <div className="flex-1 min-w-[200px] border-r border-[#E5E5E5] px-2 py-2">
                           <span className="line-clamp-2 text-[#666]">{row.issue}</span>
                         </div>
-                        <div className="w-[120px] shrink-0 border-r border-[#E5E5E5] px-2 py-2">
-                          <span className="inline-flex items-center gap-1 text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34]">
-                            {isExpanded ? (
-                              <ChevronDown className="size-3.5" strokeWidth={2} />
-                            ) : (
-                              <ChevronRight className="size-3.5" strokeWidth={2} />
-                            )}
-                            View redline
-                          </span>
-                        </div>
                         <div className="w-[110px] shrink-0 px-2 py-2">
                           <span
                             className={clsx(
@@ -394,22 +383,22 @@ export function CPCRedlinePanel({ regulation, onAcceptAll }: CPCRedlinePanelProp
                       {isExpanded && (
                         <div className="bg-[#FAFBFC] border-t border-[#E5E5E5] px-4 py-4 pl-9">
                           <div className="flex flex-col gap-3 max-w-[620px]">
-                            {/* Current clause - struck through red */}
+                            {/* Current clause - flagged-clause amber treatment, struck through */}
                             <div>
                               <p className="text-[12px] font-['Source_Sans_3'] font-semibold text-[#666] mb-1">
                                 Current clause
                               </p>
-                              <p className="text-[14px] font-['Source_Sans_3'] leading-relaxed line-through text-[#991B1B] bg-[#FEE2E2] rounded-md px-3 py-2">
+                              <p className="text-[14px] font-['Source_Sans_3'] leading-relaxed line-through text-[#1F1F1F] bg-[#FFF9F0] border-l-4 border-[#F5D6A3] rounded-r-md px-3 py-2">
                                 {row.original}
                               </p>
                             </div>
 
-                            {/* Suggested replacement - green */}
+                            {/* Suggested replacement - success treatment, no strikethrough */}
                             <div>
                               <p className="text-[12px] font-['Source_Sans_3'] font-semibold text-[#666] mb-1">
                                 Suggested replacement
                               </p>
-                              <p className="text-[14px] font-['Source_Sans_3'] leading-relaxed text-[#166534] bg-[#DCFCE7] rounded-md px-3 py-2">
+                              <p className="text-[14px] font-['Source_Sans_3'] leading-relaxed text-[#1F1F1F] bg-[#F0FDF4] border-l-4 border-[#BBF7D0] rounded-r-md px-3 py-2">
                                 {row.suggested}
                               </p>
                             </div>
