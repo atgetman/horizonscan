@@ -2,6 +2,31 @@ import { Paperclip, BookOpen, AtSign, ArrowUp, Sparkles, X, FileText, Table, Fol
 import React, { useState, useRef, useEffect } from "react";
 import { useDrop } from "react-dnd";
 import { createPortal } from "react-dom";
+import { useMonitoring } from "../contexts/MonitoringContext";
+
+type ChatTagKind = "workspace" | "skill" | "alert";
+
+interface ChatTag {
+  id: string;
+  label: string;
+  kind: ChatTagKind;
+}
+
+// Workspaces selectable as chat tags
+const WORKSPACE_OPTIONS = [
+  "Blackwell Industries Acquisition",
+  "Chen v. Metropolitan Health",
+  "Thornton Family Trust Amendment",
+  "Global Pharma Merger",
+  "Finch Data Breach Litigation",
+];
+
+// Monitoring alerts created for this prototype (mirrors the Monitoring list view)
+const PROTOTYPE_ALERTS = [
+  "Personal jurisdiction developments in Second Circuit",
+  "GDPR enforcement actions and guidance",
+  "Patent eligibility under Section 101",
+];
 
 interface PromptInputProps {
   className?: string;
@@ -44,11 +69,14 @@ export function PromptInput({
   const [submenuPosition, setSubmenuPosition] = useState<{ top: number; left: number } | null>(null);
   const [sharepointEnabled, setSharepointEnabled] = useState(true);
   const [imanageEnabled, setImanageEnabled] = useState(true);
+  const [chatTags, setChatTags] = useState<ChatTag[]>([]);
+  const { savedAlerts } = useMonitoring();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const knowledgeButtonRef = useRef<HTMLButtonElement>(null);
   const knowledgePopoverRef = useRef<HTMLDivElement>(null);
   const addMenuButtonRef = useRef<HTMLButtonElement>(null);
   const addMenuPopoverRef = useRef<HTMLDivElement>(null);
+  const submenuPopoverRef = useRef<HTMLDivElement>(null);
 
   // Use controlled or uncontrolled state
   const text = value !== undefined ? value : localText;
@@ -163,6 +191,27 @@ export function PromptInput({
     setSelectedSkillIds(prev => prev.filter(id => id !== skillId));
   };
 
+  const addChatTag = (kind: ChatTagKind, label: string) => {
+    setChatTags(prev => {
+      // Avoid duplicate tags of the same kind + label
+      if (prev.some(t => t.kind === kind && t.label === label)) return prev;
+      return [...prev, { id: `${kind}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, label, kind }];
+    });
+    setIsAddMenuOpen(false);
+    setSubmenuOpen(null);
+  };
+
+  const removeChatTag = (id: string) => {
+    setChatTags(prev => prev.filter(t => t.id !== id));
+  };
+
+  // Combine the prototype alerts with any alerts the user has saved (e.g. the
+  // M&A regulatory alert created from a scan) so they can all be tagged.
+  const alertOptions = [
+    ...PROTOTYPE_ALERTS,
+    ...savedAlerts.map(a => a.topic),
+  ].filter((label, i, arr) => arr.indexOf(label) === i);
+
   const handleAddMenuClick = () => {
     if (addMenuButtonRef.current) {
       const rect = addMenuButtonRef.current.getBoundingClientRect();
@@ -203,7 +252,8 @@ export function PromptInput({
         addMenuPopoverRef.current &&
         !addMenuPopoverRef.current.contains(event.target as Node) &&
         addMenuButtonRef.current &&
-        !addMenuButtonRef.current.contains(event.target as Node)
+        !addMenuButtonRef.current.contains(event.target as Node) &&
+        (!submenuPopoverRef.current || !submenuPopoverRef.current.contains(event.target as Node))
       ) {
         setIsAddMenuOpen(false);
         setSubmenuOpen(null);
@@ -298,6 +348,37 @@ export function PromptInput({
             : ''
         }`}
       >
+        {/* Chat Tags (workspaces, skills, alerts added from the + menu) */}
+        {chatTags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-3">
+            {chatTags.map(tag => (
+              <div
+                key={tag.id}
+                className="inline-flex items-center gap-1.5 bg-[#edf2f0] text-[#1d4b34] px-2 py-1 rounded text-[13px] border border-[#c9dcd3] animate-in fade-in zoom-in duration-200"
+              >
+                {tag.kind === 'skill' && <Blocks className="size-3.5" strokeWidth={1.75} />}
+                {tag.kind === 'alert' && <Bell className="size-3.5" strokeWidth={1.75} />}
+                {tag.kind === 'workspace' && (
+                  <svg className="size-3.5" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M13.3333 13.3333C13.687 13.3333 14.0261 13.1929 14.2761 12.9428C14.5262 12.6928 14.6667 12.3536 14.6667 12V5.33333C14.6667 4.97971 14.5262 4.64057 14.2761 4.39052C14.0261 4.14048 13.687 4 13.3333 4H8.06667C7.84368 4.00219 7.6237 3.94841 7.42687 3.84359C7.23004 3.73877 7.06264 3.58625 6.94 3.4L6.4 2.6C6.27859 2.41565 6.11332 2.26432 5.919 2.1596C5.72468 2.05488 5.50741 2.00004 5.28667 2H2.66667C2.31304 2 1.97391 2.14048 1.72386 2.39052C1.47381 2.64057 1.33333 2.97971 1.33333 3.33333V12C1.33333 12.3536 1.47381 12.6928 1.72386 12.9428C1.97391 13.1929 2.31304 13.3333 2.66667 13.3333H13.3333Z" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+                <span className="truncate max-w-[220px] font-['Source_Sans_3'] font-normal">{tag.label}</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeChatTag(tag.id);
+                  }}
+                  className="ml-0.5 hover:bg-[#1d4b34]/10 rounded p-0.5 transition-colors"
+                  aria-label={`Remove ${tag.label}`}
+                >
+                  <X className="size-2.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Staged Items Pills */}
         {items.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3">
@@ -603,27 +684,6 @@ export function PromptInput({
             <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.5} />
           </button>
 
-          {/* Shared */}
-          <button
-            onMouseEnter={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              setSubmenuPosition({
-                top: rect.top,
-                left: rect.right + 4
-              });
-              setSubmenuOpen('shared');
-            }}
-            className="w-full h-[31px] flex items-center gap-2 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
-          >
-            <div className="relative shrink-0 size-4">
-              <svg className="size-full" fill="none" viewBox="0 0 16 16">
-                <path d="M13.3333 13.3333C13.687 13.3333 14.0261 13.1929 14.2761 12.9428C14.5262 12.6928 14.6667 12.3536 14.6667 12V5.33333C14.6667 4.97971 14.5262 4.64057 14.2761 4.39052C14.0261 4.14048 13.687 4 13.3333 4H8.06667C7.84368 4.00219 7.6237 3.94841 7.42687 3.84359C7.23004 3.73877 7.06264 3.58625 6.94 3.4L6.4 2.6C6.27859 2.41565 6.11332 2.26432 5.919 2.1596C5.72468 2.05488 5.50741 2.00004 5.28667 2H2.66667C2.31304 2 1.97391 2.14048 1.72386 2.39052C1.47381 2.64057 1.33333 2.97971 1.33333 3.33333V12C1.33333 12.3536 1.47381 12.6928 1.72386 12.9428C1.97391 13.1929 2.31304 13.3333 2.66667 13.3333H13.3333Z" fill="#F8EADD" stroke="#DE6633" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Shared</span>
-            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.5} />
-          </button>
-
           {/* Skills */}
           <button
             onMouseEnter={(e) => {
@@ -643,6 +703,14 @@ export function PromptInput({
 
           {/* Monitoring & alerts */}
           <button
+            onMouseEnter={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              setSubmenuPosition({
+                top: rect.top,
+                left: rect.right + 4
+              });
+              setSubmenuOpen('alerts');
+            }}
             className="w-full h-[31px] flex items-center gap-2 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
           >
             <Bell className="size-4 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
@@ -721,6 +789,7 @@ export function PromptInput({
       {/* Submenu */}
       {submenuOpen && submenuPosition && createPortal(
         <div
+          ref={submenuPopoverRef}
           onMouseLeave={() => setSubmenuOpen(null)}
           style={{
             position: 'fixed',
@@ -736,21 +805,15 @@ export function PromptInput({
                 <Plus className="size-4 text-[#666]" strokeWidth={1.5} />
                 <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">New Workspace</span>
               </button>
-              <button className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left">
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">Blackwell Industries Acquisition</span>
-              </button>
-              <button className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left">
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">Chen v. Metropolitan Health</span>
-              </button>
-              <button className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left">
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">Thornton Family Trust Amendment</span>
-              </button>
-              <button className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left">
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">Global Pharma Merger</span>
-              </button>
-              <button className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left">
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">Finch Data Breach Litigation</span>
-              </button>
+              {WORKSPACE_OPTIONS.map((name) => (
+                <button
+                  key={name}
+                  onClick={() => addChatTag('workspace', name)}
+                  className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
+                >
+                  <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">{name}</span>
+                </button>
+              ))}
             </>
           )}
           {submenuOpen === 'documents' && (
@@ -767,36 +830,29 @@ export function PromptInput({
           )}
           {submenuOpen === 'skills' && (
             <>
-              <button
-                onClick={() => {
-                  setSubmenuOpen(null);
-                  setIsAddMenuOpen(false);
-                  handleKnowledgeClick();
-                }}
-                className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
-              >
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">Contract Review - SaaS Agreements</span>
-              </button>
-              <button
-                onClick={() => {
-                  setSubmenuOpen(null);
-                  setIsAddMenuOpen(false);
-                  handleKnowledgeClick();
-                }}
-                className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
-              >
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">Employment Law - California</span>
-              </button>
-              <button
-                onClick={() => {
-                  setSubmenuOpen(null);
-                  setIsAddMenuOpen(false);
-                  handleKnowledgeClick();
-                }}
-                className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
-              >
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">Discovery Response Standards</span>
-              </button>
+              {mockSkills.map((skill) => (
+                <button
+                  key={skill.id}
+                  onClick={() => addChatTag('skill', skill.name)}
+                  className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
+                >
+                  <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">{skill.name}</span>
+                </button>
+              ))}
+            </>
+          )}
+          {submenuOpen === 'alerts' && (
+            <>
+              {alertOptions.map((topic) => (
+                <button
+                  key={topic}
+                  onClick={() => addChatTag('alert', topic)}
+                  className="w-full flex items-start gap-2 px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
+                >
+                  <Bell className="size-4 text-[#DE6633] mt-0.5 shrink-0" strokeWidth={1.5} fill="#f8eadd" />
+                  <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.3]">{topic}</span>
+                </button>
+              ))}
             </>
           )}
         </div>,

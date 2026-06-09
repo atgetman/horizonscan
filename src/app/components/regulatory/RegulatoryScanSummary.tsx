@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink, Bell, CheckCircle2, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, ExternalLink, Bell, CheckCircle2, X, ArrowUpRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router';
 import { useMonitoring } from '../../contexts/MonitoringContext';
 
 interface TopFinding {
@@ -344,12 +345,20 @@ export function RegulatoryScanSummary({
               transition={{ duration: 0.2 }}
               className="w-full"
             >
-              <div className="flex items-center gap-[12px] flex-wrap w-full bg-[#EDF2F0] rounded-[8px] px-[12px] py-[10px]">
-                <div className="flex items-center gap-[8px] min-w-0">
-                  <span className="text-[14px] font-['Source_Sans_3'] text-[#1d4b34]">
+              <div className="flex items-center gap-[12px] w-full bg-[#EDF2F0] rounded-[8px] px-[12px] py-[10px]">
+                <div className="flex items-center gap-[8px] flex-1 min-w-0">
+                  <span className="text-[14px] font-['Source_Sans_3'] text-[#1d4b34] text-pretty">
                     {"You'll get "}
                     <strong className="font-semibold">{`${monitoringFrequency} alerts`}</strong>
-                    {' when new changes affect these documents'}
+                    {' when new changes affect your document. Manage anytime in the '}
+                    <Link
+                      to="/knowledge"
+                      className="inline-flex items-center gap-0.5 font-medium text-[#1d4b34] underline underline-offset-2 hover:text-[#143626] transition-colors"
+                    >
+                      Knowledge center
+                      <ArrowUpRight className="size-3" strokeWidth={2} />
+                    </Link>
+                    {'.'}
                   </span>
                 </div>
 
@@ -357,7 +366,7 @@ export function RegulatoryScanSummary({
                   {!showFrequencyChips ? (
                     <button
                       onClick={() => setShowFrequencyChips(true)}
-                      className="h-8 px-3 flex items-center bg-white border border-[#8a8a8a] rounded-lg text-[13px] font-['Clario'] font-medium text-[#212223] underline hover:bg-[#F5F5F5] transition-colors"
+                      className="h-8 px-3 flex items-center bg-white border border-[#8a8a8a] rounded-lg text-[13px] font-['Clario'] font-medium text-[#212223] hover:bg-[#F5F5F5] transition-colors"
                     >
                       Change frequency
                     </button>

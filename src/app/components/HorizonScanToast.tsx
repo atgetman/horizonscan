@@ -20,13 +20,13 @@ export interface HorizonScanAlert {
 }
 
 const DEFAULT_ALERT: Omit<HorizonScanAlert, "id"> = {
-  title: "Documents impacted in M&A Diligence",
-  detail: "New SEC guidance affects 3 documents in Project Atlas",
-  workspace: "Project Atlas - M&A Due Diligence",
+  title: "Documents impacted in Hernandez litigation",
+  detail: "New labor law guidance affects 3 documents in Hernandez v. Pacific Builders",
+  workspace: "Hernandez v. Pacific Builders Inc.",
   documents: [
-    { name: "Stock Purchase Agreement.docx", clause: "Reps & Warranties §3.2", impact: "high" },
-    { name: "Disclosure Schedules.docx", clause: "Material Contracts", impact: "medium" },
-    { name: "Merger Agreement.docx", clause: "Closing Conditions §7.1", impact: "low" },
+    { name: "Motion to Dismiss.docx", clause: "Memorandum of Law §II", impact: "high" },
+    { name: "Complaint.docx", clause: "Negligence Claims", impact: "medium" },
+    { name: "Personal Jurisdiction Motion.docx", clause: "Due Process §III", impact: "low" },
   ],
 };
 
