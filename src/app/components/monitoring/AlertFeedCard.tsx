@@ -25,8 +25,8 @@ interface AlertFeedCardProps {
 
 const CATEGORY_ACCENT: Record<AlertCategory, string> = {
   regulatory: 'border-l-[#DE6633]',
-  deadline: 'border-l-[#dc2626]',
-  contract: 'border-l-[#2563eb]',
+  deadline: 'border-l-[#314b3e]',
+  contract: 'border-l-[#50665b]',
 };
 
 function relativeTime(iso: string): string {
@@ -89,15 +89,17 @@ export function AlertFeedCard({ alert, onReview, onDismiss, onSnooze }: AlertFee
         </button>
         <button
           onClick={() => onSnooze(alert.id)}
-          className="h-8 px-3 flex items-center gap-1.5 rounded-lg text-[13px] font-['Source_Sans_3'] font-medium text-[#666] hover:bg-gray-100 transition-colors"
+          className="relative h-8 px-3 flex items-center gap-1.5 rounded-[4px] text-[13px] font-['Clario'] font-medium text-[#212223] hover:text-[#1d4b34] hover:bg-[#edf2f0] transition-colors"
         >
+          <span aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[5px]" />
           <Clock className="size-3.5" strokeWidth={1.5} />
           Snooze
         </button>
         <button
           onClick={() => onDismiss(alert.id)}
-          className="h-8 px-3 flex items-center gap-1.5 rounded-lg text-[13px] font-['Source_Sans_3'] font-medium text-[#666] hover:bg-gray-100 transition-colors"
+          className="relative h-8 px-3 flex items-center gap-1.5 rounded-[4px] text-[13px] font-['Clario'] font-medium text-[#212223] hover:text-[#1d4b34] hover:bg-[#edf2f0] transition-colors"
         >
+          <span aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[5px]" />
           <X className="size-3.5" strokeWidth={1.5} />
           Dismiss
         </button>

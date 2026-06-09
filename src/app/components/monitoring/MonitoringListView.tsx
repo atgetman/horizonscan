@@ -181,7 +181,7 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
   const navigate = useNavigate();
 
   // Monitoring list view component
-  const [activeTab, setActiveTab] = useState<'alerts' | 'monitors'>('alerts');
+  const [activeTab, setActiveTab] = useState<'alerts' | 'monitors'>('monitors');
   const [firedAlerts, setFiredAlerts] = useState<FiredAlert[]>(MOCK_FIRED_ALERTS);
   const [monitors, setMonitors] = useState<Monitor[]>(INITIAL_MONITORS);
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
@@ -282,9 +282,9 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
   const pausedCount = monitors.filter(m => m.status === 'paused').length;
 
   return (
-    <div className="max-w-[1100px] mx-auto px-[32px] pt-[50px]">
+    <div className="max-w-[1100px] mx-auto px-[32px] pt-[50px] pb-8">
       <div className="flex items-center justify-between mb-7">
-        <h1 className="text-[32px] font-['Clario'] font-medium text-[#314b3e] leading-[1.1]">Alerts</h1>
+        <h1 className="text-[32px] font-['Clario'] font-medium text-[#314b3e] leading-[1.1]">Monitoring & alerts</h1>
         {activeTab === 'monitors' && (
           <button
             onClick={handleCreateNew}
@@ -302,8 +302,8 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
           value={activeTab}
           onChange={(value) => setActiveTab(value as 'alerts' | 'monitors')}
           options={[
-            { value: 'alerts', label: 'Alerts' },
             { value: 'monitors', label: 'Monitors' },
+            { value: 'alerts', label: 'Alerts' },
           ]}
         />
       </div>

@@ -2735,6 +2735,14 @@ export function Knowledge() {
         onSave={handleSavePrompt}
       />
 
+      <MonitoringSetupModal
+        isOpen={isDashboardMonitorModalOpen}
+        onClose={() => { setIsDashboardMonitorModalOpen(false); setDashboardEditMonitor(null); }}
+        onSave={handleDashboardSaveMonitor}
+        editingMonitor={dashboardEditMonitor}
+        availablePracticeAreas={['Litigation', 'Corporate', 'Contracts', 'IP', 'Employment', 'Real Estate']}
+      />
+
       <NewSkillModal
         isOpen={isNewSkillModalOpen}
         onClose={() => setIsNewSkillModalOpen(false)}
