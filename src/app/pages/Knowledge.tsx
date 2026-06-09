@@ -5,7 +5,7 @@ import { PromptDrawer } from "../components/PromptDrawer";
 import { MultiSelect } from "../components/MultiSelect";
 import { SingleSelect } from "../components/SingleSelect";
 import { CardDropdownMenu } from "../components/CardDropdownMenu";
-import { Toggle } from "../components/ui/Toggle";
+import { Toggle } from "../components/ui/SegmentedToggle";
 import { NewSkillModal } from "../components/NewSkillModal";
 import { EditSkillModal } from "../components/EditSkillModal";
 import { ShareSkillModal } from "../components/ShareSkillModal";
@@ -18,6 +18,8 @@ import { Toast } from "../components/Toast";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { clsx } from "clsx";
 import { MonitoringListView } from "../components/monitoring/MonitoringListView";
+import { MonitoringCard, Monitor } from "../components/monitoring/MonitoringCard";
+import { MonitoringSetupModal } from "../components/monitoring/MonitoringSetupModal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -735,6 +737,41 @@ export function Knowledge() {
   const [toastMessage, setToastMessage] = useState('');
   const [isImportSkillModalOpen, setIsImportSkillModalOpen] = useState(false);
 
+  // Dashboard monitoring preview state
+  const [dashboardEditMonitor, setDashboardEditMonitor] = useState<Monitor | null>(null);
+  const [isDashboardMonitorModalOpen, setIsDashboardMonitorModalOpen] = useState(false);
+  const [dismissedMonitorIds, setDismissedMonitorIds] = useState<string[]>([]);
+  const [monitorOverrides, setMonitorOverrides] = useState<Record<string, Partial<Monitor>>>({});
+
+  const handleDashboardEditMonitor = (monitor: Monitor) => {
+    setDashboardEditMonitor(monitor);
+    setIsDashboardMonitorModalOpen(true);
+  };
+  const handleDashboardSaveMonitor = (monitor: Partial<Monitor>) => {
+    if (monitor.id) {
+      setMonitorOverrides(prev => ({ ...prev, [monitor.id as string]: monitor }));
+    }
+    setIsDashboardMonitorModalOpen(false);
+    setDashboardEditMonitor(null);
+    setToastMessage('Monitor updated.');
+    setShowToast(true);
+  };
+  const handleDashboardPauseMonitor = (id: string) => {
+    setMonitorOverrides(prev => ({ ...prev, [id]: { ...prev[id], status: 'paused' } }));
+    setToastMessage('Monitor paused.');
+    setShowToast(true);
+  };
+  const handleDashboardResumeMonitor = (id: string) => {
+    setMonitorOverrides(prev => ({ ...prev, [id]: { ...prev[id], status: 'active' } }));
+    setToastMessage('Monitor resumed.');
+    setShowToast(true);
+  };
+  const handleDashboardDeleteMonitor = (id: string) => {
+    setDismissedMonitorIds(prev => [...prev, id]);
+    setToastMessage('Monitor deleted.');
+    setShowToast(true);
+  };
+
   // Reopen panel when navigating to Knowledge route
   useEffect(() => {
     setIsKnowledgePanelOpen(true);
@@ -993,8 +1030,82 @@ export function Knowledge() {
     // Filter skills by scope
     const scopedSkills = skills.filter(s => s.scope === activeScope).slice(0, 4);
 
+    // Build monitor preview cards for the dashboard
+    const personalDefaultMonitors: Monitor[] = [
+      {
+        id: 'dash-personal-1',
+        topic: 'Personal jurisdiction developments',
+        criteria: 'Second Circuit cases on minimum contacts analysis',
+        frequency: 'weekly',
+        practiceAreas: ['Litigation'],
+        jurisdictions: ['Federal', 'New York'],
+        status: 'active',
+        lastScan: '2 days ago',
+        alertCount: 3,
+        createdDate: '2026-04-15',
+      },
+      {
+        id: 'dash-personal-2',
+        topic: 'GDPR enforcement actions',
+        criteria: 'EU data protection authority guidance and decisions',
+        frequency: 'daily',
+        practiceAreas: ['Corporate'],
+        jurisdictions: [],
+        status: 'active',
+        lastScan: 'today',
+        alertCount: 1,
+        createdDate: '2026-03-20',
+      },
+    ];
+    const firmDefaultMonitors: Monitor[] = [
+      {
+        id: 'dash-firm-1',
+        topic: 'SEC Disclosure Requirements',
+        criteria: 'Updates to Regulation S-K and Form 10-K requirements',
+        frequency: 'daily',
+        practiceAreas: ['Corporate'],
+        jurisdictions: ['Federal'],
+        status: 'active',
+        lastScan: '1 day ago',
+        alertCount: 2,
+        createdDate: '2026-04-01',
+      },
+      {
+        id: 'dash-firm-2',
+        topic: 'Employment Law Updates',
+        criteria: 'Federal and state wage and hour law changes',
+        frequency: 'weekly',
+        practiceAreas: ['Employment'],
+        jurisdictions: ['Federal'],
+        status: 'active',
+        lastScan: '3 days ago',
+        alertCount: 0,
+        createdDate: '2026-03-10',
+      },
+    ];
+    const savedAlertMonitors: Monitor[] = savedAlerts.map(alert => ({
+      id: alert.id,
+      topic: alert.topic,
+      criteria: alert.criteria,
+      frequency: (alert.frequency === 'instant' ? 'real-time' : alert.frequency) as Monitor['frequency'],
+      practiceAreas: alert.practiceAreas,
+      jurisdictions: alert.jurisdictions,
+      status: alert.status,
+      lastScan: alert.lastScan?.toLowerCase(),
+      alertCount: alert.alertCount,
+      createdDate: alert.createdDate,
+    }));
+
+    // Saved alerts (created from a chat scan) always show first, in either
+    // scope, followed by the scope's default preview monitors.
+    const defaultMonitors = activeScope === 'personal' ? personalDefaultMonitors : firmDefaultMonitors;
+    const baseMonitors = [...savedAlertMonitors, ...defaultMonitors].slice(0, 4);
+    const dashboardMonitors = baseMonitors
+      .filter(m => !dismissedMonitorIds.includes(m.id))
+      .map(m => ({ ...m, ...monitorOverrides[m.id] }) as Monitor);
+
     return (
-    <div className="max-w-5xl mx-auto px-8 pt-[50px] pb-8">
+    <div className="max-w-[1100px] mx-auto px-[32px] pt-[50px] pb-8">
       <div className="mb-7">
         <h1 className="text-[32px] font-['Clario'] font-medium text-[#314b3e] leading-[1.1]">Dashboard</h1>
       </div>
@@ -1046,7 +1157,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Professional Legal Writing</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-0">Professional Legal Writing</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Formal tone, precise language, and citation standards for legal documents</p>
                 <div className="flex gap-1.5 items-center">
@@ -1094,7 +1205,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Client Communication</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-0">Client Communication</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Accessible language, empathetic tone for client-facing correspondence</p>
                 <div className="flex gap-1.5 items-center">
@@ -1142,7 +1253,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Research Analysis</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-0">Research Analysis</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Comprehensive case analysis with detailed citations and precedent review</p>
                 <div className="flex gap-1.5 items-center">
@@ -1192,7 +1303,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Firm Standard Brief Format</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-0">Firm Standard Brief Format</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Standardized formatting, citation style, and structure for all firm briefs</p>
                 <div className="flex gap-1.5 items-center">
@@ -1240,7 +1351,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Contract Review Standards</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-0">Contract Review Standards</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Comprehensive checklist and risk assessment framework for contract analysis</p>
                 <div className="flex gap-1.5 items-center">
@@ -1288,7 +1399,7 @@ export function Knowledge() {
                   <div className="flex items-center justify-center shrink-0 pt-0.5">
                     <Brain className="size-5 text-[#DE6633]" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-0">Litigation Response Protocol</h3>
+                  <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-0">Litigation Response Protocol</h3>
                 </div>
                 <p className="text-[13px] text-gray-500 mb-3">Procedures and guidelines for responding to discovery requests and motions</p>
                 <div className="flex gap-1.5 items-center">
@@ -1394,7 +1505,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Brief template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1 truncate">Brief template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">2 hours ago</p>
@@ -1416,7 +1527,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">NDA template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1 truncate">NDA template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">3 days ago</p>
@@ -1438,7 +1549,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Motion template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1 truncate">Motion template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">5 days ago</p>
@@ -1460,7 +1571,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Correspondence template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1 truncate">Correspondence template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">1 week ago</p>
@@ -1484,7 +1595,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Brief template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1 truncate">Brief template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">324 KB</p>
@@ -1506,7 +1617,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">NDA template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1 truncate">NDA template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">521 KB</p>
@@ -1528,7 +1639,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Motion template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1 truncate">Motion template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">198 KB</p>
@@ -1550,7 +1661,7 @@ export function Knowledge() {
               />
             </div>
             <div className="p-3">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1 truncate">Correspondence template.docx</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] mb-1 truncate">Correspondence template.docx</h3>
               <div className="flex gap-1.5 items-center">
                 <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
                   <p className="leading-[1.2]">276 KB</p>
@@ -1587,7 +1698,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <SquarePen className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Agreement Clause Drafting</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-2">Agreement Clause Drafting</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Create a specific clause for a given agreement type</p>
             <div className="flex gap-1.5 items-center">
@@ -1606,7 +1717,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <Sheet className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Amendment Term Analysis</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-2">Amendment Term Analysis</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Understand contract terms relating to amending and modifying</p>
             <div className="flex gap-1.5 items-center">
@@ -1625,7 +1736,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <Scale className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">AI Jurisdiction Surveys</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-2">AI Jurisdiction Surveys</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Get a survey of the law across jurisdictions</p>
             <div className="flex gap-1.5 items-center">
@@ -1646,7 +1757,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <Scale className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Compliance assessment</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-2">Compliance assessment</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">across regulatory frameworks</p>
             <div className="flex gap-1.5 items-center">
@@ -1665,7 +1776,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <SquarePen className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Prepare client memo</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-2">Prepare client memo</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">summarizing case developments</p>
             <div className="flex gap-1.5 items-center">
@@ -1684,7 +1795,7 @@ export function Knowledge() {
               <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0">
                 <Sheet className="size-5 text-[#666]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight pt-2">Risk analysis</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight pt-2">Risk analysis</h3>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">for M&A transactions</p>
             <div className="flex gap-1.5 items-center">
@@ -1719,7 +1830,7 @@ export function Knowledge() {
             <>
           <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223]">Contract Review Checklist</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223]">Contract Review Checklist</h3>
               <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-1 rounded-full">15 questions</span>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Standard questions for reviewing commercial contracts</p>
@@ -1736,7 +1847,7 @@ export function Knowledge() {
 
           <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223]">Discovery Analysis</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223]">Discovery Analysis</h3>
               <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-1 rounded-full">8 questions</span>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Key questions for analyzing discovery materials</p>
@@ -1755,7 +1866,7 @@ export function Knowledge() {
             <>
           <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223]">Employee Onboarding Legal Checklist</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223]">Employee Onboarding Legal Checklist</h3>
               <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-1 rounded-full">22 questions</span>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Comprehensive checklist for new employee documentation</p>
@@ -1772,7 +1883,7 @@ export function Knowledge() {
 
           <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[15px] font-['Clario'] text-[#212223]">M&A Due Diligence Framework</h3>
+              <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223]">M&A Due Diligence Framework</h3>
               <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-1 rounded-full">31 questions</span>
             </div>
             <p className="text-[13px] text-gray-500 mb-3">Essential questions for mergers and acquisitions review</p>
@@ -1803,150 +1914,18 @@ export function Knowledge() {
             <ChevronRight className="size-4" />
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          {activeScope === 'personal' ? (
-            <>
-              {/* Show saved M&A alerts first */}
-              {savedAlerts.slice(0, 2).map(alert => (
-                <div
-                  key={alert.id}
-                  className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                  onClick={() => setActiveSection('monitoring-alerts')}
-                >
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="flex items-center justify-center shrink-0 pt-0.5">
-                      <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">{alert.topic}</h3>
-                      <p className="text-[13px] text-gray-500 mb-3 line-clamp-2">{alert.criteria}</p>
-                      <div className="flex gap-1.5 items-center">
-                        <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                          <p className="leading-[1.2]">Last scan {alert.lastScan.toLowerCase()}</p>
-                        </div>
-                        <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                        <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full capitalize">{alert.frequency}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {/* Show default alerts if no saved alerts or to fill the grid */}
-              {savedAlerts.length === 0 && (
-                <>
-                  <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                    onClick={() => setActiveSection('monitoring-alerts')}
-                  >
-                    <div className="flex items-start gap-3 mb-2">
-                      <div className="flex items-center justify-center shrink-0 pt-0.5">
-                        <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">Personal jurisdiction developments</h3>
-                        <p className="text-[13px] text-gray-500 mb-3">Second Circuit cases on minimum contacts analysis</p>
-                        <div className="flex gap-1.5 items-center">
-                          <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                            <p className="leading-[1.2]">Last scan 2 days ago</p>
-                          </div>
-                          <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                          <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">3 new</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                    onClick={() => setActiveSection('monitoring-alerts')}
-                  >
-                    <div className="flex items-start gap-3 mb-2">
-                      <div className="flex items-center justify-center shrink-0 pt-0.5">
-                        <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">GDPR enforcement actions</h3>
-                        <p className="text-[13px] text-gray-500 mb-3">EU data protection authority guidance and decisions</p>
-                        <div className="flex gap-1.5 items-center">
-                          <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                            <p className="leading-[1.2]">Last scan today</p>
-                          </div>
-                          <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                          <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">1 new</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {savedAlerts.length === 1 && (
-                <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                  onClick={() => setActiveSection('monitoring-alerts')}
-                >
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="flex items-center justify-center shrink-0 pt-0.5">
-                      <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">Personal jurisdiction developments</h3>
-                      <p className="text-[13px] text-gray-500 mb-3">Second Circuit cases on minimum contacts analysis</p>
-                      <div className="flex gap-1.5 items-center">
-                        <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                          <p className="leading-[1.2]">Last scan 2 days ago</p>
-                        </div>
-                        <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                        <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">3 new</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                onClick={() => setActiveSection('monitoring-alerts')}
-              >
-                <div className="flex items-start gap-3 mb-2">
-                  <div className="flex items-center justify-center shrink-0 pt-0.5">
-                    <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">SEC Disclosure Requirements</h3>
-                    <p className="text-[13px] text-gray-500 mb-3">Updates to Regulation S-K and Form 10-K requirements</p>
-                    <div className="flex gap-1.5 items-center">
-                      <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                        <p className="leading-[1.2]">Last scan 1 day ago</p>
-                      </div>
-                      <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                      <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">2 new</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
-                onClick={() => setActiveSection('monitoring-alerts')}
-              >
-                <div className="flex items-start gap-3 mb-2">
-                  <div className="flex items-center justify-center shrink-0 pt-0.5">
-                    <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-[15px] font-['Clario'] text-[#212223] mb-1">Employment Law Updates</h3>
-                    <p className="text-[13px] text-gray-500 mb-3">Federal and state wage and hour law changes</p>
-                    <div className="flex gap-1.5 items-center">
-                      <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">
-                        <p className="leading-[1.2]">Last scan 3 days ago</p>
-                      </div>
-                      <div className="size-1 rounded-full bg-[#8A8A8A]" />
-                      <span className="text-[12px] font-['Source_Sans_3'] font-medium text-[#1d4b34] bg-[#edf2f0] px-2.5 py-0.5 rounded-full">Active</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {dashboardMonitors.map((monitor) => (
+            <MonitoringCard
+              key={monitor.id}
+              monitor={monitor}
+              onEdit={handleDashboardEditMonitor}
+              onPause={handleDashboardPauseMonitor}
+              onResume={handleDashboardResumeMonitor}
+              onDelete={handleDashboardDeleteMonitor}
+              onViewResults={() => setActiveSection('monitoring-alerts')}
+            />
+          ))}
         </div>
       </div>
     </div>
@@ -2343,7 +2322,7 @@ export function Knowledge() {
         {filteredSkills.length === 0 && (
           <div className="py-12 text-center">
             <Blocks className="size-12 text-gray-300 mx-auto mb-3" />
-            <h3 className="text-[15px] font-['Clario'] text-gray-700 mb-1">No skills yet</h3>
+            <h3 className="text-[15px] font-['Clario'] font-medium text-gray-700 mb-1">No skills yet</h3>
             <p className="text-[14px] text-gray-500">Create your first skill to get started</p>
           </div>
         )}
@@ -2355,7 +2334,7 @@ export function Knowledge() {
     <div className="flex items-center justify-center h-full">
       <div className="text-center">
         {icon}
-        <h3 className="text-[16px] font-['Clario'] text-gray-700 mb-2">{title}</h3>
+        <h3 className="text-[16px] font-['Clario'] font-medium text-gray-700 mb-2">{title}</h3>
         <p className="text-[14px] text-gray-500">{description}</p>
       </div>
     </div>
@@ -2383,82 +2362,82 @@ export function Knowledge() {
           </h2>
         </div>
 
-        <nav>
+        <nav className="px-2 flex flex-col gap-1">
           <button
             onClick={() => setActiveSection('dashboard')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'dashboard'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <LayoutDashboard className="size-4 shrink-0" />
+            <LayoutDashboard className="size-[18px] shrink-0" />
             <span>Dashboard</span>
           </button>
           <button
             onClick={() => setActiveSection('instructions')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'instructions'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <Brain className="size-4 shrink-0" />
+            <Brain className="size-[18px] shrink-0" />
             <span>Instructions</span>
           </button>
           <button
             onClick={() => setActiveSection('custom-skills')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'custom-skills'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <Blocks className="size-4 shrink-0" />
+            <Blocks className="size-[18px] shrink-0" />
             <span>Custom skills</span>
           </button>
           <button
             onClick={() => setActiveSection('model-documents')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'model-documents'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <FileBadge className="size-4 shrink-0" />
+            <FileBadge className="size-[18px] shrink-0" />
             <span>Model documents</span>
           </button>
           <button
             onClick={() => setActiveSection('prompts')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'prompts'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <MessageCircleQuestion className="size-4 shrink-0" />
+            <MessageCircleQuestion className="size-[18px] shrink-0" />
             <span>Prompts</span>
           </button>
           <button
             onClick={() => setActiveSection('question-sets')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'question-sets'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <Sheet className="size-4 shrink-0" />
+            <Sheet className="size-[18px] shrink-0" />
             <span>Question sets</span>
           </button>
           <button
             onClick={() => setActiveSection('monitoring-alerts')}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-[14px] ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] transition-colors ${
               activeSection === 'monitoring-alerts'
                 ? 'bg-gray-100 text-[#212223] font-semibold'
-                : 'text-[#212223] hover:bg-[#f3f4f6] font-normal'
+                : 'text-[#212223] hover:bg-gray-100 font-normal'
             }`}
           >
-            <Bell className="size-4 shrink-0" />
+            <Bell className="size-[18px] shrink-0" />
             <span>Monitoring & alerts</span>
           </button>
         </nav>
@@ -2627,29 +2606,29 @@ export function Knowledge() {
                 />
 
                 {/* View Mode Toggle */}
-                <div className="flex items-center gap-1 rounded-lg p-0.5">
+                <div className="inline-flex w-fit items-center rounded-[8px] bg-[#f0f2f1] p-[4px] gap-[2px]">
                   <button
                     onClick={() => setViewMode('card')}
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-[13px] font-['Source_Sans_3'] transition-all ${
+                    className={`flex items-center gap-1.5 px-[16px] py-[6px] text-[14px] font-medium rounded-[6px] transition-all font-['Source_Sans_3',sans-serif] ${
                       viewMode === 'card'
-                        ? 'bg-[#edf2f0] text-[#314b3e] font-semibold'
-                        : 'text-[#666666] hover:text-[#212223]'
+                        ? 'bg-white text-[#1d4b34] shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
+                        : 'text-[#5c5c5c] hover:text-[#1d4b34] bg-transparent'
                     }`}
                     title="Card view"
                   >
-                    <LayoutGrid className="size-3.5" />
+                    <LayoutGrid className="size-4" />
                     Card
                   </button>
                   <button
                     onClick={() => setViewMode('table')}
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-[13px] font-['Source_Sans_3'] transition-all ${
+                    className={`flex items-center gap-1.5 px-[16px] py-[6px] text-[14px] font-medium rounded-[6px] transition-all font-['Source_Sans_3',sans-serif] ${
                       viewMode === 'table'
-                        ? 'bg-[#edf2f0] text-[#314b3e] font-semibold'
-                        : 'text-[#666666] hover:text-[#212223]'
+                        ? 'bg-white text-[#1d4b34] shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
+                        : 'text-[#5c5c5c] hover:text-[#1d4b34] bg-transparent'
                     }`}
                     title="Table view"
                   >
-                    <Table className="size-3.5" />
+                    <Table className="size-4" />
                     Table
                   </button>
                 </div>
@@ -2707,7 +2686,7 @@ export function Knowledge() {
                           <div className={`w-[24px] h-[24px] rounded-md ${bgColor} border ${borderColor} flex items-center justify-center flex-shrink-0`}>
                             <PromptIcon className={`w-[18px] h-[18px] ${iconColor}`} />
                           </div>
-                          <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] truncate">
+                          <h3 className="text-[15px] font-['Clario'] font-normal text-[#212223] truncate">
                             {prompt.title}
                           </h3>
                         </div>
@@ -2755,6 +2734,14 @@ export function Knowledge() {
         onClose={() => setIsDrawerOpen(false)}
         prompt={selectedPrompt}
         onSave={handleSavePrompt}
+      />
+
+      <MonitoringSetupModal
+        isOpen={isDashboardMonitorModalOpen}
+        onClose={() => { setIsDashboardMonitorModalOpen(false); setDashboardEditMonitor(null); }}
+        onSave={handleDashboardSaveMonitor}
+        editingMonitor={dashboardEditMonitor}
+        availablePracticeAreas={['Litigation', 'Corporate', 'Contracts', 'IP', 'Employment', 'Real Estate']}
       />
 
       <NewSkillModal
@@ -2856,7 +2843,7 @@ function SkillCard({ skill, onEdit, onShare, onDelete, onTest }: {
           <Blocks className="size-5 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
         </div>
         <div className="flex-1 min-w-0 pr-32">
-          <h3 className="text-[15px] font-['Clario'] text-[#212223] leading-tight mb-1">{skill.name}</h3>
+          <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight mb-1">{skill.name}</h3>
           <p className="text-[13px] text-gray-500 line-clamp-2 mb-2">{skill.purpose || skill.practiceArea}</p>
           <div className="flex gap-1.5 items-center">
             <div className="flex flex-col font-['Source_Sans_3'] font-normal justify-center leading-[0] text-[#666] text-[14px]">

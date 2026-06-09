@@ -13,6 +13,7 @@ import { ClassicCoCounsel } from "./pages/ClassicCoCounsel";
 import SkillTesting from "./pages/SkillTesting";
 import { RegulatoryDemo } from "./pages/RegulatoryDemo";
 import { StandaloneViewPage } from "./pages/StandaloneViewPage";
+import { Preferences } from "./pages/Preferences";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       { path: "workspace/:workspaceName", Component: WorkspacePage },
       { path: "spaces", Component: Spaces },
       { path: "knowledge", Component: Knowledge },
+      { path: "preferences", Component: Preferences },
       { path: "knowledge/test-skill", Component: SkillTesting },
       { path: "regulatory-demo", Component: RegulatoryDemo },
       { path: "history", Component: History },

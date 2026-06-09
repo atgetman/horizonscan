@@ -11,9 +11,10 @@ export interface Monitor {
   id: string;
   topic: string;
   criteria: string;
-  frequency: 'real-time' | 'daily' | 'weekly';
+  frequency: 'real-time' | 'daily' | 'weekly' | 'monthly';
   practiceAreas: string[];
   jurisdictions?: string[];
+  sources?: string[];
   status: 'active' | 'paused';
   lastScan?: string;
   nextScan?: string;
@@ -42,10 +43,12 @@ export function MonitoringCard({
   const isPaused = monitor.status === 'paused';
 
   return (
-    <div className={clsx(
-      "bg-white relative rounded-lg border border-[#e5e5e5] p-4 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group",
-      isPaused && "opacity-60"
-    )}>
+    <div
+      onClick={() => onEdit(monitor)}
+      className={clsx(
+        "bg-white relative rounded-lg border border-[#e5e5e5] p-4 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group",
+        isPaused && "opacity-60"
+      )}>
       <div className="flex items-start gap-3 pr-8">
         <div className="flex items-center justify-center shrink-0 pt-0.5">
           <Bell className={clsx(
@@ -57,10 +60,10 @@ export function MonitoringCard({
           />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-[15px] font-['Clario'] font-semibold text-[#212223] leading-tight mb-1">
+          <h3 className="text-[15px] font-['Clario'] font-medium text-[#212223] leading-tight mb-1">
             {monitor.topic}
           </h3>
-          <p className="text-[13px] text-gray-500 line-clamp-2 mb-2">
+          <p className="text-[13px] font-['Source_Sans_3'] font-normal text-gray-500 line-clamp-2 mb-2">
             {monitor.criteria}
           </p>
           <div className="flex gap-1.5 items-center">
@@ -100,28 +103,26 @@ export function MonitoringCard({
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
-            <DropdownMenuItem onClick={() => onEdit(monitor)}>
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(monitor); }}>
               <Edit className="size-3.5 mr-0 text-gray-500" />
               Edit
             </DropdownMenuItem>
             {isPaused ? (
-              <DropdownMenuItem onClick={() => onResume(monitor.id)}>
+              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onResume(monitor.id); }}>
                 <Play className="size-3.5 mr-0 text-gray-500" />
                 Resume
               </DropdownMenuItem>
             ) : (
-              <DropdownMenuItem onClick={() => onPause(monitor.id)}>
+              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onPause(monitor.id); }}>
                 <Pause className="size-3.5 mr-0 text-gray-500" />
                 Pause
               </DropdownMenuItem>
             )}
-            {monitor.alertCount > 0 && (
-              <DropdownMenuItem onClick={() => onViewResults(monitor.id)}>
-                <Eye className="size-3.5 mr-0 text-gray-500" />
-                View results
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuItem onClick={() => onDelete(monitor.id)}>
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onViewResults(monitor.id); }}>
+              <Eye className="size-3.5 mr-0 text-gray-500" />
+              View results
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(monitor.id); }}>
               <Trash2 className="size-3.5 mr-0 text-gray-500" />
               Delete
             </DropdownMenuItem>

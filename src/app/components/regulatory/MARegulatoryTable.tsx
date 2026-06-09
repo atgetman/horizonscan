@@ -165,7 +165,7 @@ export function MARegulatoryTable() {
             <span className="text-[13px] text-[#1F1F1F]">
               <span className="font-medium">{MA_REGULATORY_DATA.length} of {MA_REGULATORY_DATA.length} regulatory findings</span>
               <span className="text-[#666] mx-2">•</span>
-              <span className="font-medium">{totalDocuments} documents affected</span>
+              <span className="font-medium">{totalDocuments} documents affected across standard M&A templates</span>
               <span className="text-[#666] mx-2">•</span>
               <span className="text-[#D97706] font-medium">{highPriorityCount} high priority items require immediate attention</span>
             </span>

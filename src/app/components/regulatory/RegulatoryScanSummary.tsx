@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { ChevronDown, ChevronUp, ExternalLink, Bell, CheckCircle2, X } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useMonitoring } from '../../contexts/MonitoringContext';
 
 interface TopFinding {
   regulation: string;
-  impact: 'Critical' | 'High';
+  impact: 'High' | 'Medium' | 'Low';
   deadline: string;
 }
 
@@ -16,13 +18,17 @@ interface RegulatoryScanSummaryProps {
 }
 
 const impactColors = {
-  Critical: {
+  High: {
     bgColor: 'bg-[#FFEDED]',
     textColor: 'text-[#DC0A0A]'
   },
-  High: {
+  Medium: {
     bgColor: 'bg-[#FFF8E5]',
     textColor: 'text-[#AB3300]'
+  },
+  Low: {
+    bgColor: 'bg-[#EDF6FF]',
+    textColor: 'text-[#0062C4]'
   }
 };
 
@@ -34,6 +40,57 @@ export function RegulatoryScanSummary({
   onViewAffectedClauses
 }: RegulatoryScanSummaryProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['what-found']));
+  // Shared alert state — synced across the chat summary and the tabular toolbar
+  const { savedAlerts, addAlert, removeAlert } = useMonitoring();
+  const regulatoryAlert = savedAlerts.find(a => a.sourceType === 'regulatory-table');
+  const alertSaved = Boolean(regulatoryAlert);
+  // Inline confirmation strip is shown right after saving from this surface
+  const [showAlertSavedStrip, setShowAlertSavedStrip] = useState(false);
+  const [showFrequencyChips, setShowFrequencyChips] = useState(false);
+  const monitoringFrequency = (regulatoryAlert?.frequency === 'instant' ? 'weekly' : regulatoryAlert?.frequency) ?? 'weekly';
+
+  const handleSaveAsAlert = () => {
+    setShowFrequencyChips(false);
+    if (!alertSaved) {
+      addAlert({
+        topic: 'M&A Regulatory Updates',
+        criteria: 'Monitor regulatory changes affecting M&A transactions',
+        frequency: 'weekly',
+        practiceAreas: ['Corporate', 'M&A'],
+        jurisdictions: ['Federal', 'Multi-jurisdictional'],
+        status: 'active',
+        lastScan: 'Just now',
+        nextScan: '7 days',
+        alertCount: 0,
+        sourceType: 'regulatory-table'
+      });
+    }
+    setShowAlertSavedStrip(true);
+  };
+
+  const handleChangeFrequency = (freq: 'daily' | 'weekly' | 'monthly') => {
+    if (regulatoryAlert) {
+      removeAlert(regulatoryAlert.id);
+    }
+    addAlert({
+      topic: 'M&A Regulatory Updates',
+      criteria: 'Monitor regulatory changes affecting M&A transactions',
+      frequency: freq,
+      practiceAreas: ['Corporate', 'M&A'],
+      jurisdictions: ['Federal', 'Multi-jurisdictional'],
+      status: 'active',
+      lastScan: 'Just now',
+      nextScan: freq === 'daily' ? 'Tomorrow' : freq === 'weekly' ? '7 days' : '30 days',
+      alertCount: 0,
+      sourceType: 'regulatory-table'
+    });
+    setShowFrequencyChips(false);
+  };
+
+  const handleDismissAlert = () => {
+    setShowAlertSavedStrip(false);
+    setShowFrequencyChips(false);
+  };
 
   const toggleSection = (section: string) => {
     const newExpanded = new Set(expandedSections);
@@ -180,7 +237,7 @@ export function RegulatoryScanSummary({
           {expandedSections.has('docs-affected') && (
             <div className="mt-2">
               <p className="text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5] mb-3">
-                {documentsAffected} workspace documents contain clauses that may need updates based on these regulatory changes.
+                Potential impact across {documentsAffected} standard M&A templates. Connect a document library to see impact on your own documents.
               </p>
               {onViewAffectedClauses && (
                 <button
@@ -216,7 +273,7 @@ export function RegulatoryScanSummary({
               <ul className="space-y-2 text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5]">
                 <li className="flex items-start gap-2">
                   <span className="text-[#1d4b34] shrink-0">•</span>
-                  <span>Review Critical items before their compliance deadlines</span>
+                  <span>Review High impact items before their compliance deadlines</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#1d4b34] shrink-0">•</span>
@@ -255,6 +312,83 @@ export function RegulatoryScanSummary({
                 Always consult with legal counsel before making compliance decisions.
               </p>
             </div>
+          )}
+        </div>
+
+        {/* Save as alert action + inline confirmation strip */}
+        <div className="pt-4 flex flex-col gap-2">
+          {/* The button is never replaced — it stays and becomes disabled once an alert is saved */}
+          <div>
+            <button
+              onClick={handleSaveAsAlert}
+              disabled={alertSaved}
+              className={`h-9 px-4 flex items-center gap-2 rounded-lg text-[14px] font-['Clario'] font-medium transition-colors ${
+                alertSaved
+                  ? 'bg-white border border-[#D2D2D2] text-[#1d4b34] cursor-not-allowed'
+                  : 'bg-[#1d4b34] text-white hover:bg-[#153a28]'
+              }`}
+            >
+              {alertSaved ? (
+                <CheckCircle2 className="size-4" strokeWidth={2} />
+              ) : (
+                <Bell className="size-4" strokeWidth={1.5} />
+              )}
+              {alertSaved ? 'Alert saved' : 'Save as alert'}
+            </button>
+          </div>
+
+          {alertSaved && showAlertSavedStrip && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+              className="w-full"
+            >
+              <div className="flex items-center gap-[12px] flex-wrap w-full bg-[#EDF2F0] rounded-[8px] px-[12px] py-[10px]">
+                <div className="flex items-center gap-[8px] min-w-0">
+                  <span className="text-[14px] font-['Source_Sans_3'] text-[#1d4b34]">
+                    {"You'll get "}
+                    <strong className="font-semibold">{`${monitoringFrequency} alerts`}</strong>
+                    {' when new changes affect these documents'}
+                  </span>
+                </div>
+
+                <div className="ml-auto flex items-center gap-[8px] shrink-0">
+                  {!showFrequencyChips ? (
+                    <button
+                      onClick={() => setShowFrequencyChips(true)}
+                      className="h-8 px-3 flex items-center bg-white border border-[#8a8a8a] rounded-lg text-[13px] font-['Clario'] font-medium text-[#212223] underline hover:bg-[#F5F5F5] transition-colors"
+                    >
+                      Change frequency
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-[6px] flex-wrap">
+                      {(['daily', 'weekly', 'monthly'] as const).map((freq) => (
+                        <button
+                          key={freq}
+                          onClick={() => handleChangeFrequency(freq)}
+                          className={`h-8 px-[12px] flex items-center text-[13px] font-['Source_Sans_3'] rounded-full border transition-colors capitalize ${
+                            monitoringFrequency === freq
+                              ? 'bg-[#1d4b34] border-[#1d4b34] text-white'
+                              : 'bg-white border-[#8a8a8a] text-[#212223] hover:bg-[#dde7e2]'
+                          }`}
+                        >
+                          {freq}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  <button
+                    onClick={handleDismissAlert}
+                    aria-label="Dismiss alert confirmation"
+                    className="size-8 flex items-center justify-center bg-white border border-[#8a8a8a] rounded-lg text-[#212223] hover:bg-[#F5F5F5] transition-colors"
+                  >
+                    <X className="size-4" strokeWidth={1.5} />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           )}
         </div>
       </div>

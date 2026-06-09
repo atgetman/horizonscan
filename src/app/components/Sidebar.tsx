@@ -1,4 +1,4 @@
-import { Home, Folders, Library, Search, UserCircle, Settings, MessageCircleCode, Bell, MessageCirclePlus } from "lucide-react";
+import { Home, Folders, Library, Search, UserCircle, Settings, MessageCircleCode, Bell, MessageCirclePlus, SlidersHorizontal, Compass, HelpCircle, ChevronRight, CornerUpLeft, ContactRound, LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { clsx } from "clsx";
 import { Logo } from "./Logo";
@@ -196,7 +196,9 @@ export function Sidebar() {
             >
               <Bell className="size-[18px]" strokeWidth={1.5} />
               {unreadCount > 0 && (
-                <div className="absolute top-1.5 right-1.5 size-2 bg-[#dc2626] border border-white rounded-full" />
+                <div className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 flex items-center justify-center bg-[#dc2626] border border-white rounded-full text-white text-[10px] font-['Source_Sans_3'] font-semibold leading-none">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </div>
               )}
             </button>
           </TooltipTrigger>
@@ -233,12 +235,67 @@ export function Sidebar() {
             </TooltipContent>
           </Tooltip>
           {showAccountMenu && (
-            <div className="absolute left-full bottom-0 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[200px]">
+            <div className="absolute left-full bottom-0 ml-2 bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-[300px] py-2 font-['Source_Sans_3']">
+              {/* Account header */}
+              <div className="px-4 py-2 border-b border-[#E5E5E5] mb-1">
+                <p className="text-[15px] font-medium text-[#212223] truncate">
+                  jane.lawson@thomsonreuters.com
+                </p>
+                <p className="text-[14px] text-[#666666] mt-0.5">
+                  Region: United States
+                </p>
+              </div>
+
+              {/* Group 1 */}
               <button
-                className="w-full text-left px-4 py-2.5 text-[13px] text-[#212223] hover:bg-gray-50 rounded-lg transition-colors whitespace-nowrap"
+                className="w-full flex items-center gap-3 px-4 py-2 text-[15px] text-[#212223] hover:bg-gray-50 transition-colors"
+                onClick={() => {
+                  setShowAccountMenu(false);
+                  navigate('/preferences');
+                }}
+              >
+                <SlidersHorizontal className="size-[18px] text-[#212223]" strokeWidth={1.5} />
+                Preferences
+              </button>
+              <button
+                className="w-full flex items-center gap-3 px-4 py-2 text-[15px] text-[#212223] hover:bg-gray-50 transition-colors"
                 onClick={handleShowOnboarding}
               >
-                Show onboarding tour
+                <Compass className="size-[18px] text-[#212223]" strokeWidth={1.5} />
+                Onboarding tour
+              </button>
+              <button className="w-full flex items-center justify-between px-4 py-2 text-[15px] text-[#212223] hover:bg-gray-50 transition-colors">
+                <span className="flex items-center gap-3">
+                  <HelpCircle className="size-[18px] text-[#212223]" strokeWidth={1.5} />
+                  Support
+                </span>
+                <ChevronRight className="size-4 text-[#666666]" strokeWidth={1.5} />
+              </button>
+
+              <div className="h-px bg-[#E5E5E5] my-1.5" />
+
+              {/* Group 2 */}
+              <button
+                className="w-full flex items-center gap-3 px-4 py-2 text-[15px] text-[#212223] hover:bg-gray-50 transition-colors"
+                onClick={() => {
+                  setShowAccountMenu(false);
+                  navigate('/classic');
+                }}
+              >
+                <CornerUpLeft className="size-[18px] text-[#212223]" strokeWidth={1.5} />
+                Back to CoCounsel Classic
+              </button>
+              <button className="w-full flex items-center gap-3 px-4 py-2 text-[15px] text-[#212223] hover:bg-gray-50 transition-colors">
+                <ContactRound className="size-[18px] text-[#212223]" strokeWidth={1.5} />
+                Thomson Reuters Account
+              </button>
+
+              <div className="h-px bg-[#E5E5E5] my-1.5" />
+
+              {/* Group 3 */}
+              <button className="w-full flex items-center gap-3 px-4 py-2 text-[15px] text-[#212223] hover:bg-gray-50 transition-colors">
+                <LogOut className="size-[18px] text-[#212223]" strokeWidth={1.5} />
+                Sign out
               </button>
             </div>
           )}

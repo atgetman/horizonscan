@@ -15,15 +15,16 @@ interface SpreadsheetToolbarProps {
 }
 
 export function SpreadsheetToolbar({ isChatOpen, onToggleChat, isCommentsOpen = false, onToggleComments, isHistoryOpen = false, onToggleHistory }: SpreadsheetToolbarProps) {
-    const { addAlert } = useMonitoring();
+    const { savedAlerts, addAlert } = useMonitoring();
+    const regulatoryAlert = savedAlerts.find(a => a.sourceType === 'regulatory-table');
+    const alertSaved = Boolean(regulatoryAlert);
     const [textWrap, setTextWrap] = useState<"truncate" | "wrap">("truncate");
     const [showFrequencyMenu, setShowFrequencyMenu] = useState(false);
     const [selectedFrequency, setSelectedFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
     const [showConfirmation, setShowConfirmation] = useState(false);
-    const [alertSaved, setAlertSaved] = useState(false);
 
     const handleSaveAlert = () => {
-        // Create the alert
+        // Create the alert (shared across surfaces via MonitoringContext)
         addAlert({
             topic: 'M&A Regulatory Updates - Project Atlas',
             criteria: 'Monitor regulatory changes affecting M&A transactions including antitrust guidelines, SPAC disclosure rules, CFIUS requirements, and other merger-related regulations',
@@ -38,7 +39,6 @@ export function SpreadsheetToolbar({ isChatOpen, onToggleChat, isCommentsOpen = 
         });
 
         setShowFrequencyMenu(false);
-        setAlertSaved(true);
         setShowConfirmation(true);
         setTimeout(() => setShowConfirmation(false), 3000);
     };
@@ -127,14 +127,16 @@ export function SpreadsheetToolbar({ isChatOpen, onToggleChat, isCommentsOpen = 
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <button
-                            onClick={() => setShowFrequencyMenu(!showFrequencyMenu)}
+                            onClick={() => !alertSaved && setShowFrequencyMenu(!showFrequencyMenu)}
+                            disabled={alertSaved}
                             className={clsx(
                                 "flex items-center gap-2 rounded text-[13px] transition-colors px-[10px] py-[4px]",
+                                alertSaved ? "text-[#1d4b34] cursor-not-allowed" :
                                 showFrequencyMenu ? "bg-[#edf2f0] text-[#1d4b34]" : "hover:bg-[#E5E5E5] text-[#212223]"
                             )}
                         >
-                            <Save className="size-3.5" strokeWidth={1.5} />
-                            <span>{alertSaved ? 'Edit frequency' : 'Save as alert'}</span>
+                            {alertSaved ? <Check className="size-3.5" strokeWidth={2} /> : <Save className="size-3.5" strokeWidth={1.5} />}
+                            <span>{alertSaved ? 'Alert saved' : 'Save as alert'}</span>
                         </button>
                     </TooltipTrigger>
                     <TooltipContent side="top" sideOffset={4}>

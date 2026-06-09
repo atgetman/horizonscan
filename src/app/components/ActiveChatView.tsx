@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import svgPaths from '../../imports/svg-1wkqh0ufu9';
-import { FileText, Folder, Table, X, MessageCircleQuestion, ChevronUp, ChevronDown, ChevronRight, Search, BookOpen, Scale, FileCheck, ClipboardList, NotebookPen, Copy, Minimize2, MoreHorizontal, Download, ExternalLink, Share2, FolderInput, Trash2, Sparkles, CheckCircle2, Bell, Save, Circle, CircleDot } from 'lucide-react';
+import { FileText, Folder, Table, X, MessageCircleQuestion, ChevronUp, ChevronDown, ChevronRight, Search, BookOpen, Scale, FileCheck, ClipboardList, NotebookPen, Copy, Minimize2, MoreHorizontal, Download, ExternalLink, Share2, FolderInput, Trash2, Sparkles, CheckCircle2, Bell, Circle, CircleDot } from 'lucide-react';
 import { PromptInput } from './PromptInput';
 import { SkillClarifyingQuestions } from './SkillClarifyingQuestions';
 import { SkillBuildingMessage } from './SkillBuildingMessage';
@@ -13,8 +13,9 @@ import { getReasoningContent, getSourceContent } from '../utils/chatReasoningCon
 import { DynamicReasoningSteps } from './chat/DynamicReasoningSteps';
 import { DynamicSourceItems } from './chat/DynamicSourceItems';
 import { HorizonScanResults, RegulatoryScanSummary } from './regulatory';
-import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 import { CPCHandoffScreen } from './CPCHandoffScreen';
+import { CPCScanSummary } from './regulatory/CPCScanSummary';
+import { useMonitoring } from '../contexts/MonitoringContext';
 
 interface StagedItem {
     id: string;
@@ -23,21 +24,23 @@ interface StagedItem {
 }
 
 interface ActiveChatViewProps {
-    prompt: string;
-    attachments: StagedItem[];
-    onNewPrompt: (prompt: string, attachments: StagedItem[]) => void;
-    onThinkingChange?: (isThinking: boolean) => void;
-    onOpenTab?: (item: { name: string, type: string }) => void;
-    initialMessages?: any[];
-    onMessagesChange?: (messages: any[]) => void;
-    onArtifactCreated?: (item: { name: string, type: string, sourceChatMessages?: any[] }) => void;
-    mode?: 'chatgpt' | 'hybrid';
-    cocounselToken?: string;
-    isSkillCreation?: boolean;
-    showClarifyingQuestions?: boolean;
-    onSubmitQuestions?: (answers: any) => void;
-    onSkipQuestions?: () => void;
-    currentTabId?: string;
+  prompt: string;
+  attachments: StagedItem[];
+  onNewPrompt: (prompt: string, attachments: StagedItem[]) => void;
+  onThinkingChange?: (isThinking: boolean) => void;
+  onOpenTab?: (item: { name: string, type: string }) => void;
+  initialMessages?: any[];
+  onMessagesChange?: (messages: any[]) => void;
+  onArtifactCreated?: (item: { name: string, type: string, sourceChatMessages?: any[] }) => void;
+  mode?: 'chatgpt' | 'hybrid';
+  cocounselToken?: string;
+  isSkillCreation?: boolean;
+  showClarifyingQuestions?: boolean;
+  onSubmitQuestions?: (answers: any) => void;
+  onSkipQuestions?: () => void;
+  currentTabId?: string;
+  appendCPCPrompt?: string; // New: append CPC workflow to existing chat without remounting
+  onCPCAppended?: () => void; // New: callback when CPC has been appended
 }
 
 const LOGO_PATHS = [
@@ -470,16 +473,42 @@ function ArtifactCard({ onArtifactClick, streamedIntroText, streamedDescText, is
   );
 }
 
-export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingChange, onOpenTab, initialMessages, onMessagesChange, onArtifactCreated, mode = 'chatgpt', cocounselToken, isSkillCreation = false, showClarifyingQuestions = false, onSubmitQuestions, onSkipQuestions, currentTabId }: ActiveChatViewProps) {
+export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingChange, onOpenTab, initialMessages, onMessagesChange, onArtifactCreated, mode = 'chatgpt', cocounselToken, isSkillCreation = false, showClarifyingQuestions = false, onSubmitQuestions, onSkipQuestions, currentTabId, appendCPCPrompt, onCPCAppended }: ActiveChatViewProps) {
   const navigate = useNavigate();
+  const { savedAlerts, addAlert } = useMonitoring();
 
   console.log('🎬 ActiveChatView rendering with initialMessages:', initialMessages);
 
+  // Restore a previously-completed regulatory scan for this chat. The completed
+  // view is purely state-driven (taskType/showArtifact/dropdowns/streamedIntro/
+  // isStreamingComplete) and was never persisted, so closing the table tab
+  // remounted this component and re-ran the whole thinking simulation. We
+  // snapshot the finished state to sessionStorage on completion and restore it
+  // here on mount so the chat returns to its completed result instantly.
+  // (Skip when this is a CPC re-entry — that path seeds its own initialMessages.)
+  const [restoredScan] = useState<{ introText: string; topic: string } | null>(() => {
+    try {
+      if (!currentTabId) return null;
+      if (initialMessages && initialMessages.length > 1) return null;
+      const raw = sessionStorage.getItem(`chat_${currentTabId}_completedScan`);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [messages, setMessages] = useState<{role: 'user' | 'assistant', text: string | React.ReactNode, attachments?: StagedItem[], isFigmaContent?: boolean, workflowData?: {showReasoning?: boolean, showSources?: boolean, showPreparing?: boolean, documentTitle?: string, artifactIntro?: string, artifactDescription?: string}}[]>(
-    initialMessages || [{ role: 'user', text: prompt, attachments }]
+    initialMessages ||
+    (restoredScan
+      ? [
+          { role: 'user', text: prompt, attachments },
+          { role: 'assistant', text: restoredScan.topic || 'Regulatory Changes', isFigmaContent: true },
+        ]
+      : [{ role: 'user', text: prompt, attachments }])
   );
 
   console.log('📨 ActiveChatView messages state:', messages);
+
   const [showThinking, setShowThinking] = useState(false);
   const [stagedFiles, setStagedFiles] = useState<StagedItem[]>([]);
   const [showReasoningDropdown, setShowReasoningDropdown] = useState(false);
@@ -497,29 +526,27 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [isPreparingExpanded, setIsPreparingExpanded] = useState(false);
   const [preparingItems, setPreparingItems] = useState<number>(0);
   const [isPreparingLoading, setIsPreparingLoading] = useState(false);
-  const [showArtifact, setShowArtifact] = useState(false);
+  const [showArtifact, setShowArtifact] = useState(!!restoredScan);
   const [showCreating, setShowCreating] = useState(false);
   const [showCreatingDropdown, setShowCreatingDropdown] = useState(false);
   const [isCreatingExpanded, setIsCreatingExpanded] = useState(false);
   const [creatingItems, setCreatingItems] = useState<number>(0);
   const [isContentGenerating, setIsContentGenerating] = useState(false);
-  const [streamedIntroText, setStreamedIntroText] = useState('');
+  const [streamedIntroText, setStreamedIntroText] = useState(restoredScan?.introText || '');
   const [streamedDescText, setStreamedDescText] = useState('');
-  const [isStreamingComplete, setIsStreamingComplete] = useState(false);
+  const [isStreamingComplete, setIsStreamingComplete] = useState(!!restoredScan);
   const [showOpeningMessage, setShowOpeningMessage] = useState(false);
   const [hasDocumentOpened, setHasDocumentOpened] = useState(false);
   const [artifactName, setArtifactName] = useState('Motion to Dismiss');
   const [artifactCategory, setArtifactCategory] = useState('Motion');
   const [artifactSummary, setArtifactSummary] = useState('');
   const [showPreparingFinalOutput, setShowPreparingFinalOutput] = useState(false);
-  const [taskType, setTaskType] = useState<'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis'>('draft'); // Track task type
+  const [taskType, setTaskType] = useState<'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis'>(restoredScan ? 'regulatory-scan' : 'draft'); // Track task type
   const [researchTopic, setResearchTopic] = useState('');
   const [reasoningContent, setReasoningContent] = useState(getReasoningContent('draft', ''));
   const [sourceContent, setSourceContent] = useState(getSourceContent('draft', ''));
   const [showMonitoringPrompt, setShowMonitoringPrompt] = useState(true);
   const [showMonitoringConfirmation, setShowMonitoringConfirmation] = useState(false);
-  const [monitoringFrequency, setMonitoringFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
-  const [showFrequencyMenu, setShowFrequencyMenu] = useState(false);
   const [prepWorkItems, setPrepWorkItems] = useState<Array<{title: string; type: string}>>([]);
   const [cpcRegulation, setCpcRegulation] = useState('');
   const [cpcDocsAffected, setCpcDocsAffected] = useState(0);
@@ -603,16 +630,84 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     };
   }, [messages]);
 
+  // Handle appending CPC workflow to existing chat without remounting
+  const hasAppendedCPCRef = useRef(false);
+  useEffect(() => {
+    if (appendCPCPrompt && appendCPCPrompt.length > 0 && !hasAppendedCPCRef.current) {
+      hasAppendedCPCRef.current = true;
+      console.log('[v0] ActiveChatView: Appending CPC prompt to existing chat:', appendCPCPrompt);
+
+      // Build the new history explicitly from the current messages (on a CPC
+      // re-entry these are the seeded recap messages). Append the CPC user
+      // message, then drive the workflow OUTSIDE of any setState updater so the
+      // side-effecting processChatHybrid call runs reliably (updaters must be
+      // pure and may be invoked twice in StrictMode).
+      const cpcMessage = { role: 'user' as const, text: appendCPCPrompt, attachments: [] };
+      const nextHistory = [...messages, cpcMessage];
+      setMessages(nextHistory);
+
+      // Notify parent that CPC has been appended
+      onCPCAppended?.();
+
+      // Trigger the CPC workflow once the new user message has rendered.
+      // Use the same processing function the component uses for follow-ups so
+      // it matches the active mode (ChatPage defaults to 'chatgpt').
+      safeSetTimeout(() => {
+        if (mode === 'hybrid') {
+          processChatHybrid(nextHistory).catch(err => {
+            console.error('[v0] processChatHybrid error (CPC append):', err);
+          });
+        } else {
+          Promise.resolve(processChat(nextHistory)).catch(err => {
+            console.error('[v0] processChat error (CPC append):', err);
+          });
+        }
+      }, 200);
+    }
+  }, [appendCPCPrompt]);
+
   const processChat = useCallback(async (history: any[]) => {
     // Clear any existing timers before starting new workflow
     clearAllTimersRef.current();
     
-    // Detect task type from user prompt
-    const userPrompt = prompt.toLowerCase();
-    let detectedType: 'draft' | 'research' | 'analyze' | 'regulatory-scan' = 'draft';
+    // Use the last user message text for detection (more accurate than prompt prop)
+    const lastUserMsg = history.filter(m => m.role === 'user').pop();
+    const userPrompt = (lastUserMsg?.text || prompt).toLowerCase();
+    let detectedType: 'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis' = 'draft';
     let topic = '';
+    
+    // Check for CPC analysis FIRST (highest priority)
+    if (userPrompt.includes('initiate cross-product clause analysis') || userPrompt.includes('initiate cpc')) {
+      console.log('[v0] processChat: CPC ANALYSIS DETECTED!');
+      detectedType = 'cpc-analysis';
+      
+      // Extract regulation name from prompt
+      const regulationMatch = userPrompt.match(/analysis for:\s*(.+)/i);
+      const regulation = regulationMatch ? regulationMatch[1].trim() : 'Regulatory Change';
+      topic = regulation;
+      setCpcRegulation(regulation);
+      
+      // Get CPC workflow data from sessionStorage
+      const workflowData = sessionStorage.getItem('pendingCPCWorkflow');
+      if (workflowData) {
+        const { docsAffected, clausesAffected, impactLevel } = JSON.parse(workflowData);
+        setCpcDocsAffected(docsAffected || 3);
+        setCpcClausesAffected(clausesAffected || 12);
+        setCpcImpactLevel(impactLevel || 'High');
+        // NOTE: do NOT removeItem here. The Layout double-mounts the page, so a
+        // discarded mount removing this would starve the surviving mount.
+        // ChatPage clears it on a delayed timer instead.
+        console.log('[v0] processChat: CPC data loaded from sessionStorage');
+      } else {
+        // Default values if no data
+        setCpcDocsAffected(3);
+        setCpcClausesAffected(12);
+        setCpcImpactLevel('High');
+      }
+      // CPC will now run through the full workflow animation below
+    }
 
-    // Check for regulatory scan first
+    // Check for regulatory scan
     if ((userPrompt.includes('scan') || userPrompt.includes('check') || userPrompt.includes('identify')) &&
         (userPrompt.includes('regulatory') || userPrompt.includes('regulation')) &&
         (userPrompt.includes('change') || userPrompt.includes('update') || userPrompt.includes('affect'))) {
@@ -666,6 +761,12 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     } else if (detectedType === 'analyze') {
       setArtifactName('Document Analysis');
       setArtifactCategory('Analysis');
+    } else if (detectedType === 'cpc-analysis') {
+      setArtifactName('Cross-product clause analysis');
+      setArtifactCategory('CPC Analysis');
+    } else if (detectedType === 'regulatory-scan') {
+      setArtifactName('M&A regulatory findings');
+      setArtifactCategory('Regulatory scan');
     } else {
       setArtifactName('Motion to Dismiss');
       setArtifactCategory('Motion');
@@ -705,6 +806,25 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     setArtifactSummary('');
     setShowPreparingFinalOutput(false);
     onThinkingChange?.(true);
+
+    // Surface a proactive Horizon Scan notification mid-task (slides up while
+    // the user is working, rather than appearing immediately on load).
+    safeSetTimeout(() => {
+      window.dispatchEvent(
+        new CustomEvent("horizonScanAlert", {
+          detail: {
+            title: "Documents impacted in M&A Diligence",
+            detail: "New SEC guidance affects 3 documents in Project Atlas",
+            workspace: "Project Atlas - M&A Due Diligence",
+            documents: [
+              { name: "Stock Purchase Agreement.docx", clause: "Reps & Warranties §3.2", impact: "high" },
+              { name: "Disclosure Schedules.docx", clause: "Material Contracts", impact: "medium" },
+              { name: "Merger Agreement.docx", clause: "Closing Conditions §7.1", impact: "low" },
+            ],
+          },
+        })
+      );
+    }, 6000);
 
     try {
         // Add placeholder for assistant response
@@ -761,7 +881,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                           setIsPreparingLoading(true);
                           
                           // Stream in preparing items with varied, realistic timing
-                          const preparingTimings = [1200, 800, 1500, 900, 1100]; // Varied delays in ms
+                          const preparingTimings = [600, 400, 700, 450, 550]; // Varied delays in ms
                           let prepIdx = 0;
                           
                           const addNextPreparingItem = () => {
@@ -802,6 +922,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                     } else if (detectedType === 'regulatory-scan') {
                                       introText = `I ran a regulatory horizon scan across federal and state sources to identify any changes that may impact your M&A contract templates.`;
                                       descText = ``;
+                                    } else if (detectedType === 'cpc-analysis') {
+                                      introText = `I've initiated the Cross-Product Clause analysis for ${topic}. Here's a summary of the affected documents and recommended updates:`;
+                                      descText = ``;
                                     } else {
                                       introText = `I've drafted ${topic.toLowerCase()}.`;
                                       descText = `This document includes the necessary legal arguments, supporting precedents, and procedural requirements. It's structured with appropriate sections and citations. Let me know if you'd like to revise any arguments or add additional support.`;
@@ -830,7 +953,21 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                               // Mark streaming as complete after description finishes
                                               safeSetTimeout(() => {
                                                 setIsStreamingComplete(true);
-                                                
+
+                                                // Persist a completed regulatory scan so closing the
+                                                // table tab and returning to this chat restores the
+                                                // result instead of re-running the thinking simulation.
+                                                if (detectedType === 'regulatory-scan' && currentTabId) {
+                                                  try {
+                                                    sessionStorage.setItem(
+                                                      `chat_${currentTabId}_completedScan`,
+                                                      JSON.stringify({ introText, topic })
+                                                    );
+                                                  } catch (e) {
+                                                    console.warn('[v0] Failed to persist completed scan', e);
+                                                  }
+                                                }
+
                                                 // Update messages with complete assistant response
                                                 setMessages(prev => {
                                                   const updated = [...prev];
@@ -859,7 +996,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                     }, 7.5); // 7.5ms per character for intro (doubled speed)
                                     
                                     onThinkingChange?.(false);
-                                  }, 2000); // Wait 2000ms showing "Compiling research..." before artifact appears
+                                  }, 800); // Wait showing "Compiling research..." before artifact appears
                                 }, 300); // Brief delay before showing "Compiling research..."
                               }, 1000);
                             }
@@ -867,7 +1004,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                           
                           // Start with first item
                           safeSetTimeout(addNextPreparingItem, preparingTimings[0]);
-                        }, 5000);
+                        }, 1500);
                       }, 1000);
                     }
                   }, 200);
@@ -875,7 +1012,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
               }, 1000);
             }
           }, 400);
-        }, 2000);
+        }, 900);
     } catch (error) {
         console.error("Chat error:", error);
         const errorMessage = error instanceof Error ? error.message : "I'm sorry, I'm having trouble connecting to the server right now.";
@@ -943,6 +1080,25 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     setArtifactSummary('');
     onThinkingChange?.(true);
 
+    // Surface a proactive Horizon Scan notification mid-task (slides up while
+    // the user is working, rather than appearing immediately on load).
+    safeSetTimeout(() => {
+      window.dispatchEvent(
+        new CustomEvent("horizonScanAlert", {
+          detail: {
+            title: "Documents impacted in M&A Diligence",
+            detail: "New SEC guidance affects 3 documents in Project Atlas",
+            workspace: "Project Atlas - M&A Due Diligence",
+            documents: [
+              { name: "Stock Purchase Agreement.docx", clause: "Reps & Warranties §3.2", impact: "high" },
+              { name: "Disclosure Schedules.docx", clause: "Material Contracts", impact: "medium" },
+              { name: "Merger Agreement.docx", clause: "Closing Conditions §7.1", impact: "low" },
+            ],
+          },
+        })
+      );
+    }, 6000);
+
     try {
       // Add placeholder for assistant response
       setMessages(prev => {
@@ -1004,7 +1160,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
             setCpcDocsAffected(docsAffected);
             setCpcClausesAffected(clausesAffected);
             setCpcImpactLevel(impactLevel);
-            sessionStorage.removeItem('pendingCPCWorkflow');
+            // NOTE: cleared by ChatPage on a delayed timer (double-mount safe).
           }
         }
       } else if ((userPromptLower.includes('scan') || userPromptLower.includes('check') || userPromptLower.includes('identify')) &&
@@ -1068,7 +1224,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 • Prioritize findings by severity and effective date`;
 
         // Simulate progressive display
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 600));
         setReasoningSteps(5);
         setIsReasoningLoading(false);
         console.log('Step 2 complete: Regulatory scan reasoning shown');
@@ -1262,7 +1418,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         setPrepWorkItems(prepWork);
 
         // Simulate minimum time
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
       } else {
         // Call ChatGPT for prep materials for other task types
         const prepStartTime = Date.now();
@@ -1329,7 +1485,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       for (let i = 1; i <= Math.min(5, prepWork.length); i++) {
         if (!isMountedRef.current) break;
         setPreparingItems(i);
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 250));
       }
       
       setIsPreparingLoading(false);
@@ -1387,7 +1543,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       // STEP 8: For regulatory scan, show results directly without calling CoCounsel
       if (detectedType === 'regulatory-scan') {
         console.log('=== REGULATORY SCAN DETECTED - SHOWING RESULTS ===');
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 800));
         setShowPreparingFinalOutput(false);
         setShowArtifact(true);
 
@@ -1414,6 +1570,19 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                     setIsStreamingComplete(true);
                     setIsContentGenerating(false);
                     onThinkingChange?.(false);
+                    // Persist the completed scan so closing the table tab and
+                    // returning to this chat restores the result instead of
+                    // re-running the entire thinking simulation.
+                    if (currentTabId) {
+                      try {
+                        sessionStorage.setItem(
+                          `chat_${currentTabId}_completedScan`,
+                          JSON.stringify({ introText, topic })
+                        );
+                      } catch (e) {
+                        console.warn('[v0] Failed to persist completed scan', e);
+                      }
+                    }
                   }, 300);
                 }
               }, 5);
@@ -1581,6 +1750,53 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   // Track if artifact has been added to outputs
   const hasAddedArtifactRef = useRef(false);
 
+  // Rehydrate the completed regulatory-scan view when restoring from a snapshot.
+  // The completed layout depends on many granular dropdown/content states that
+  // are normally set by the simulation; we set their final (collapsed, done)
+  // values once on mount so closing the table tab returns to the finished
+  // result instead of replaying the thinking animation.
+  const hasRestoredScanRef = useRef(false);
+  useEffect(() => {
+    if (!restoredScan || hasRestoredScanRef.current) return;
+    hasRestoredScanRef.current = true;
+
+    setResearchTopic(restoredScan.topic || 'Regulatory Changes');
+    setReasoningContent(getReasoningContent('regulatory-scan', restoredScan.topic || 'Regulatory Changes'));
+    setSourceContent(getSourceContent('regulatory-scan', restoredScan.topic || 'Regulatory Changes'));
+
+    // Reasoning row — visible, collapsed, complete
+    setShowReasoningDropdown(true);
+    setIsReasoningExpanded(false);
+    setReasoningSteps(5);
+    setIsReasoningLoading(false);
+
+    // Search results row — visible, collapsed, complete
+    setShowSearching(true);
+    setShowSourcesDropdown(true);
+    setIsSourcesExpanded(false);
+    setSourcesItems(6);
+    setIsSourcesLoading(false);
+
+    // Preliminary materials row — visible, collapsed, complete
+    setShowPreparing(true);
+    setShowPreparingDropdown(true);
+    setIsPreparingExpanded(false);
+    setIsPreparingLoading(false);
+    setPrepWorkItems([
+      { title: 'Identified jurisdictions and practice areas from workspace', type: 'analysis' },
+      { title: 'Searched Westlaw for proposed and final regulations', type: 'research' },
+      { title: 'Searched Practical Law for M&A guidance and practice notes', type: 'research' },
+      { title: 'Evaluating impact on workspace documents', type: 'analysis' },
+    ]);
+    setPreparingItems(4);
+
+    // Thinking / generating states off — we're showing the finished result
+    setShowThinking(false);
+    setShowPreparingFinalOutput(false);
+    setIsContentGenerating(false);
+    onThinkingChange?.(false);
+  }, [restoredScan]);
+
   // Add artifact to outputs when the assistant response is complete
   useEffect(() => {
     // Only run when streaming completes
@@ -1601,6 +1817,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   }, [isStreamingComplete]); // Only depend on isStreamingComplete, not messages!
 
   useEffect(() => {
+    // If we restored a completed scan for this chat, don't re-run the simulation.
+    if (restoredScan) {
+        return;
+    }
     // If we have initial messages (restored state), don't run the simulation
     if (initialMessages && initialMessages.length > 1) {
         return;
@@ -1702,9 +1922,18 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const hasAutoOpenedRef = useRef(false);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-open artifact when streaming is complete
+  // Auto-open artifact when streaming is complete (but NOT for CPC or regulatory scan - they show inline)
   useEffect(() => {
     if (isStreamingComplete && showArtifact && !hasAutoOpenedRef.current && isMountedRef.current) {
+      // Skip auto-open for CPC and regulatory scan - they display results inline
+      if (taskType === 'cpc-analysis' || taskType === 'regulatory-scan') {
+        hasAutoOpenedRef.current = true;
+        setIsContentGenerating(false);
+        setShowOpeningMessage(false);
+        setHasDocumentOpened(true);
+        return;
+      }
+      
       hasAutoOpenedRef.current = true;
       safeSetTimeout(() => {
         // Double-check component is still mounted before opening
@@ -1717,7 +1946,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         }
       }, 500);
     }
-  }, [isStreamingComplete, showArtifact]); // Removed unstable dependencies
+  }, [isStreamingComplete, showArtifact, taskType]); // Added taskType dependency
 
   return (
     <div className="flex flex-col h-full relative bg-[#FCFCFC]">
@@ -1792,8 +2021,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                            </span>
                          </div>
 
-                         {/* Figma Content */}
-                         {msg.text}
+                         {/* Figma Content (skip the plain topic title string) */}
+                         {typeof msg.text === 'string' ? null : msg.text}
                        </div>
                    ) : (
                        <div className="flex flex-col gap-3 w-full">
@@ -2101,35 +2330,135 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
           )}
         </AnimatePresence>
 
-        {/* Final Artifact Card or Regulatory Scan Results - appears after preparing completes */}
-        {showArtifact && taskType === 'cpc-analysis' ? (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex flex-col gap-3 max-w-[800px] mr-auto w-full"
-          >
-            {/* Intro Text */}
-            {streamedIntroText && (
-              <div className="text-[15px] text-[#212223] leading-relaxed">
-                {streamedIntroText}
-              </div>
-            )}
+  {/* Final Artifact Card or Regulatory Scan Results - appears after preparing completes */}
+  {showArtifact && taskType === 'cpc-analysis' ? (
+  <motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4 }}
+  className="flex flex-col gap-4 max-w-[800px] mr-auto w-full"
+  >
+  {/* Intro Text */}
+  {streamedIntroText && (
+  <div className="text-[15px] text-[#212223] leading-relaxed">
+  {streamedIntroText}
+  </div>
+  )}
+  
+  {/* CPC Results Card - matching horizon scan format */}
+  {streamedIntroText && streamedIntroText.length > 0 && (
+  <div className="relative rounded-[8px] w-full">
+  <div aria-hidden="true" className="absolute border border-[#e5e5e5] border-solid inset-0 pointer-events-none rounded-[8px]" />
+  <div className="content-stretch flex flex-col gap-[8px] px-[24px] py-[16px] relative">
+  <div className="content-stretch flex gap-[8px] items-center w-full">
+  <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3:Semibold',sans-serif] justify-center leading-[0] not-italic text-[#212223] text-[12px]">
+  <p className="leading-[1.5]">CPC analysis results</p>
+  </div>
+  </div>
+  <button
+  onClick={() => {
+  onOpenTab?.({ name: `Cross-product clause analysis`, type: 'cpc-redlines', regulation: cpcRegulation });
+  }}
+  className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors"
+  >
+  <div aria-hidden="true" className="absolute border border-[#8a8a8a] border-solid inset-0 pointer-events-none rounded-[8px]" />
+  <div className="flex flex-row items-center size-full">
+  <div className="content-center flex flex-wrap gap-[4px_8px] items-center pr-[12px] py-[8px] relative size-full">
+  <div className="flex-[1_0_0] min-w-px relative">
+  <div className="flex flex-row items-center size-full">
+  <div className="content-stretch flex gap-[8px] items-center pl-[8px] relative size-full">
+  <div className="content-stretch flex items-center justify-center max-h-[28px] max-w-[28px] relative shrink-0 size-[28px]">
+  <div className="relative">
+  <FileCheck className="size-5 text-[#1d4b34]" strokeWidth={1.5} />
+  </div>
+  </div>
+  <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative">
+  <div className="content-stretch flex items-center relative w-full">
+  <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Clario:Medium',sans-serif] justify-center leading-[0] min-w-px not-italic overflow-hidden relative text-[#212223] text-[16px] text-ellipsis whitespace-nowrap">
+  <p className="leading-[1.5] overflow-hidden text-ellipsis text-left">Cross-product clause analysis</p>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div className="flex items-center gap-1 shrink-0 pr-2">
+  <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
+  <ExternalLink className="size-4 text-[#212223]" strokeWidth={1.5} />
+  </div>
+  </div>
+  </div>
+  </div>
+  </button>
 
-            {/* CPC Handoff Screen */}
-            {streamedIntroText && streamedIntroText.length > 0 && (
-              <CPCHandoffScreen
-                regulation={cpcRegulation}
-                docsAffected={cpcDocsAffected}
-                clausesAffected={cpcClausesAffected}
-                impactLevel={cpcImpactLevel}
-                onOpenRegulation={() => {
-                  onOpenTab?.({ name: cpcRegulation, type: 'doc' });
-                }}
-              />
-            )}
-          </motion.div>
-        ) : showArtifact && taskType === 'regulatory-scan' ? (
+  {/* Supporting documents */}
+  <div className="content-stretch flex flex-col gap-[8px] items-start pt-[12px] w-full">
+  <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3:Semibold',sans-serif] justify-center leading-[0] not-italic text-[#212223] text-[12px]">
+  <p className="leading-[1.5]">Supporting documents</p>
+  </div>
+  <div className="flex flex-wrap gap-[6px] w-full">
+  <div className="bg-white justify-self-stretch max-w-[240px] min-h-[24px] relative rounded-[8px] self-start shrink-0">
+  <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px]" />
+  <div className="flex flex-row items-center justify-center max-w-[inherit] min-h-[inherit] size-full">
+  <div className="content-stretch flex gap-[4px] items-center justify-center max-w-[inherit] min-h-[inherit] px-[8px] py-[2px] relative size-full">
+  <FileText className="size-3 text-[#8a8a8a]" strokeWidth={1.5} />
+  <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative">
+  <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-px overflow-hidden relative text-[#212223] text-[14px] text-ellipsis whitespace-nowrap">
+  <p className="leading-[1.35] overflow-hidden text-ellipsis">M&A Purchase Agreement</p>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div className="bg-white justify-self-stretch max-w-[240px] min-h-[24px] relative rounded-[8px] self-start shrink-0">
+  <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px]" />
+  <div className="flex flex-row items-center justify-center max-w-[inherit] min-h-[inherit] size-full">
+  <div className="content-stretch flex gap-[4px] items-center justify-center max-w-[inherit] min-h-[inherit] px-[8px] py-[2px] relative size-full">
+  <FileText className="size-3 text-[#8a8a8a]" strokeWidth={1.5} />
+  <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative">
+  <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-px overflow-hidden relative text-[#212223] text-[14px] text-ellipsis whitespace-nowrap">
+  <p className="leading-[1.35] overflow-hidden text-ellipsis">Due Diligence Checklist</p>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div className="bg-white justify-self-stretch max-w-[240px] min-h-[24px] relative rounded-[8px] self-start shrink-0">
+  <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px]" />
+  <div className="flex flex-row items-center justify-center max-w-[inherit] min-h-[inherit] size-full">
+  <div className="content-stretch flex gap-[4px] items-center justify-center max-w-[inherit] min-h-[inherit] px-[8px] py-[2px] relative size-full">
+  <FileText className="size-3 text-[#8a8a8a]" strokeWidth={1.5} />
+  <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative">
+  <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-px overflow-hidden relative text-[#212223] text-[14px] text-ellipsis whitespace-nowrap">
+  <p className="leading-[1.35] overflow-hidden text-ellipsis">Disclosure Schedule Template</p>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  )}
+
+  {/* CPC Scan Summary - matching RegulatoryScanSummary format */}
+  {streamedIntroText && streamedIntroText.length > 0 && (
+  <CPCScanSummary
+  regulation={cpcRegulation}
+  docsAffected={cpcDocsAffected}
+  clausesAffected={cpcClausesAffected}
+  impactLevel={cpcImpactLevel}
+  onReviewRedlines={() => {
+  onOpenTab?.({ name: `CPC Redlines - ${cpcRegulation}`, type: 'cpc-redlines' });
+  }}
+  onAcceptAllRedlines={() => {
+  console.log('Accept all redlines clicked');
+  }}
+  />
+  )}
+  </motion.div>
+  ) : showArtifact && taskType === 'regulatory-scan' ? (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -2153,7 +2482,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                       <p className="leading-[1.5]">Regulatory scan results</p>
                     </div>
                   </div>
-                  <button
+                  <div
+                    role="button"
+                    tabIndex={0}
                     onClick={() => {
                       // Store the current tab ID for CPC to navigate back to
                       if (currentTabId) {
@@ -2161,7 +2492,16 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                       }
                       onOpenTab?.({ name: 'M&A regulatory findings', type: 'regulatory-table' });
                     }}
-                    className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (currentTabId) {
+                          sessionStorage.setItem('regulatoryTableSourceTabId', currentTabId);
+                        }
+                        onOpenTab?.({ name: 'M&A regulatory findings', type: 'regulatory-table' });
+                      }
+                    }}
+                    className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors cursor-pointer"
                   >
                     <div aria-hidden="true" className="absolute border border-[#8a8a8a] border-solid inset-0 pointer-events-none rounded-[8px]" />
                     <div className="flex flex-row items-center size-full">
@@ -2186,136 +2526,13 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                           </div>
                         </div>
                         <div className="flex items-center gap-1 shrink-0">
-                          <div className="relative">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setShowFrequencyMenu(!showFrequencyMenu);
-                                  }}
-                                  className={`content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] transition-colors ${
-                                    showFrequencyMenu ? 'bg-[#edf2f0]' : 'bg-[rgba(255,255,255,0)] hover:bg-[#F5F5F5]'
-                                  }`}
-                                >
-                                  <Save className="size-4 text-[#1d4b34]" strokeWidth={1.5} />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent side="top" sideOffset={4}>
-                                Save as alert
-                              </TooltipContent>
-                            </Tooltip>
-
-                            {/* Frequency menu dropdown */}
-                            {showFrequencyMenu && (
-                              <>
-                                <div className="fixed inset-0 z-40" onClick={() => setShowFrequencyMenu(false)} />
-                                <div className="absolute right-0 top-[calc(100%+4px)] bg-white rounded-[8px] z-50 min-w-[200px]">
-                        <div className="flex flex-col items-start overflow-clip p-[12px] relative rounded-[inherit] gap-[12px]">
-                          {/* Header */}
-                          <div className="font-['Source_Sans_3'] font-semibold text-[15px] text-[#212223] text-left">
-                            Select frequency
-                          </div>
-
-                          {/* Radio options */}
-                          <div className="flex flex-col gap-[12px] w-full">
-                            {/* Daily option */}
-                            <button
-                              onClick={() => setMonitoringFrequency('daily')}
-                              className="flex gap-[8px] items-center relative shrink-0 w-full text-left"
-                            >
-                              <div className={`relative rounded-[88px] shrink-0 size-[16px] ${
-                                monitoringFrequency === 'daily' ? 'bg-[#1d4b34]' : 'bg-white'
-                              }`}>
-                                <div className="flex items-center justify-center overflow-clip relative rounded-[inherit] size-full">
-                                  <div className="flex items-center justify-center relative shrink-0">
-                                    {monitoringFrequency === 'daily' && (
-                                      <div className="size-[6px] bg-white rounded-full" />
-                                    )}
-                                  </div>
-                                </div>
-                                <div aria-hidden="true" className={`absolute border border-solid inset-[-1px] pointer-events-none rounded-[89px] ${
-                                  monitoringFrequency === 'daily' ? 'border-[#1d4b34]' : 'border-[#8a8a8a]'
-                                }`} />
-                              </div>
-                              <div className="font-['Source_Sans_3'] font-normal text-[#212223] text-[15px] leading-[1.5] text-left">
-                                Daily
-                              </div>
-                            </button>
-
-                            {/* Weekly option */}
-                            <button
-                              onClick={() => setMonitoringFrequency('weekly')}
-                              className="flex gap-[8px] items-center relative shrink-0 w-full text-left"
-                            >
-                              <div className={`relative rounded-[88px] shrink-0 size-[16px] ${
-                                monitoringFrequency === 'weekly' ? 'bg-[#1d4b34]' : 'bg-white'
-                              }`}>
-                                <div className="flex items-center justify-center overflow-clip relative rounded-[inherit] size-full">
-                                  <div className="flex items-center justify-center relative shrink-0">
-                                    {monitoringFrequency === 'weekly' && (
-                                      <div className="size-[6px] bg-white rounded-full" />
-                                    )}
-                                  </div>
-                                </div>
-                                <div aria-hidden="true" className={`absolute border border-solid inset-[-1px] pointer-events-none rounded-[89px] ${
-                                  monitoringFrequency === 'weekly' ? 'border-[#1d4b34]' : 'border-[#8a8a8a]'
-                                }`} />
-                              </div>
-                              <div className="font-['Source_Sans_3'] font-normal text-[#212223] text-[15px] leading-[1.5] text-left">
-                                Weekly
-                              </div>
-                            </button>
-
-                            {/* Monthly option */}
-                            <button
-                              onClick={() => setMonitoringFrequency('monthly')}
-                              className="flex gap-[8px] items-center relative shrink-0 w-full text-left"
-                            >
-                              <div className={`relative rounded-[88px] shrink-0 size-[16px] ${
-                                monitoringFrequency === 'monthly' ? 'bg-[#1d4b34]' : 'bg-white'
-                              }`}>
-                                <div className="flex items-center justify-center overflow-clip relative rounded-[inherit] size-full">
-                                  <div className="flex items-center justify-center relative shrink-0">
-                                    {monitoringFrequency === 'monthly' && (
-                                      <div className="size-[6px] bg-white rounded-full" />
-                                    )}
-                                  </div>
-                                </div>
-                                <div aria-hidden="true" className={`absolute border border-solid inset-[-1px] pointer-events-none rounded-[89px] ${
-                                  monitoringFrequency === 'monthly' ? 'border-[#1d4b34]' : 'border-[#8a8a8a]'
-                                }`} />
-                              </div>
-                              <div className="font-['Source_Sans_3'] font-normal text-[#212223] text-[15px] leading-[1.5] text-left">
-                                Monthly
-                              </div>
-                            </button>
-                          </div>
-
-                          {/* Save alert button */}
-                          <button
-                            onClick={() => {
-                              setShowFrequencyMenu(false);
-                              setShowMonitoringPrompt(false);
-                              setShowMonitoringConfirmation(true);
-                            }}
-                            className="w-full h-[32px] px-[12px] py-[6px] flex items-center justify-center text-[14px] font-['Clario'] font-medium text-white bg-[#1d4b34] rounded-[4px] hover:bg-[#153a28] transition-colors"
-                          >
-                            Save alert
-                          </button>
-                        </div>
-                        <div aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[9px] shadow-[0px_4px_12px_4px_rgba(31,31,31,0.1)]" />
-                      </div>
-                    </>
-                  )}
-                          </div>
                           <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
                             <ExternalLink className="size-4 text-[#212223]" strokeWidth={1.5} />
                           </div>
                         </div>
                       </div>
                     </div>
-                  </button>
+                  </div>
 
                   {/* Supporting documents */}
                   <div className="content-stretch flex flex-col gap-[8px] items-start pt-[12px] w-full">
@@ -2372,11 +2589,11 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
             {streamedIntroText && streamedIntroText.length > 0 && (
               <RegulatoryScanSummary
                 totalFindings={3}
-                highestImpact="Critical"
+                highestImpact="High"
                 topFindings={[
-                  { regulation: 'SEC Climate Disclosure Rules', impact: 'Critical' as const, deadline: 'Jan 1, 2027' },
+                  { regulation: 'SEC Climate Disclosure Rules', impact: 'High' as const, deadline: 'Jan 1, 2027' },
                   { regulation: 'CFPB Consumer Data Rights Rule', impact: 'High' as const, deadline: 'Apr 1, 2027' },
-                  { regulation: 'FTC Non-Compete Ban Amendments', impact: 'High' as const, deadline: 'TBD (Pending)' }
+                  { regulation: 'FTC Non-Compete Ban Amendments', impact: 'Medium' as const, deadline: 'TBD (Pending)' }
                 ]}
                 documentsAffected={25}
                 onViewAffectedClauses={() => {
@@ -2399,6 +2616,26 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                   </span>
                   <button
                     onClick={() => {
+                      // Persist the monitor to shared context so it appears on the
+                      // Dashboard and the Monitoring & alerts page. Guard against
+                      // duplicates if the user clicks more than once.
+                      const alreadyMonitoring = savedAlerts.some(
+                        a => a.topic === 'M&A Regulatory Updates'
+                      );
+                      if (!alreadyMonitoring) {
+                        addAlert({
+                          topic: 'M&A Regulatory Updates',
+                          criteria: 'Monitor regulatory changes that may affect M&A contract templates',
+                          frequency: 'weekly',
+                          practiceAreas: ['Corporate', 'M&A'],
+                          jurisdictions: ['Federal', 'Multi-jurisdictional'],
+                          status: 'active',
+                          lastScan: 'Just now',
+                          nextScan: '7 days',
+                          alertCount: 0,
+                          sourceType: 'manual',
+                        });
+                      }
                       setShowMonitoringPrompt(false);
                       setShowMonitoringConfirmation(true);
                     }}
@@ -2412,7 +2649,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
             )}
 
             {/* Monitoring confirmation - shown after user clicks to set up monitoring */}
-            {streamedDescText && streamedDescText.length > 0 && !isContentGenerating && showMonitoringConfirmation && (
+            {streamedIntroText && streamedIntroText.length > 0 && !isContentGenerating && showMonitoringConfirmation && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

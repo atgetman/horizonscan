@@ -15,7 +15,8 @@ interface MonitoringConfirmationProps {
 const frequencyLabels = {
   'real-time': 'Real-time',
   'daily': 'Daily',
-  'weekly': 'Weekly'
+  'weekly': 'Weekly',
+  'monthly': 'Monthly'
 };
 
 export function MonitoringConfirmation({

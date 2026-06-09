@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { createPortal } from 'react-dom';
-import { ChevronDown, Share, Edit, FolderInput, Trash2, X } from 'lucide-react';
+import { ChevronDown, Share, Edit, FolderInput, Trash2, X, Bell, ExternalLink } from 'lucide-react';
 import { ActiveChatView } from '../components/ActiveChatView';
 import { generateChatTitle } from '../services/ChatService';
 import { Dropdown, DropdownItem } from '../components/ui/Dropdown';
@@ -32,59 +32,115 @@ export function ChatPage() {
   const [skillToSave, setSkillToSave] = useState<any>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-  const [initialMessages, setInitialMessages] = useState<any[] | undefined>(undefined);
-  const [cpcPrompt, setCpcPrompt] = useState<string>('');
-  const [chatKey, setChatKey] = useState(0); // Force re-mount when CPC is triggered
   const titleRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Check for pending CPC data from StandaloneViewPage
-  useEffect(() => {
-    const checkPendingCPC = () => {
+  // Detect a CPC re-entry. When the user clicks "Initiate CPC" from the
+  // artifact/table view we navigate back to this chat route. The Layout wraps
+  // the routed page in <AnimatePresence mode="wait"> keyed by pathname, which
+  // mounts ChatPage TWICE (the first mount is discarded for the enter
+  // animation, the second is the one the user actually sees). So we must NOT
+  // destructively consume `pendingCPCData` during render — otherwise the
+  // discarded first mount eats it and the surviving second mount falls back to
+  // re-running the original prompt. Instead we read it purely here (both mounts
+  // see it) and clear it later in an effect.
+  const [cpcReentry] = useState<{ regulation: string; docsAffected: number; clausesAffected: number; impactLevel: string } | null>(() => {
+    try {
       const pendingData = sessionStorage.getItem('pendingCPCData');
       if (pendingData) {
-        console.log('✅ ChatPage: Found pending CPC data!');
-        const { regulation, docsAffected, clausesAffected, impactLevel } = JSON.parse(pendingData);
-        console.log('📊 CPC data:', { regulation, docsAffected, clausesAffected, impactLevel });
-
-        // Clear the pending data
-        sessionStorage.removeItem('pendingCPCData');
-
-        // Get existing messages from sessionStorage (if any)
-        const existingMessagesKey = `chat_${chatId}_messages`;
-        const existingMessagesStr = sessionStorage.getItem(existingMessagesKey);
-        const existingMessages = existingMessagesStr ? JSON.parse(existingMessagesStr) : [];
-
-        // Create CPC user message text
-        const cpcPromptText = `Initiate Cross-Product Clause analysis for: ${regulation}`;
-
-        // Store workflow data for ActiveChatView to use
+        const parsed = JSON.parse(pendingData);
+        // Persist workflow data so ActiveChatView's CPC flow can read it.
         sessionStorage.setItem('pendingCPCWorkflow', JSON.stringify({
-          docsAffected,
-          clausesAffected,
-          impactLevel
+          docsAffected: parsed.docsAffected,
+          clausesAffected: parsed.clausesAffected,
+          impactLevel: parsed.impactLevel,
         }));
-        console.log('💾 ChatPage: Stored CPC workflow data in sessionStorage');
-
-        // Set the CPC prompt to trigger workflow
-        setCpcPrompt(cpcPromptText);
-
-        // Set initial messages to existing messages (without the CPC prompt yet)
-        setInitialMessages(existingMessages);
-
-        // Force re-mount of ActiveChatView to trigger workflow
-        setChatKey(prev => prev + 1);
+        return parsed;
       }
-    };
+    } catch (e) {
+      console.warn('[v0] ChatPage: failed to read pending CPC data', e);
+    }
+    return null;
+  });
+  const cpcPromptText = cpcReentry ? `Initiate Cross-Product Clause analysis for: ${cpcReentry.regulation}` : '';
 
-    // Check immediately
-    checkPendingCPC();
+  // Clear the pending CPC payload after the double-mount transition has settled
+  // (and after the surviving mount has already captured it at init time). This
+  // prevents a later, unrelated visit to this chat from falsely re-triggering
+  // CPC, without racing the discarded/surviving mount swap.
+  useEffect(() => {
+    if (!cpcReentry) return;
+    const t = setTimeout(() => {
+      sessionStorage.removeItem('pendingCPCData');
+      sessionStorage.removeItem('pendingCPCWorkflow');
+    }, 4000);
+    return () => clearTimeout(t);
+  }, [cpcReentry]);
 
-    // Also check after a short delay in case we just navigated back
-    const timer = setTimeout(checkPendingCPC, 100);
+  const openRegulatoryTable = () => {
+    sessionStorage.setItem('regulatoryTableSourceTabId', chatId || '');
+    navigate(`/chat?open=${encodeURIComponent('M&A regulatory findings')}&type=regulatory-table&from=${chatId}`);
+  };
 
-    return () => clearTimeout(timer);
-  }, [chatId, initialPrompt]);
+  // Seed the thread with a recap of the prior regulatory scan so the CPC flow
+  // appears to continue the existing conversation (length > 1 also tells
+  // ActiveChatView to skip re-running the original prompt simulation).
+  // React nodes are safe here because this prop is passed in memory, never
+  // serialized to sessionStorage.
+  const [initialMessages] = useState<any[] | undefined>(() => {
+    if (!cpcReentry) return undefined;
+    const originalPrompt = initialPrompt || 'Can you scan for any regulatory changes that might affect our M&A contract templates?';
+    return [
+      { role: 'user', text: originalPrompt, attachments: [] },
+      {
+        role: 'assistant',
+        isFigmaContent: true,
+        text: (
+          <div className="flex flex-col gap-4 max-w-[800px] mr-auto w-full">
+            <div className="text-[15px] text-[#212223] leading-relaxed">
+              {`I ran a regulatory horizon scan across federal and state sources and identified ${cpcReentry.regulation}, which may impact your M&A contract templates.`}
+            </div>
+            <button
+              onClick={openRegulatoryTable}
+              className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors"
+            >
+              <div aria-hidden="true" className="absolute border border-[#8a8a8a] border-solid inset-0 pointer-events-none rounded-[8px]" />
+              <div className="flex flex-row items-center size-full">
+                <div className="content-center flex flex-wrap gap-[4px_8px] items-center pr-[12px] py-[8px] relative size-full">
+                  <div className="flex-[1_0_0] min-w-px relative">
+                    <div className="flex flex-row items-center size-full">
+                      <div className="content-stretch flex gap-[8px] items-center pl-[8px] relative size-full">
+                        <div className="content-stretch flex items-center justify-center max-h-[28px] max-w-[28px] relative shrink-0 size-[28px]">
+                          <div className="relative">
+                            <Bell className="size-5 text-[#DE6633]" strokeWidth={1.5} />
+                            <div className="absolute top-0 right-0 size-2 bg-[#DE6633] rounded-full border border-white" />
+                          </div>
+                        </div>
+                        <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative">
+                          <div className="content-stretch flex items-center relative w-full">
+                            <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Clario:Medium',sans-serif] justify-center leading-[0] min-w-px not-italic overflow-hidden relative text-[#212223] text-[16px] text-ellipsis whitespace-nowrap">
+                              <p className="leading-[1.5] overflow-hidden text-ellipsis text-left">M&A regulatory findings</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
+                      <ExternalLink className="size-4 text-[#212223]" strokeWidth={1.5} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+        ),
+      },
+    ];
+  });
+  const [cpcPrompt] = useState<string>(cpcPromptText);
+  const [appendCPCToExisting, setAppendCPCToExisting] = useState<boolean>(!!cpcReentry);
 
   // Listen for skill share events
   useEffect(() => {
@@ -235,26 +291,27 @@ export function ChatPage() {
         {/* Chat View */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <ActiveChatView
-            key={chatKey}
-            prompt={cpcPrompt || initialPrompt}
+            prompt={initialPrompt}
             attachments={[]}
             onNewPrompt={() => {}}
             isSkillCreation={isSkillCreation}
             initialMessages={initialMessages}
             currentTabId={chatId}
-            onMessagesChange={(messages) => {
-              // Save messages to sessionStorage so we can append CPC messages later
-              const messagesKey = `chat_${chatId}_messages`;
-              sessionStorage.setItem(messagesKey, JSON.stringify(messages));
-            }}
+            appendCPCPrompt={appendCPCToExisting ? cpcPrompt : undefined}
+            onCPCAppended={() => setAppendCPCToExisting(false)}
             onOpenTab={(item: any) => {
               if (item.type === 'skill') {
                 setSkillInPanel(item);
                 setSkillPanelOpen(true);
+              } else if (item.type === 'cpc-redlines') {
+                // Open the clause analysis in a full-page tab (mirrors the
+                // regulatory-table tabular view). Closing it returns to chat.
+                const regulation = item.regulation || item.name?.replace(/^CPC (Redlines|Analysis) - /, '') || '';
+                sessionStorage.setItem('cpcRedlineRegulation', regulation);
+                navigate(`/chat?open=${encodeURIComponent('Cross-product clause analysis')}&type=cpc-redlines&from=${chatId}`);
               } else if (item.type === 'regulatory-table') {
                 // Navigate to workspace-agnostic standalone view, passing the chat ID
-                sessionStorage.setItem('regulatoryTableSourceTabId', chatId || '');
-                navigate(`/chat?open=${encodeURIComponent(item.name)}&type=regulatory-table&from=${chatId}`);
+                openRegulatoryTable();
               }
             }}
           />

@@ -156,7 +156,7 @@ export function ImportSkillModal({ isOpen, onClose, onImport }: ImportSkillModal
         <div className="p-6">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">
+              <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">
                 Import skill
               </h2>
               <p className="text-[16px] font-['Source_Sans_3'] font-normal text-[#666666] mt-1">

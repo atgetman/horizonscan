@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ExternalLink, ChevronDown } from 'lucide-react';
+import { ExternalLink, ChevronDown, Check } from 'lucide-react';
+import { useMonitoring } from '../../contexts/MonitoringContext';
 
 interface RegulatoryFinding {
   id: string;
@@ -8,7 +9,7 @@ interface RegulatoryFinding {
   type: 'TR Product' | 'Reuters News' | 'Web Source';
   summary: string;
   rationale: string;
-  impact: 'Critical' | 'High' | 'Medium' | 'Low';
+  impact: 'High' | 'Medium' | 'Low';
   relevance: number; // 0-100
   complianceDeadline: string;
 }
@@ -20,11 +21,6 @@ interface RegulatoryFindingsTableProps {
 }
 
 const impactConfig = {
-  Critical: {
-    bgColor: 'bg-[#FEE2E2]',
-    textColor: 'text-[#991B1B]',
-    borderColor: 'border-[#FCA5A5]'
-  },
   High: {
     bgColor: 'bg-[#FEF3C7]',
     textColor: 'text-[#92400E]',
@@ -60,12 +56,32 @@ const typeConfig = {
 export function RegulatoryFindingsTable({ findings, onSaveAsAlert, onSaveScan }: RegulatoryFindingsTableProps) {
   const [impactFilter, setImpactFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('impact');
+  const { savedAlerts, addAlert } = useMonitoring();
+  const alertSaved = savedAlerts.some(a => a.sourceType === 'regulatory-table');
+
+  const handleSaveAsAlert = () => {
+    if (!alertSaved) {
+      addAlert({
+        topic: 'M&A Regulatory Updates',
+        criteria: 'Monitor regulatory changes affecting M&A transactions',
+        frequency: 'weekly',
+        practiceAreas: ['Corporate', 'M&A'],
+        jurisdictions: ['Federal', 'Multi-jurisdictional'],
+        status: 'active',
+        lastScan: 'Just now',
+        nextScan: '7 days',
+        alertCount: 0,
+        sourceType: 'regulatory-table'
+      });
+    }
+    onSaveAsAlert?.();
+  };
 
   const filteredFindings = findings.filter(f =>
     impactFilter === 'all' || f.impact === impactFilter
   ).sort((a, b) => {
     if (sortBy === 'impact') {
-      const impactOrder = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+      const impactOrder = { High: 0, Medium: 1, Low: 2 };
       return impactOrder[a.impact] - impactOrder[b.impact];
     } else if (sortBy === 'relevance') {
       return b.relevance - a.relevance;
@@ -87,7 +103,6 @@ export function RegulatoryFindingsTable({ findings, onSaveAsAlert, onSaveScan }:
               className="appearance-none bg-white border border-[#E5E5E5] rounded-md px-3 py-1.5 pr-8 text-[13px] font-['Source_Sans_3'] text-[#212223] cursor-pointer hover:border-[#8a8a8a] transition-colors"
             >
               <option value="all">All Impact Levels</option>
-              <option value="Critical">Critical</option>
               <option value="High">High</option>
               <option value="Medium">Medium</option>
               <option value="Low">Low</option>
@@ -116,10 +131,16 @@ export function RegulatoryFindingsTable({ findings, onSaveAsAlert, onSaveScan }:
         <div className="flex items-center gap-2">
           {onSaveAsAlert && (
             <button
-              onClick={onSaveAsAlert}
-              className="h-[24px] px-[8px] py-[4px] flex items-center gap-1.5 text-[14px] font-['Clario'] font-medium text-[#1d4b34] rounded-[4px] border border-transparent hover:bg-[#edf2f0] hover:border-[#8a8a8a] transition-all"
+              onClick={handleSaveAsAlert}
+              disabled={alertSaved}
+              className={`h-[24px] px-[8px] py-[4px] flex items-center gap-1.5 text-[14px] font-['Clario'] font-medium rounded-[4px] border transition-all ${
+                alertSaved
+                  ? 'text-[#1d4b34] border-transparent cursor-not-allowed'
+                  : 'text-[#1d4b34] border-transparent hover:bg-[#edf2f0] hover:border-[#8a8a8a]'
+              }`}
             >
-              Save as alert
+              {alertSaved && <Check className="size-3.5" strokeWidth={2} />}
+              {alertSaved ? 'Alert saved' : 'Save as alert'}
             </button>
           )}
           {onSaveScan && (

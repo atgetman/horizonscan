@@ -228,6 +228,10 @@ export function WorkspacePage() {
   
   // Track mount status to prevent updates during navigation/unmount
   const isMountedRef = useRef(true);
+
+  // Stable ref to the impact-analysis opener so URL-param effects (which run
+  // before the function is defined in render order) can invoke it.
+  const handleViewImpactAnalysisRef = useRef<(() => void) | null>(null);
   
   useEffect(() => {
     return () => {
@@ -1043,6 +1047,7 @@ export function WorkspacePage() {
 
     const openParam = searchParams.get('open');
     const typeParam = searchParams.get('type');
+    const impactParam = searchParams.get('impact');
 
     if (openParam && typeParam) {
       openItemLogic({ name: openParam, type: typeParam });
@@ -1051,6 +1056,16 @@ export function WorkspacePage() {
       const newSearchParams = new URLSearchParams(searchParams);
       newSearchParams.delete('open');
       newSearchParams.delete('type');
+      setSearchParams(newSearchParams, { replace: true });
+    }
+
+    // Deep-link from the Horizon Scan toast: auto-open the regulatory impact
+    // analysis for this workspace so the user lands directly on the affected docs.
+    if (impactParam === '1') {
+      handleViewImpactAnalysisRef.current?.();
+
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete('impact');
       setSearchParams(newSearchParams, { replace: true });
     }
   }, [searchParams]); // Only depend on searchParams, openItemLogic is stable with refs
@@ -1367,6 +1382,9 @@ export function WorkspacePage() {
     setTabs(prev => [...prev, newTab]);
     setActiveTabId(newTabId);
   };
+
+  // Keep the ref pointed at the latest opener so deep-link effects can call it.
+  handleViewImpactAnalysisRef.current = handleViewImpactAnalysis;
 
   return (
     <div className="flex-1 h-full flex bg-[#FCFCFC]">
