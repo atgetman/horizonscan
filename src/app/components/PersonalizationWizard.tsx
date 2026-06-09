@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, ArrowUp, Check, Scale, Building2, FileText, Lightbulb, Users, Home, Calculator, ShieldCheck, TrendingUp, Bell } from 'lucide-react';
+import { Sparkles, ArrowUp, ArrowLeft, Check, Scale, Building2, FileText, Lightbulb, Users, Home, Calculator, ShieldCheck, TrendingUp, Bell } from 'lucide-react';
 
 interface PersonalizationWizardProps {
   isOpen: boolean;
@@ -132,6 +132,16 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
     }
   };
 
+  const BackButton = () => (
+    <button
+      onClick={() => setStep((prev) => (prev > 1 ? ((prev - 1) as 1 | 2 | 3 | 4 | 5 | 6) : prev))}
+      className="flex items-center gap-1.5 px-4 py-3 rounded-full text-[15px] font-medium text-[#666] hover:text-[#1F1F1F] transition-colors"
+    >
+      <ArrowLeft className="w-4 h-4" />
+      Back
+    </button>
+  );
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -248,17 +258,20 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Continue button */}
-                  <button
-                    onClick={() => setStep(3)}
-                    disabled={selectedRoles.length === 0}
-                    className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
-                      selectedRoles.length > 0
-                        ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
-                        : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
-                    }`}
-                  >
-                    Continue
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <BackButton />
+                    <button
+                      onClick={() => setStep(3)}
+                      disabled={selectedRoles.length === 0}
+                      className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
+                        selectedRoles.length > 0
+                          ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
+                          : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
+                      }`}
+                    >
+                      Continue
+                    </button>
+                  </div>
                 </motion.div>
               ) : step === 3 ? (
                 <motion.div
@@ -296,17 +309,20 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Continue button */}
-                  <button
-                    onClick={() => setStep(4)}
-                    disabled={!selectedFirmType}
-                    className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
-                      selectedFirmType
-                        ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
-                        : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
-                    }`}
-                  >
-                    Continue
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <BackButton />
+                    <button
+                      onClick={() => setStep(4)}
+                      disabled={!selectedFirmType}
+                      className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
+                        selectedFirmType
+                          ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
+                          : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
+                      }`}
+                    >
+                      Continue
+                    </button>
+                  </div>
                 </motion.div>
               ) : step === 4 ? (
                 <motion.div
@@ -345,17 +361,20 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Continue button */}
-                  <button
-                    onClick={() => setStep(5)}
-                    disabled={selectedPracticeAreas.length === 0}
-                    className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
-                      selectedPracticeAreas.length > 0
-                        ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
-                        : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
-                    }`}
-                  >
-                    Continue
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <BackButton />
+                    <button
+                      onClick={() => setStep(5)}
+                      disabled={selectedPracticeAreas.length === 0}
+                      className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
+                        selectedPracticeAreas.length > 0
+                          ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
+                          : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
+                      }`}
+                    >
+                      Continue
+                    </button>
+                  </div>
                 </motion.div>
               ) : step === 5 ? (
                 <motion.div
@@ -393,17 +412,20 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Continue button */}
-                  <button
-                    onClick={() => setStep(6)}
-                    disabled={selectedJurisdictions.length === 0}
-                    className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
-                      selectedJurisdictions.length > 0
-                        ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
-                        : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
-                    }`}
-                  >
-                    Continue
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <BackButton />
+                    <button
+                      onClick={() => setStep(6)}
+                      disabled={selectedJurisdictions.length === 0}
+                      className={`px-6 py-3 rounded-full text-[15px] font-medium transition-all ${
+                        selectedJurisdictions.length > 0
+                          ? 'bg-[#1d4b34] hover:bg-[#163829] text-white'
+                          : 'bg-[#E8E6E0] text-[#999] cursor-not-allowed'
+                      }`}
+                    >
+                      Continue
+                    </button>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.div
@@ -465,7 +487,8 @@ export function PersonalizationWizard({ isOpen, onComplete }: PersonalizationWiz
                   </div>
 
                   {/* Skip or Continue */}
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <BackButton />
                     <button
                       onClick={handleComplete}
                       className="px-6 py-3 rounded-full text-[15px] font-medium text-[#666] hover:text-[#1F1F1F] transition-colors"
