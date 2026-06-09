@@ -350,7 +350,15 @@ export function RegulatoryScanSummary({
                   <span className="text-[14px] font-['Source_Sans_3'] text-[#1d4b34]">
                     {"You'll get "}
                     <strong className="font-semibold">{`${monitoringFrequency} alerts`}</strong>
-                    {' when new changes affect these documents'}
+                    {' when new changes affect your document. Manage anytime in the '}
+                    <Link
+                      to="/knowledge"
+                      className="inline-flex items-center gap-0.5 font-medium text-[#1d4b34] underline underline-offset-2 hover:text-[#143626] transition-colors"
+                    >
+                      Knowledge center
+                      <ArrowUpRight className="size-3" strokeWidth={2} />
+                    </Link>
+                    {'.'}
                   </span>
                 </div>
 
@@ -389,18 +397,6 @@ export function RegulatoryScanSummary({
                   </button>
                 </div>
               </div>
-
-              <p className="text-[13px] font-['Source_Sans_3'] text-[#666] leading-[1.4] mt-2 px-[2px]">
-                {'Manage this alert\u2019s frequency, scope, and delivery anytime in the '}
-                <Link
-                  to="/knowledge"
-                  className="inline-flex items-center gap-0.5 font-medium text-[#0062C4] hover:text-[#004a96] underline transition-colors"
-                >
-                  Knowledge center
-                  <ArrowUpRight className="size-3" strokeWidth={2} />
-                </Link>
-                {'.'}
-              </p>
             </motion.div>
           )}
         </div>
