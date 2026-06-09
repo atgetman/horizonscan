@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink, Bell, CheckCircle2, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, ExternalLink, Bell, CheckCircle2, X, ArrowUpRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router';
 import { useMonitoring } from '../../contexts/MonitoringContext';
 
 interface TopFinding {
@@ -388,6 +389,18 @@ export function RegulatoryScanSummary({
                   </button>
                 </div>
               </div>
+
+              <p className="text-[13px] font-['Source_Sans_3'] text-[#666] leading-[1.4] mt-2 px-[2px]">
+                {'Manage this alert\u2019s frequency, scope, and delivery anytime in the '}
+                <Link
+                  to="/knowledge"
+                  className="inline-flex items-center gap-0.5 font-medium text-[#0062C4] hover:text-[#004a96] underline transition-colors"
+                >
+                  Knowledge center
+                  <ArrowUpRight className="size-3" strokeWidth={2} />
+                </Link>
+                {'.'}
+              </p>
             </motion.div>
           )}
         </div>
