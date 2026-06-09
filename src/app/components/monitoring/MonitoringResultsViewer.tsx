@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, ExternalLink, Download, FileText } from 'lucide-react';
+import { X, ExternalLink, Download, FileText, Loader2 } from 'lucide-react';
 import { Toggle } from '../ui/SegmentedToggle';
 
 export interface MonitoringResult {
@@ -27,12 +27,14 @@ interface MonitoringResultsViewerProps {
   isOpen: boolean;
   onClose: () => void;
   result: MonitoringResult | null;
+  isScanning?: boolean;
 }
 
 export function MonitoringResultsViewer({
   isOpen,
   onClose,
   result,
+  isScanning = false,
 }: MonitoringResultsViewerProps) {
   const [filterType, setFilterType] = useState<string>('all');
 
@@ -64,21 +66,25 @@ export function MonitoringResultsViewer({
         <div className="p-6">
           <div className="flex items-start justify-between mb-1">
             <div>
-              <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">
+              <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">
                 Monitoring results
               </h2>
               <p className="text-[16px] font-['Source_Sans_3'] font-normal text-[#212223] mt-1">
-                {result.monitorTopic} • Scanned {result.scanDate}
+                {isScanning
+                  ? `Scanning sources for "${result.monitorTopic}"…`
+                  : `${result.monitorTopic} • Scanned ${result.scanDate}`}
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={handleExport}
-                className="flex items-center gap-2 px-3 py-1.5 text-[14px] font-['Clario'] font-medium text-[#212223] hover:bg-gray-50 rounded-lg transition-colors"
-              >
-                <Download className="size-4" />
-                Export
-              </button>
+              {!isScanning && (
+                <button
+                  onClick={handleExport}
+                  className="flex items-center gap-2 px-3 py-1.5 text-[14px] font-['Clario'] font-medium text-[#212223] hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <Download className="size-4" />
+                  Export
+                </button>
+              )}
               <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
                 <X className="size-5 text-gray-500" />
               </button>
@@ -86,6 +92,19 @@ export function MonitoringResultsViewer({
           </div>
         </div>
 
+        {isScanning ? (
+          /* Scanning state */
+          <div className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
+            <Loader2 className="size-8 text-[#1d4b34] animate-spin mb-4" />
+            <h3 className="text-[16px] font-['Clario'] font-medium text-[#212223] mb-2">
+              Running scan
+            </h3>
+            <p className="text-[14px] font-['Source_Sans_3'] text-[#666] max-w-md">
+              Checking federal and state regulatory sources for new developments relevant to this monitor.
+            </p>
+          </div>
+        ) : (
+          <>
         {/* Filters */}
         <div className="px-6 pb-6">
           <Toggle
@@ -186,6 +205,8 @@ export function MonitoringResultsViewer({
             )}
           </div>
         </div>
+          </>
+        )}
       </div>
     </div>
   );

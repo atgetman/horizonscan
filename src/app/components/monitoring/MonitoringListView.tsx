@@ -40,6 +40,39 @@ const MOCK_ACTIVITIES: MonitoringActivity[] = [
   },
 ];
 
+// Findings surfaced when a brand-new monitor runs its first scan on demand
+const NEW_SCAN_FINDINGS: MonitoringFinding[] = [
+  {
+    id: 'new-finding-1',
+    type: 'regulation',
+    title: 'SEC adopts amendments to merger disclosure requirements',
+    jurisdiction: 'Federal',
+    date: 'June 5, 2026',
+    summary: 'The SEC finalized amendments expanding the disclosure obligations for material definitive agreements in M&A transactions, with new line-item requirements for representations and warranties.',
+    keyPoints: [
+      'Expands Item 1.01 disclosure for material definitive agreements',
+      'New requirements may affect standard reps & warranties in templates',
+      'Compliance date set for Q1 2027',
+    ],
+    citation: 'SEC Release No. 33-11456 (June 5, 2026)',
+    relevanceScore: 92,
+  },
+  {
+    id: 'new-finding-2',
+    type: 'guidance',
+    title: 'FTC issues updated guidance on HSR premerger notification',
+    jurisdiction: 'Federal',
+    date: 'June 2, 2026',
+    summary: 'Updated FTC guidance clarifies expanded data submission expectations during the HSR waiting period, which may lengthen diligence timelines for covered transactions.',
+    keyPoints: [
+      'Broader transaction-related document production expected',
+      'May affect closing-condition and timing covenants in templates',
+    ],
+    citation: 'FTC Premerger Notification Guidance (June 2026)',
+    relevanceScore: 78,
+  },
+];
+
 // Mock results data
 const MOCK_RESULTS: Record<string, MonitoringResult> = {
   'monitor-1': {
@@ -189,6 +222,7 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'paused'>('all');
   const [showResultsViewer, setShowResultsViewer] = useState(false);
   const [selectedResult, setSelectedResult] = useState<MonitoringResult | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
@@ -244,11 +278,42 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
   };
 
   const handleViewResults = (id: string) => {
-    const result = MOCK_RESULTS[id];
-    if (result) {
-      setSelectedResult(result);
+    const monitor = monitors.find(m => m.id === id);
+    const cached = MOCK_RESULTS[id];
+
+    if (cached) {
+      setSelectedResult(cached);
       setShowResultsViewer(true);
+      return;
     }
+
+    // No cached results yet (e.g. a freshly created monitor) — kick off a new
+    // scan. We show the results viewer in a scanning state, then populate it
+    // with freshly "found" results.
+    setIsScanning(true);
+    setSelectedResult({
+      id: `result-${id}`,
+      monitorId: id,
+      monitorTopic: monitor?.topic ?? 'Monitor',
+      scanDate: 'just now',
+      findings: [],
+    });
+    setShowResultsViewer(true);
+
+    window.setTimeout(() => {
+      setSelectedResult({
+        id: `result-${id}`,
+        monitorId: id,
+        monitorTopic: monitor?.topic ?? 'Monitor',
+        scanDate: 'just now',
+        findings: NEW_SCAN_FINDINGS,
+      });
+      setMonitors(prev => prev.map(m => m.id === id
+        ? { ...m, lastScan: 'just now', alertCount: NEW_SCAN_FINDINGS.length }
+        : m
+      ));
+      setIsScanning(false);
+    }, 2600);
   };
 
   const handleCreateNew = () => {
@@ -393,7 +458,11 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
       {/* Results Viewer */}
       <MonitoringResultsViewer
         isOpen={showResultsViewer}
-        onClose={() => setShowResultsViewer(false)}
+        isScanning={isScanning}
+        onClose={() => {
+          setShowResultsViewer(false);
+          setIsScanning(false);
+        }}
         result={selectedResult}
       />
 

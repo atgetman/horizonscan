@@ -1083,7 +1083,7 @@ export function Knowledge() {
         createdDate: '2026-03-10',
       },
     ];
-    const savedAlertMonitors: Monitor[] = savedAlerts.slice(0, 2).map(alert => ({
+    const savedAlertMonitors: Monitor[] = savedAlerts.map(alert => ({
       id: alert.id,
       topic: alert.topic,
       criteria: alert.criteria,
@@ -1096,9 +1096,10 @@ export function Knowledge() {
       createdDate: alert.createdDate,
     }));
 
-    const baseMonitors = activeScope === 'personal'
-      ? [...savedAlertMonitors, ...(savedAlerts.length >= 2 ? [] : personalDefaultMonitors)].slice(0, 2)
-      : firmDefaultMonitors;
+    // Saved alerts (created from a chat scan) always show first, in either
+    // scope, followed by the scope's default preview monitors.
+    const defaultMonitors = activeScope === 'personal' ? personalDefaultMonitors : firmDefaultMonitors;
+    const baseMonitors = [...savedAlertMonitors, ...defaultMonitors].slice(0, 4);
     const dashboardMonitors = baseMonitors
       .filter(m => !dismissedMonitorIds.includes(m.id))
       .map(m => ({ ...m, ...monitorOverrides[m.id] }) as Monitor);

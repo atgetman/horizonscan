@@ -118,12 +118,10 @@ export function MonitoringCard({
                 Pause
               </DropdownMenuItem>
             )}
-            {monitor.alertCount > 0 && (
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onViewResults(monitor.id); }}>
-                <Eye className="size-3.5 mr-0 text-gray-500" />
-                View results
-              </DropdownMenuItem>
-            )}
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onViewResults(monitor.id); }}>
+              <Eye className="size-3.5 mr-0 text-gray-500" />
+              View results
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(monitor.id); }}>
               <Trash2 className="size-3.5 mr-0 text-gray-500" />
               Delete

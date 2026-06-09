@@ -15,6 +15,7 @@ import { DynamicSourceItems } from './chat/DynamicSourceItems';
 import { HorizonScanResults, RegulatoryScanSummary } from './regulatory';
 import { CPCHandoffScreen } from './CPCHandoffScreen';
 import { CPCScanSummary } from './regulatory/CPCScanSummary';
+import { useMonitoring } from '../contexts/MonitoringContext';
 
 interface StagedItem {
     id: string;
@@ -474,6 +475,7 @@ function ArtifactCard({ onArtifactClick, streamedIntroText, streamedDescText, is
 
 export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingChange, onOpenTab, initialMessages, onMessagesChange, onArtifactCreated, mode = 'chatgpt', cocounselToken, isSkillCreation = false, showClarifyingQuestions = false, onSubmitQuestions, onSkipQuestions, currentTabId, appendCPCPrompt, onCPCAppended }: ActiveChatViewProps) {
   const navigate = useNavigate();
+  const { savedAlerts, addAlert } = useMonitoring();
 
   console.log('🎬 ActiveChatView rendering with initialMessages:', initialMessages);
 
@@ -2602,6 +2604,26 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                   </span>
                   <button
                     onClick={() => {
+                      // Persist the monitor to shared context so it appears on the
+                      // Dashboard and the Monitoring & alerts page. Guard against
+                      // duplicates if the user clicks more than once.
+                      const alreadyMonitoring = savedAlerts.some(
+                        a => a.topic === 'M&A Regulatory Updates'
+                      );
+                      if (!alreadyMonitoring) {
+                        addAlert({
+                          topic: 'M&A Regulatory Updates',
+                          criteria: 'Monitor regulatory changes that may affect M&A contract templates',
+                          frequency: 'weekly',
+                          practiceAreas: ['Corporate', 'M&A'],
+                          jurisdictions: ['Federal', 'Multi-jurisdictional'],
+                          status: 'active',
+                          lastScan: 'Just now',
+                          nextScan: '7 days',
+                          alertCount: 0,
+                          sourceType: 'manual',
+                        });
+                      }
                       setShowMonitoringPrompt(false);
                       setShowMonitoringConfirmation(true);
                     }}
