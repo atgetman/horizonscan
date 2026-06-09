@@ -184,6 +184,28 @@ export function MonitoringSetupModal({
     onClose();
   };
 
+  // Required fields must be filled in for any save.
+  const isValid = Boolean(topic) && selectedPracticeAreas.length > 0;
+
+  // Compare current values against the monitor we opened with. When creating a
+  // new monitor there is nothing to diff against, so a valid form is enough.
+  const sameSet = (a: string[], b: string[]) =>
+    a.length === b.length && [...a].sort().join('|') === [...b].sort().join('|');
+
+  const isDirty = !editingMonitor
+    ? true
+    : topic !== (editingMonitor.topic || '') ||
+      criteria !== (editingMonitor.criteria || '') ||
+      frequency !== (editingMonitor.frequency || 'daily') ||
+      !sameSet(selectedPracticeAreas, editingMonitor.practiceAreas ?? []) ||
+      !sameSet(
+        selectedJurisdictions.map((v) => v.split(':').slice(1).join(':')),
+        editingMonitor.jurisdictions ?? []
+      ) ||
+      !sameSet(selectedSources, editingMonitor.sources ?? [...SOURCE_OPTIONS]);
+
+  const canSave = isValid && isDirty;
+
   if (!isOpen) return null;
 
   return (
@@ -192,7 +214,7 @@ export function MonitoringSetupModal({
         {/* Header */}
         <div className="p-6">
           <div className="flex items-start justify-between mb-1">
-            <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">
+            <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">
               {editingMonitor ? 'Edit monitor' : 'Set up monitoring'}
             </h2>
             <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
@@ -400,18 +422,18 @@ export function MonitoringSetupModal({
             </button>
           </div>
           <div className={`content-stretch flex items-start justify-center min-h-[32px] relative rounded-[4px] shrink-0 ${
-            !topic || selectedPracticeAreas.length === 0 ? 'bg-[#f2f2f2]' : 'bg-[#1d4b34] hover:bg-[#3d5e4d] transition-colors'
+            !canSave ? 'bg-[#f2f2f2]' : 'bg-[#1d4b34] hover:bg-[#3d5e4d] transition-colors'
           }`}>
             <div aria-hidden="true" className={`absolute border border-solid inset-[-1px] pointer-events-none rounded-[5px] ${
-              !topic || selectedPracticeAreas.length === 0 ? 'border-[#f2f2f2]' : 'border-[#1d4b34]'
+              !canSave ? 'border-[#f2f2f2]' : 'border-[#1d4b34]'
             }`} />
             <button
               onClick={handleSave}
-              disabled={!topic || selectedPracticeAreas.length === 0}
+              disabled={!canSave}
               className="content-stretch flex gap-[8px] h-[32px] items-center justify-center px-[8px] py-[4px] relative rounded-[4px] shrink-0 disabled:cursor-not-allowed"
             >
               <div className={`flex flex-col font-['Clario'] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[15px] whitespace-nowrap ${
-                !topic || selectedPracticeAreas.length === 0 ? 'text-[#8a8a8a]' : 'text-[#fcfcfc]'
+                !canSave ? 'text-[#8a8a8a]' : 'text-[#fcfcfc]'
               }`}>
                 <p className="leading-[1.35]">{editingMonitor ? 'Save changes' : 'Start monitoring'}</p>
               </div>
