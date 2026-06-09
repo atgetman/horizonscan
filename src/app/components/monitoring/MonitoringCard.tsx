@@ -11,9 +11,10 @@ export interface Monitor {
   id: string;
   topic: string;
   criteria: string;
-  frequency: 'real-time' | 'daily' | 'weekly';
+  frequency: 'real-time' | 'daily' | 'weekly' | 'monthly';
   practiceAreas: string[];
   jurisdictions?: string[];
+  sources?: string[];
   status: 'active' | 'paused';
   lastScan?: string;
   nextScan?: string;

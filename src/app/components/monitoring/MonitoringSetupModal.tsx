@@ -15,17 +15,118 @@ const FREQUENCY_OPTIONS = [
   { value: 'real-time', label: 'Real-time' },
   { value: 'daily', label: 'Daily' },
   { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
 ] as const;
 
-const JURISDICTION_OPTIONS = [
-  'Federal',
-  'New York',
-  'California',
-  'Texas',
-  'Florida',
-  'Illinois',
-  'All US jurisdictions',
+interface JurisdictionRegion {
+  id: string;
+  label: string;
+  jurisdictions: string[];
+  moreJurisdictions?: string[];
+}
+
+const JURISDICTION_REGIONS: JurisdictionRegion[] = [
+  {
+    id: 'us',
+    label: 'United States',
+    jurisdictions: [
+      'Federal', 'All US jurisdictions', 'California', 'New York', 'Texas',
+      'Florida', 'Illinois', 'Delaware', 'New Jersey', 'Pennsylvania',
+      'Georgia', 'Washington', 'Massachusetts', 'Virginia', 'Colorado',
+    ],
+    moreJurisdictions: [
+      'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'Connecticut', 'Hawaii',
+      'Idaho', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine',
+      'Maryland', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana',
+      'Nebraska', 'Nevada', 'New Hampshire', 'New Mexico', 'North Carolina',
+      'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Rhode Island',
+      'South Carolina', 'South Dakota', 'Tennessee', 'Utah', 'Vermont',
+      'West Virginia', 'Wisconsin', 'Wyoming',
+    ],
+  },
+  {
+    id: 'canada',
+    label: 'Canada',
+    jurisdictions: ['Federal', 'Ontario', 'British Columbia', 'Quebec', 'Alberta'],
+  },
+  {
+    id: 'uk',
+    label: 'United Kingdom',
+    jurisdictions: ['England & Wales', 'Scotland', 'Northern Ireland'],
+  },
+  {
+    id: 'eu',
+    label: 'European Union',
+    jurisdictions: ['EU-wide', 'Germany', 'France', 'Netherlands', 'Ireland', 'Luxembourg', 'Spain', 'Italy'],
+  },
+  {
+    id: 'apac',
+    label: 'Asia Pacific',
+    jurisdictions: ['Australia', 'Singapore', 'Hong Kong', 'Japan'],
+  },
 ];
+
+const SOURCE_OPTIONS = ['TR Product', 'Reuters News', 'Web sources'];
+
+// Maps onboarding practice-area ids to this modal's practice-area labels
+const PRACTICE_AREA_ID_TO_LABEL: Record<string, string> = {
+  litigation: 'Litigation',
+  corporate: 'Corporate',
+  contracts: 'Contracts',
+  ip: 'IP',
+  employment: 'Employment',
+  'real-estate': 'Real Estate',
+};
+
+function readJSON<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+// Pre-populate practice areas from the user's onboarding profile
+function getDefaultPracticeAreas(available: string[]): string[] {
+  const ids = readJSON<string[]>('cocounsel-user-practice-areas', []);
+  const labels = ids
+    .map((id) => PRACTICE_AREA_ID_TO_LABEL[id])
+    .filter((label): label is string => Boolean(label) && available.includes(label));
+  return labels;
+}
+
+// Pre-populate jurisdictions from the user's onboarding profile.
+// Onboarding stores values namespaced as `regionId:jurisdiction`.
+function getDefaultJurisdictions(): string[] {
+  const stored = readJSON<string[]>('cocounsel-user-jurisdictions', []);
+  const valid = new Set<string>();
+  JURISDICTION_REGIONS.forEach((region) => {
+    [...region.jurisdictions, ...(region.moreJurisdictions ?? [])].forEach((j) => {
+      valid.add(`${region.id}:${j}`);
+    });
+  });
+  // Alias onboarding "All states" to this modal's "All US jurisdictions"
+  return stored
+    .map((v) => (v === 'us:All states' ? 'us:All US jurisdictions' : v))
+    .filter((v) => valid.has(v));
+}
+
+function getDefaultRegions(jurisdictions: string[]): string[] {
+  return Array.from(new Set(jurisdictions.map((v) => v.split(':')[0])));
+}
+
+// Re-namespace plain jurisdiction labels (from a saved monitor) back to `regionId:label`
+function namespaceJurisdictions(labels: string[]): string[] {
+  return labels
+    .map((label) => {
+      const region = JURISDICTION_REGIONS.find((r) =>
+        [...r.jurisdictions, ...(r.moreJurisdictions ?? [])].includes(label)
+      );
+      return region ? `${region.id}:${label}` : null;
+    })
+    .filter((v): v is string => v !== null);
+}
 
 export function MonitoringSetupModal({
   isOpen,
@@ -36,15 +137,35 @@ export function MonitoringSetupModal({
 }: MonitoringSetupModalProps) {
   const [topic, setTopic] = useState(editingMonitor?.topic || '');
   const [criteria, setCriteria] = useState(editingMonitor?.criteria || '');
-  const [frequency, setFrequency] = useState<'real-time' | 'daily' | 'weekly'>(
+  const [frequency, setFrequency] = useState<'real-time' | 'daily' | 'weekly' | 'monthly'>(
     editingMonitor?.frequency || 'daily'
   );
   const [selectedPracticeAreas, setSelectedPracticeAreas] = useState<string[]>(
-    editingMonitor?.practiceAreas || []
+    editingMonitor?.practiceAreas ?? getDefaultPracticeAreas(availablePracticeAreas)
   );
-  const [selectedJurisdictions, setSelectedJurisdictions] = useState<string[]>(
-    editingMonitor?.jurisdictions || []
+  const initialJurisdictions = editingMonitor?.jurisdictions
+    ? namespaceJurisdictions(editingMonitor.jurisdictions)
+    : getDefaultJurisdictions();
+  const [selectedJurisdictions, setSelectedJurisdictions] = useState<string[]>(initialJurisdictions);
+  const [selectedRegions, setSelectedRegions] = useState<string[]>(
+    getDefaultRegions(initialJurisdictions)
   );
+  const [expandedMoreStates, setExpandedMoreStates] = useState<string[]>([]);
+  const [selectedSources, setSelectedSources] = useState<string[]>(
+    editingMonitor?.sources ?? [...SOURCE_OPTIONS]
+  );
+
+  const handleRegionToggle = (regionId: string) => {
+    setSelectedRegions((prev) =>
+      prev.includes(regionId) ? prev.filter((r) => r !== regionId) : [...prev, regionId]
+    );
+  };
+
+  const handleMoreStatesToggle = (regionId: string) => {
+    setExpandedMoreStates((prev) =>
+      prev.includes(regionId) ? prev.filter((r) => r !== regionId) : [...prev, regionId]
+    );
+  };
 
   const handleSave = () => {
     const monitor: Partial<Monitor> = {
@@ -53,7 +174,8 @@ export function MonitoringSetupModal({
       criteria,
       frequency,
       practiceAreas: selectedPracticeAreas,
-      jurisdictions: selectedJurisdictions,
+      jurisdictions: selectedJurisdictions.map((v) => v.split(':').slice(1).join(':')),
+      sources: selectedSources,
       status: 'active',
       createdDate: editingMonitor?.createdDate || new Date().toISOString(),
       alertCount: editingMonitor?.alertCount || 0,
@@ -94,7 +216,7 @@ export function MonitoringSetupModal({
                 type="text"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                placeholder="e.g., Personal jurisdiction developments in Second Circuit"
+                placeholder="e.g., CCPA amendments, HSR filing thresholds, EU AI Act enforcement"
                 className="w-full h-9 px-[12px] py-[4px] border border-[#d2d2d2] rounded-lg font-['Source_Sans_3'] font-normal text-[#212223] text-[16px] placeholder:text-[#666] focus:outline-none focus:border-gray-400"
               />
             </div>
@@ -152,24 +274,97 @@ export function MonitoringSetupModal({
                   Jurisdictions (optional)
                 </label>
               </div>
+
+              {/* Row 1 — Region pills (always visible, multi-select) */}
               <div className="flex flex-wrap gap-[6px]">
-                {JURISDICTION_OPTIONS.map((jurisdiction) => (
+                {JURISDICTION_REGIONS.map((region) => (
                   <button
-                    key={jurisdiction}
-                    onClick={() => {
-                      setSelectedJurisdictions(prev =>
-                        prev.includes(jurisdiction)
-                          ? prev.filter(j => j !== jurisdiction)
-                          : [...prev, jurisdiction]
-                      );
-                    }}
+                    key={region.id}
+                    onClick={() => handleRegionToggle(region.id)}
                     className={`h-[35px] px-4 rounded-full text-[15px] font-['Clario'] font-normal transition-all border border-solid ${
-                      selectedJurisdictions.includes(jurisdiction)
+                      selectedRegions.includes(region.id)
                         ? 'bg-[rgb(245,247,246)] border-[rgb(80,102,91)] text-[rgb(29,75,52)]'
                         : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400'
                     }`}
                   >
-                    {jurisdiction}
+                    {region.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Row 2 — Jurisdiction pills for each selected region */}
+              {JURISDICTION_REGIONS.filter((region) => selectedRegions.includes(region.id)).map((region) => {
+                const showMore = expandedMoreStates.includes(region.id);
+                const visibleJurisdictions = showMore && region.moreJurisdictions
+                  ? [...region.jurisdictions, ...region.moreJurisdictions]
+                  : region.jurisdictions;
+                return (
+                  <div key={region.id} className="flex flex-col gap-[6px] w-full">
+                    <span className="text-[12px] font-['Source_Sans_3'] font-medium uppercase tracking-wide text-[#8a8a8a]">
+                      {region.label}
+                    </span>
+                    <div className="flex flex-wrap gap-[6px]">
+                      {visibleJurisdictions.map((jurisdiction) => {
+                        const value = `${region.id}:${jurisdiction}`;
+                        return (
+                          <button
+                            key={value}
+                            onClick={() => {
+                              setSelectedJurisdictions((prev) =>
+                                prev.includes(value)
+                                  ? prev.filter((j) => j !== value)
+                                  : [...prev, value]
+                              );
+                            }}
+                            className={`h-[35px] px-4 rounded-full text-[15px] font-['Clario'] font-normal transition-all border border-solid ${
+                              selectedJurisdictions.includes(value)
+                                ? 'bg-[rgb(245,247,246)] border-[rgb(80,102,91)] text-[rgb(29,75,52)]'
+                                : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400'
+                            }`}
+                          >
+                            {jurisdiction}
+                          </button>
+                        );
+                      })}
+                      {region.moreJurisdictions && (
+                        <button
+                          onClick={() => handleMoreStatesToggle(region.id)}
+                          className="h-[35px] px-4 rounded-full text-[15px] font-['Clario'] font-normal transition-all border border-dashed border-gray-300 text-gray-600 hover:border-gray-400"
+                        >
+                          {showMore ? 'Show fewer states' : 'More states'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Sources */}
+            <div className="content-stretch flex flex-col gap-[8px] items-start">
+              <div className="content-stretch flex flex-col items-start shrink-0 w-full">
+                <label className="text-[15px] font-['Source_Sans_3'] font-semibold text-[#212223] leading-[1.35]">
+                  Sources (optional)
+                </label>
+              </div>
+              <div className="flex flex-wrap gap-[6px]">
+                {SOURCE_OPTIONS.map((source) => (
+                  <button
+                    key={source}
+                    onClick={() => {
+                      setSelectedSources((prev) =>
+                        prev.includes(source)
+                          ? prev.filter((s) => s !== source)
+                          : [...prev, source]
+                      );
+                    }}
+                    className={`h-[35px] px-4 rounded-full text-[15px] font-['Clario'] font-normal transition-all border border-solid ${
+                      selectedSources.includes(source)
+                        ? 'bg-[rgb(245,247,246)] border-[rgb(80,102,91)] text-[rgb(29,75,52)]'
+                        : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400'
+                    }`}
+                  >
+                    {source}
                   </button>
                 ))}
               </div>
@@ -184,7 +379,7 @@ export function MonitoringSetupModal({
               </div>
               <Toggle
                 value={frequency}
-                onChange={(value) => setFrequency(value as 'real-time' | 'daily' | 'weekly')}
+                onChange={(value) => setFrequency(value as 'real-time' | 'daily' | 'weekly' | 'monthly')}
                 options={FREQUENCY_OPTIONS}
               />
             </div>
