@@ -20,7 +20,7 @@ export function SaveSkillModal({ isOpen, onClose, skillName, onConfirm }: SaveSk
       <div className="bg-white rounded-xl w-full max-w-lg">
         <div className="p-6">
           <div className="flex items-start justify-between mb-1">
-            <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">
+            <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">
               Save skill
             </h2>
             <button

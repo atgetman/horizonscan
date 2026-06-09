@@ -29,7 +29,7 @@ export function ConfirmationModal({
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-3">
             <AlertTriangle className="size-5 text-amber-600 mt-0.5" />
-            <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">{title}</h2>
+            <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">{title}</h2>
           </div>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
             <X className="size-5 text-gray-500" />

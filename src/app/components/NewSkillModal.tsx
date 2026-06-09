@@ -250,7 +250,7 @@ export function NewSkillModal({ isOpen, onClose, onSave }: NewSkillModalProps) {
     <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col">
       <div className="p-6 sticky top-0 bg-white z-10">
         <div className="flex items-start justify-between mb-1">
-          <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">Teach CoCounsel something new</h2>
+          <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">Teach CoCounsel something new</h2>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
             <X className="size-5 text-gray-500" />
           </button>
@@ -459,7 +459,7 @@ export function NewSkillModal({ isOpen, onClose, onSave }: NewSkillModalProps) {
         <div className="bg-white rounded-xl w-full max-w-lg">
           <div className="p-6">
             <div className="flex items-start justify-between mb-1">
-              <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">Generating skill</h2>
+              <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">Generating skill</h2>
               <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
                 <X className="size-5 text-gray-500" />
               </button>
@@ -514,7 +514,7 @@ export function NewSkillModal({ isOpen, onClose, onSave }: NewSkillModalProps) {
     <div className="bg-white rounded-xl w-full max-w-md">
       <div className="p-6">
         <div className="flex items-start justify-between mb-1">
-          <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">Firm knowledge found</h2>
+          <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">Firm knowledge found</h2>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
             <X className="size-5 text-gray-500" />
           </button>
@@ -760,7 +760,7 @@ export function NewSkillModal({ isOpen, onClose, onSave }: NewSkillModalProps) {
         <div className="bg-white rounded-xl w-full max-w-lg">
           <div className="p-6">
             <div className="flex items-start justify-between mb-1">
-              <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">Building skill</h2>
+              <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">Building skill</h2>
               <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
                 <X className="size-5 text-gray-500" />
               </button>
@@ -820,7 +820,7 @@ ${selectedPills[5]?.join(', ') || 'Universally applicable across all practice ar
       <div className="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         <div className="p-6">
           <div className="flex items-start justify-between mb-1">
-            <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">Review skill</h2>
+            <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">Review skill</h2>
             <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
               <X className="size-5 text-gray-500" />
             </button>

@@ -44,7 +44,7 @@ export function SkillTestingModal({ isOpen, onClose, skillName }: SkillTestingMo
     <div className="bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
       <div className="p-6">
         <div className="flex items-start justify-between mb-1">
-          <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">
+          <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">
             Testing: {skillName}
           </h2>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
@@ -154,7 +154,7 @@ export function SkillTestingModal({ isOpen, onClose, skillName }: SkillTestingMo
             >
               <ChevronLeft className="size-5 text-gray-500" />
             </button>
-            <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">
+            <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">
               Testing: {skillName}
             </h2>
           </div>

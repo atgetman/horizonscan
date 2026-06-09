@@ -85,7 +85,7 @@ export function ShareSkillModal({ isOpen, onClose, skillName, skills = [], onSha
       <div className="bg-white rounded-xl w-full max-w-lg">
         <div className="p-6">
           <div className="flex items-start justify-between mb-1">
-            <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223]">
+            <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223]">
               {skills.length > 1 ? 'Share these skills' : 'Share this skill'}
             </h2>
             <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">

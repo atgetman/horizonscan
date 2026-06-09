@@ -16,7 +16,7 @@ export function SkillTooShortModal({ isOpen, onClose, onSaveAnyway, lineCount }:
         <button onClick={onClose} className="absolute top-6 right-6 p-1 hover:bg-gray-100 rounded transition-colors">
           <X className="size-5 text-gray-500" />
         </button>
-        <h2 className="text-[20px] font-['Clario'] font-semibold text-[#212223] mb-3">
+        <h2 className="text-[20px] font-['Clario'] font-medium text-[#212223] mb-3">
           Skill may be too short
         </h2>
         <p className="text-[16px] font-['Source_Sans_3'] font-normal text-[#666] mb-6">
