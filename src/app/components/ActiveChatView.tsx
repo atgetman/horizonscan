@@ -873,7 +873,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                           setIsPreparingLoading(true);
                           
                           // Stream in preparing items with varied, realistic timing
-                          const preparingTimings = [1200, 800, 1500, 900, 1100]; // Varied delays in ms
+                          const preparingTimings = [600, 400, 700, 450, 550]; // Varied delays in ms
                           let prepIdx = 0;
                           
                           const addNextPreparingItem = () => {
@@ -988,7 +988,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                     }, 7.5); // 7.5ms per character for intro (doubled speed)
                                     
                                     onThinkingChange?.(false);
-                                  }, 2000); // Wait 2000ms showing "Compiling research..." before artifact appears
+                                  }, 800); // Wait showing "Compiling research..." before artifact appears
                                 }, 300); // Brief delay before showing "Compiling research..."
                               }, 1000);
                             }
@@ -996,7 +996,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                           
                           // Start with first item
                           safeSetTimeout(addNextPreparingItem, preparingTimings[0]);
-                        }, 5000);
+                        }, 1500);
                       }, 1000);
                     }
                   }, 200);
@@ -1004,7 +1004,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
               }, 1000);
             }
           }, 400);
-        }, 2000);
+        }, 900);
     } catch (error) {
         console.error("Chat error:", error);
         const errorMessage = error instanceof Error ? error.message : "I'm sorry, I'm having trouble connecting to the server right now.";
@@ -1210,7 +1210,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 • Prioritize findings by severity and effective date`;
 
         // Simulate progressive display
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 600));
         setReasoningSteps(5);
         setIsReasoningLoading(false);
         console.log('Step 2 complete: Regulatory scan reasoning shown');
@@ -1404,7 +1404,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         setPrepWorkItems(prepWork);
 
         // Simulate minimum time
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
       } else {
         // Call ChatGPT for prep materials for other task types
         const prepStartTime = Date.now();
@@ -1471,7 +1471,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       for (let i = 1; i <= Math.min(5, prepWork.length); i++) {
         if (!isMountedRef.current) break;
         setPreparingItems(i);
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 250));
       }
       
       setIsPreparingLoading(false);
@@ -1529,7 +1529,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       // STEP 8: For regulatory scan, show results directly without calling CoCounsel
       if (detectedType === 'regulatory-scan') {
         console.log('=== REGULATORY SCAN DETECTED - SHOWING RESULTS ===');
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 800));
         setShowPreparingFinalOutput(false);
         setShowArtifact(true);
 
