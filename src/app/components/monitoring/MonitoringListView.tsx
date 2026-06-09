@@ -261,12 +261,6 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
     navigate(alert.matterPath);
   };
 
-  const handleDismissAlert = (id: string) => {
-    setFiredAlerts(prev => prev.filter(a => a.id !== id));
-    setToastMessage('Alert dismissed.');
-    setShowToast(true);
-  };
-
   const handleSnoozeAlert = (id: string) => {
     setFiredAlerts(prev => prev.map(a => a.id === id ? { ...a, isRead: true } : a));
     setToastMessage('Alert snoozed for 7 days.');
@@ -328,7 +322,6 @@ export function MonitoringListView({ availablePracticeAreas }: MonitoringListVie
                 key={alert.id}
                 alert={alert}
                 onReview={handleReviewAlert}
-                onDismiss={handleDismissAlert}
                 onSnooze={handleSnoozeAlert}
               />
             ))}

@@ -1,4 +1,4 @@
-import { ExternalLink, Clock, X } from 'lucide-react';
+import { ExternalLink, Clock } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export type AlertCategory = 'regulatory' | 'deadline' | 'contract';
@@ -19,7 +19,6 @@ export interface FiredAlert {
 interface AlertFeedCardProps {
   alert: FiredAlert;
   onReview: (alert: FiredAlert) => void;
-  onDismiss: (id: string) => void;
   onSnooze: (id: string) => void;
 }
 
@@ -44,7 +43,7 @@ function relativeTime(iso: string): string {
   return `${weeks}w ago`;
 }
 
-export function AlertFeedCard({ alert, onReview, onDismiss, onSnooze }: AlertFeedCardProps) {
+export function AlertFeedCard({ alert, onReview, onSnooze }: AlertFeedCardProps) {
   return (
     <div
       className={clsx(
@@ -82,26 +81,18 @@ export function AlertFeedCard({ alert, onReview, onDismiss, onSnooze }: AlertFee
       <div className="flex items-center gap-2">
         <button
           onClick={() => onReview(alert)}
-          className="h-8 px-3 flex items-center gap-1.5 bg-[#314b3e] rounded-lg text-[13px] font-['Clario'] font-medium text-white hover:bg-[#3d5e4d] transition-colors"
+          className="h-[32px] px-3 flex items-center gap-1.5 bg-[#314b3e] rounded-[4px] text-[15px] font-['Clario'] font-medium text-white hover:bg-[#3d5e4d] transition-colors"
         >
           Review
           <ExternalLink className="size-3.5" strokeWidth={2} />
         </button>
         <button
           onClick={() => onSnooze(alert.id)}
-          className="relative h-8 px-3 flex items-center gap-1.5 rounded-[4px] text-[13px] font-['Clario'] font-medium text-[#212223] hover:text-[#1d4b34] hover:bg-[#edf2f0] transition-colors"
+          className="relative h-[32px] px-3 flex items-center gap-1.5 rounded-[4px] text-[15px] font-['Clario'] font-medium text-[#212223] hover:text-[#1d4b34] transition-colors"
         >
           <span aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[5px]" />
           <Clock className="size-3.5" strokeWidth={1.5} />
           Snooze
-        </button>
-        <button
-          onClick={() => onDismiss(alert.id)}
-          className="relative h-8 px-3 flex items-center gap-1.5 rounded-[4px] text-[13px] font-['Clario'] font-medium text-[#212223] hover:text-[#1d4b34] hover:bg-[#edf2f0] transition-colors"
-        >
-          <span aria-hidden="true" className="absolute border border-[#d2d2d2] border-solid inset-[-1px] pointer-events-none rounded-[5px]" />
-          <X className="size-3.5" strokeWidth={1.5} />
-          Dismiss
         </button>
       </div>
     </div>
