@@ -5,6 +5,7 @@ import svgPaths from '../../imports/svg-1wkqh0ufu9';
 import { FileText, Folder, Table, X, MessageCircleQuestion, ChevronUp, ChevronDown, ChevronRight, Search, BookOpen, Scale, FileCheck, ClipboardList, NotebookPen, Copy, Minimize2, MoreHorizontal, Download, ExternalLink, Share2, FolderInput, Trash2, Sparkles, CheckCircle2, Bell, Circle, CircleDot } from 'lucide-react';
 import { PromptInput } from './PromptInput';
 import { SkillClarifyingQuestions } from './SkillClarifyingQuestions';
+import { JurisdictionClarifyingPanel } from './JurisdictionClarifyingPanel';
 import { SkillBuildingMessage } from './SkillBuildingMessage';
 import { streamChat, streamChatHybrid } from '../services/ChatService';
 import { ScrollableDropdown } from './ScrollableDropdown';
@@ -515,6 +516,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [isReasoningExpanded, setIsReasoningExpanded] = useState(false);
   const [reasoningSteps, setReasoningSteps] = useState<number>(0);
   const [showSkillQuestions, setShowSkillQuestions] = useState(false);
+  const [showJurisdictionPanel, setShowJurisdictionPanel] = useState(false);
+  const jurisdictionResolvedRef = useRef(false);
   const [isReasoningLoading, setIsReasoningLoading] = useState(false);
   const [showSearching, setShowSearching] = useState(false);
   const [showSourcesDropdown, setShowSourcesDropdown] = useState(false);
@@ -675,7 +678,12 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     const userPrompt = (lastUserMsg?.text || prompt).toLowerCase();
     let detectedType: 'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis' = 'draft';
     let topic = '';
-    
+
+    // AI governance horizon scan — driven internally after the jurisdiction
+    // clarifying panel is resolved. The sentinel keeps "research" in it so the
+    // existing research animation runs; we override topic/name just below.
+    const isAiGovScan = userPrompt.includes('__ai_gov_research__');
+
     // Check for CPC analysis FIRST (highest priority)
     if (userPrompt.includes('initiate cross-product clause analysis') || userPrompt.includes('initiate cpc')) {
       console.log('[v0] processChat: CPC ANALYSIS DETECTED!');
@@ -772,6 +780,15 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       setArtifactCategory('Response');
     }
     
+    // Override naming/topic for the AI governance horizon scan so the research
+    // animation produces an on-theme compliance memo (detectedType is already
+    // 'research' because the sentinel contains "research").
+    if (isAiGovScan) {
+      topic = 'US AI Legislation & Compliance Requirements';
+      setArtifactName('AI Governance Compliance Memo');
+      setArtifactCategory('Research memo');
+    }
+
     setTaskType(detectedType);
     setResearchTopic(topic);
     setReasoningContent(getReasoningContent(detectedType, topic));
@@ -1833,8 +1850,14 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
             handleSkillCreationFlow();
             return;
         }
-        
-       
+
+        // AI governance scenario: ask which jurisdictions matter before scanning.
+        const firstPromptText = typeof messages[0].text === 'string' ? messages[0].text : '';
+        if (!jurisdictionResolvedRef.current && isAIGovernanceScenario(firstPromptText)) {
+            startJurisdictionClarification();
+            return;
+        }
+
         if (mode === 'hybrid') {
           processChatHybrid(messages).catch(err => {
             console.error('processChatHybrid error (initial):', err);
@@ -1844,6 +1867,132 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         }
     }
   }, []); // Run once on mount
+
+  // --- AI Governance scenario: jurisdiction clarification before the scan ---
+
+  // Detect the specific AI-legislation horizon-scan prompt that should trigger a
+  // jurisdiction clarifying question before CoCounsel starts working.
+  const isAIGovernanceScenario = useCallback((text: string) => {
+    const t = (text || '').toLowerCase();
+    return (
+      t.includes('artificial intelligence') &&
+      (t.includes('legislation') ||
+        t.includes('enacted') ||
+        t.includes('pending') ||
+        t.includes('regulation'))
+    );
+  }, []);
+
+  const JURISDICTION_QUESTION =
+    "Which states matter most to your business? I'll cover federal developments across the board and surface these first.";
+
+  // Build the scope-confirmation recap CoCounsel posts after the jurisdiction is
+  // resolved (mirrors the bullet summary in the brief).
+  const buildAiGovScopeRecap = useCallback((priorityStates: string[]) => {
+    const priorityLabel =
+      priorityStates.length > 0
+        ? priorityStates.join(', ')
+        : 'California and New York';
+    return (
+      <ul className="flex flex-col gap-2 list-disc pl-5 text-[#212223] text-[15px] leading-[1.5]">
+        <li>
+          <span className="font-semibold">Topic:</span> US AI regulation governing
+          automated decision-making, workplace AI, and consumer-facing applications,
+          with a focus on consumer lending and credit decisioning
+        </li>
+        <li>
+          <span className="font-semibold">Jurisdictions:</span> Federal + all 50
+          states, with priority on {priorityLabel}
+        </li>
+        <li>
+          <span className="font-semibold">Time horizon:</span> In effect now + taking
+          effect within 12 months as the primary focus; significant pending
+          legislation beyond 12 months flagged separately for planning purposes
+        </li>
+        <li>
+          <span className="font-semibold">Sources:</span> Westlaw, Practical Law,
+          International Research, and web sources
+        </li>
+        <li>
+          <span className="font-semibold">Documents:</span> I can see the AI Governance
+          workspace — I found your Credit Decisioning Policy (March 2026), Consumer
+          Disclosure Templates (January 2026), and Internal AI Use Guidelines (April
+          2026). I will flag any specific clauses that may need to be reviewed based on
+          what I find. Let me know if there are additional documents you would like
+          included.
+        </li>
+      </ul>
+    );
+  }, []);
+
+  // Post a brief "Working on it..." beat, then the clarifying question, then open
+  // the jurisdiction panel in the input area.
+  const startJurisdictionClarification = useCallback(() => {
+    setShowThinking(true);
+    onThinkingChange?.(true);
+    setMessages(prev => {
+      if (prev.length > 0 && prev[prev.length - 1].role === 'assistant') return prev;
+      return [
+        ...prev,
+        {
+          role: 'assistant',
+          text: (
+            <div className="flex gap-[8px] items-center">
+              <div className="w-[20px] h-[20px] flex items-center justify-center">
+                <div
+                  className="w-[10px] h-[10px] rotate-45 bg-[#de6633]"
+                  style={{ boxShadow: '0px 4px 33px rgba(247, 93, 27, 0.4)' }}
+                />
+              </div>
+              <div className="bg-clip-text bg-gradient-to-r flex flex-col font-['Clario:Regular',sans-serif] from-[#ededed] justify-center leading-[0] text-[15px] text-[transparent] to-[#e2e2e2] to-[58.173%] via-[#c3c3c3] via-[20.673%] whitespace-nowrap">
+                <p className="leading-[1.5]">Working on it...</p>
+              </div>
+            </div>
+          ),
+        },
+      ];
+    });
+
+    safeSetTimeout(() => {
+      setShowThinking(false);
+      onThinkingChange?.(false);
+      setMessages(current => {
+        const next = [...current];
+        next[next.length - 1] = { role: 'assistant', text: JURISDICTION_QUESTION };
+        return next;
+      });
+      safeSetTimeout(() => setShowJurisdictionPanel(true), 200);
+    }, 1400);
+  }, [onThinkingChange, safeSetTimeout]);
+
+  // Once the user submits or skips the jurisdiction panel, post the scope recap
+  // and kick off the research workflow animation.
+  const handleJurisdictionResolved = useCallback((selectedStates: string[]) => {
+    setShowJurisdictionPanel(false);
+    jurisdictionResolvedRef.current = true;
+
+    setMessages(prev => {
+      const next = [...prev];
+      if (selectedStates.length > 0) {
+        next.push({
+          role: 'user',
+          text: `Prioritize: ${selectedStates.join(', ')}`,
+        });
+      }
+      next.push({
+        role: 'assistant',
+        text: buildAiGovScopeRecap(selectedStates),
+      });
+      return next;
+    });
+
+    // Drive the research animation via the sentinel prompt so naming/topic stay
+    // controlled. The visible messages are managed above; this history is only
+    // used for task detection inside processChat.
+    safeSetTimeout(() => {
+      processChat([{ role: 'user', text: '__ai_gov_research__ us ai legislation' }]);
+    }, 400);
+  }, [buildAiGovScopeRecap, processChat, safeSetTimeout]);
 
   const handleFollowUp = (text: string, files: StagedItem[]) => {
       // Optimistically add user message
@@ -2843,7 +2992,13 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
       {/* Collapsed Input Area or Clarifying Questions */}
       <div className="p-4 border-t border-[#E5E5E5] bg-white">
-         {showSkillQuestions ? (
+         {showJurisdictionPanel ? (
+             <JurisdictionClarifyingPanel
+                 question={JURISDICTION_QUESTION}
+                 onSubmit={handleJurisdictionResolved}
+                 onSkip={() => handleJurisdictionResolved([])}
+             />
+         ) : showSkillQuestions ? (
              <div className="flex justify-center w-full">
                  <SkillClarifyingQuestions
                      onSubmit={(answers) => {
