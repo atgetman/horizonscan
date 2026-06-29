@@ -64,6 +64,7 @@ export function SidebarExpanded() {
   }, [isLoading]);
 
   const recentWorkspaces = [
+    "AI Governance",
     "SEC Climate Disclosure Program",
     "GDPR Cross-Border Data Transfer Review",
     "Vendor DPA Remediation",
