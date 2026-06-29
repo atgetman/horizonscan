@@ -284,7 +284,7 @@ export function WorkflowPhases({ showReasoning, showSources, showPreparing, arti
                   <div className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors">
                     <Scale className="size-3.5 text-[#8a8a8a] shrink-0" />
                     <p className="text-[#212223] leading-relaxed flex-1 min-w-0 text-[12px]">
-                      Recent Case Law: Minimum Contacts Analysis
+                      Recent Guidance: GHG Emissions Metrics
                     </p>
                   </div>
                 </div>

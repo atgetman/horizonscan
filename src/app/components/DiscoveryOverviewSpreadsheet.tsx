@@ -94,11 +94,11 @@ export const DiscoveryOverviewSpreadsheet = forwardRef((props, ref) => {
             {/* Column Headers */}
             <div className="flex sticky top-0 z-10 bg-[#F5F5F5] border-b border-[#E5E5E5]">
               <div className="w-10 shrink-0 border-r border-[#E5E5E5] bg-[#F5F5F5]"></div>
-              <div className="w-[300px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">File Name</div>
-              <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Bates Range</div>
-              <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Date Produced</div>
-              <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Custodian</div>
-              <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Source/Type</div>
+              <div className="w-[300px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Vendor</div>
+              <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Data Category</div>
+              <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Transfer Region</div>
+              <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Lawful Basis</div>
+              <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Risk Level</div>
               <div className="w-[220px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Status</div>
             </div>
 
@@ -131,7 +131,8 @@ export const DiscoveryOverviewSpreadsheet = forwardRef((props, ref) => {
                         cell === 'Reviewed' ? "bg-green-100 text-green-800" :
                         cell === 'Processing' ? "bg-yellow-100 text-yellow-800" :
                         cell === 'Flagged' ? "bg-red-100 text-red-800" :
-                        cell === 'Pending OCR' ? "bg-gray-100 text-gray-800" :
+                        cell === 'Remediation' ? "bg-red-100 text-red-800" :
+                        cell === 'Pending DPA' ? "bg-gray-100 text-gray-800" :
                         "bg-blue-100 text-blue-800"
                       )}>
                         {cell}

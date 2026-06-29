@@ -924,9 +924,9 @@ export function Knowledge() {
     
     // Map workspace IDs to names
     const workspaceNames: Record<string, string> = {
-      'hernandez-pacific': 'Hernandez v. Pacific Builders Inc.',
-      'blue-ridge-trust': 'In re: Blue Ridge Trust 2025',
-      'meridian-tech': 'Meridian Tech Acquisition'
+      'sec-climate': 'SEC Climate Disclosure Program',
+      'vendor-dpa': 'Vendor DPA Remediation',
+      'project-harbor': 'Project Harbor — Fintech Diligence'
     };
     
     // Update skill metadata based on share target
@@ -1034,11 +1034,11 @@ export function Knowledge() {
     const personalDefaultMonitors: Monitor[] = [
       {
         id: 'dash-personal-1',
-        topic: 'Personal jurisdiction developments',
-        criteria: 'Second Circuit cases on minimum contacts analysis',
+        topic: 'SEC climate disclosure developments',
+        criteria: 'Final rules and staff guidance on climate-related and GHG emissions disclosures',
         frequency: 'weekly',
-        practiceAreas: ['Litigation'],
-        jurisdictions: ['Federal', 'New York'],
+        practiceAreas: ['Securities'],
+        jurisdictions: ['Federal'],
         status: 'active',
         lastScan: '2 days ago',
         alertCount: 3,
@@ -1072,11 +1072,11 @@ export function Knowledge() {
       },
       {
         id: 'dash-firm-2',
-        topic: 'Employment Law Updates',
-        criteria: 'Federal and state wage and hour law changes',
+        topic: 'State Privacy Law Updates',
+        criteria: 'CCPA and emerging state consumer privacy law changes',
         frequency: 'weekly',
-        practiceAreas: ['Employment'],
-        jurisdictions: ['Federal'],
+        practiceAreas: ['Data Privacy'],
+        jurisdictions: ['California'],
         status: 'active',
         lastScan: '3 days ago',
         alertCount: 0,

@@ -137,7 +137,7 @@ export function SpreadsheetRowDrawer({
 
   if (!rowData) return null;
 
-  const fileName = rowData['File Name'] || 'Document';
+  const fileName = rowData['Vendor'] ? `${rowData['Vendor']} - DPA` : 'Vendor Record';
   const totalPages = 24;
   const fieldAnalyses = generateFieldAnalyses(rowData);
   const totalQuestions = fieldAnalyses.length;
