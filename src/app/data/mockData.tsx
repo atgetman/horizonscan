@@ -129,355 +129,246 @@ export const MOCK_CHATS: Record<string, React.ReactNode> = {
 };
 
 export const MOCK_FILES: Record<string, React.ReactNode | (() => React.ReactNode)> = {
-  "Motion to Dismiss - Personal Jurisdiction": PersonalJurisdictionMotion,
-  "Motion to Dismiss": (
+  "GDPR Data Transfer Assessment": PersonalJurisdictionMotion,
+  "SEC Comment Letter Response": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-2xl font-bold mb-6 text-center">UNITED STATES DISTRICT COURT<br/>SOUTHERN DISTRICT OF NEW YORK</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">MERIDIAN FINANCIAL GROUP, INC.<br/>OFFICE OF THE GENERAL COUNSEL</h1>
       <div className="flex justify-between mb-12 text-sm border-b-2 border-black pb-8">
         <div className="w-1/2 border-r-2 border-black pr-4">
-          <p className="font-bold">MARIA HERNANDEZ,</p>
-          <p className="ml-8 italic">Plaintiff,</p>
-          <p className="my-4 text-center">- against -</p>
-          <p className="font-bold">PACIFIC BUILDERS INC., a Delaware Corporation,</p>
-          <p className="ml-8 italic">Defendant.</p>
+          <p className="font-bold">U.S. SECURITIES AND EXCHANGE COMMISSION</p>
+          <p className="ml-8 italic">Division of Corporation Finance</p>
+          <p className="my-4 text-center">— re —</p>
+          <p className="font-bold">Form 10-K, FY Ended December 31, 2025</p>
+          <p className="ml-8 italic">Response to Staff Comment Letter</p>
         </div>
         <div className="w-1/2 pl-4 flex flex-col justify-center">
-          <p>Civil Action No. 24-cv-01234</p>
-          <p className="font-bold mt-4 text-lg">DEFENDANT'S NOTICE OF MOTION AND MOTION TO DISMISS COMPLAINT</p>
-          <p className="mt-2 font-bold">ORAL ARGUMENT REQUESTED</p>
+          <p>File No. 001-38291</p>
+          <p className="font-bold mt-4 text-lg">RESPONSE TO STAFF COMMENT LETTER DATED FEBRUARY 9, 2026</p>
+          <p className="mt-2 font-bold">SUBMITTED VIA EDGAR</p>
         </div>
       </div>
       
       <p className="mb-6 text-[15px] leading-relaxed text-justify">
-        PLEASE TAKE NOTICE that upon the accompanying Memorandum of Law, the Declaration of John Smith, and all prior pleadings and proceedings herein, Defendant Pacific Builders Inc. ("Defendant") will move this Court, before the Honorable Judge [Name], at the United States Courthouse, 500 Pearl Street, New York, New York, for an order dismissing the Complaint pursuant to Federal Rule of Civil Procedure 12(b)(6) for failure to state a claim upon which relief can be granted.
+        On behalf of Meridian Financial Group, Inc. ("Meridian" or the "Company"), we respectfully submit the following responses to the comments of the Staff of the Division of Corporation Finance (the "Staff") relating to the above-referenced Annual Report on Form 10-K. Each comment is reproduced below, followed by the Company's response.
       </p>
 
-       <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">PRELIMINARY STATEMENT</h3>
+       <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">CLIMATE-RELATED DISCLOSURES</h3>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Plaintiff Maria Hernandez ("Plaintiff") attempts to transform a simple breach of contract dispute into a tort action to recover punitive damages that are not available under New York contract law. Her negligence and fraudulent misrepresentation claims are duplicative of her breach of contract claim and are barred by the economic loss rule. Accordingly, Counts II and III of the Complaint must be dismissed as a matter of law.
+         The Staff requested that the Company expand its disclosure regarding the governance of climate-related risks, including the board committee responsible for oversight and the frequency of management reporting. The Company will revise its disclosure consistent with the SEC's climate disclosure rules.
        </p>
        
-       <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">ARGUMENT</h3>
-       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">I. The Economic Loss Rule Bars Plaintiff's Negligence Claim</h4>
+       <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">RESPONSES</h3>
+       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">I. Governance of Climate-Related Risks</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Under New York law, a plaintiff cannot recover in tort for purely economic losses resulting from a breach of contract. This well-established principle prevents contract disputes from morphing into tort litigation.
+         Registrants are required to describe the board's oversight of climate-related risks and management's role in assessing and managing those risks.
          <Citation 
            id="cit-1"
-           type="case"
-           source="N.Y. Ct. App."
-           title="532 Madison Ave. Gourmet Foods, Inc. v. Finlandia Ctr., Inc."
-           snippet='Held that "a plaintiff cannot recover in tort for purely economic losses resulting from a breach of contract" absent personal injury or property damage.'
+           type="statute"
+           source="17 C.F.R. § 229.1501"
+           title="Regulation S-K, Item 1501 (Governance)"
+           snippet="Requires disclosure of the board's oversight of climate-related risks and management's role in assessing and managing such risks."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Here, Plaintiff alleges only economic damages—specifically, the cost to repair the foundation—arising from Defendant's alleged failure to perform under the Contract. Because Plaintiff has not alleged any personal injury or damage to property other than the subject of the contract itself, her negligence claim (Count III) is barred. The damages sought are identical to those recoverable under a breach of contract theory.
+         The Company advises the Staff that the Board's Risk Committee has primary oversight responsibility for climate-related risks and receives reports from the Chief Risk Officer no less than quarterly. The Company will revise its disclosure in future filings to identify the Risk Committee and the cadence of management reporting.
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         The purpose of the economic loss rule is to keep contract law and tort law separate. As the Second Circuit has explained, allowing tort recovery for economic loss would "blur the distinct lines between contract and tort." 
-         <Citation 
-           id="cit-2"
-           type="case"
-           source="2d Cir."
-           title="Bellevue South Assocs. v. HRH Constr. Corp."
-           snippet='Reaffirming that the economic loss rule prevents recovery in tort for economic damages resulting from a breach of contract.'
-         />
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-          Plaintiff's remedy, if any, lies in contract, not tort. She cannot circumvent the limitations of contract law—such as the bar on punitive damages—by simply relabeling her claim as "negligence."
+         Material climate-related matters are escalated to the full Board as appropriate, and the Company's enterprise risk-management framework integrates climate considerations into its broader risk assessment processes.
        </p>
 
-       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">II. The Fraudulent Misrepresentation Claim Is Duplicative of the Breach of Contract Claim</h4>
+       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">II. Materiality of Physical and Transition Risks</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         A fraud claim cannot stand where the only fraud alleged is that the defendant entered into a contract with no intention of performing it. This is a fundamental tenet of New York commercial litigation.
+         A registrant must disclose climate-related risks that have had or are reasonably likely to have a material impact on its business or results of operations.
          <Citation 
            id="cit-3"
-           type="case"
-           source="2d Cir."
-           title="Bridgestone/Firestone, Inc. v. Recovery Credit Servs., Inc."
-           snippet="Established that a fraud claim cannot be maintained when the only fraud alleged is that the defendant entered into a contract with no intention of performing it."
+           type="statute"
+           source="17 C.F.R. § 229.1502"
+           title="Regulation S-K, Item 1502 (Strategy)"
+           snippet="Requires disclosure of climate-related risks reasonably likely to have a material impact on the registrant, including over the short, medium, and long term."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Plaintiff's fraud allegations (Count II) are based on the same facts as her breach of contract claim: that Defendant used Grade C concrete instead of Grade A. This is a classic breach of performance, not a separate tort. The alleged misrepresentation is simply the failure to perform the contract specifications.
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         New York courts consistently dismiss fraud claims that are merely duplicative of breach of contract claims. To maintain a separate fraud claim, a plaintiff must allege: (1) a legal duty separate from the duty to perform under the contract; (2) a fraudulent misrepresentation collateral or extraneous to the contract; or (3) special damages that are caused by the misrepresentation and unrecoverable as contract damages.
-         <Citation 
-           id="cit-4"
-           type="case"
-           source="S.D.N.Y."
-           title="Telecom Int'l Am., Ltd. v. AT&T Corp."
-           snippet="Held that a plaintiff must allege a legal duty separate from the duty to perform under the contract to maintain a fraud claim."
-         />
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Plaintiff has failed to allege any of these elements. She does not claim any damages distinct from the cost of replacing the concrete.
+         Based on its current assessment, the Company advises the Staff that the identified physical and transition risks have not had a material impact on its results of operations during the periods presented. The Company will disclose any reasonably likely material impacts, with quantification where practicable, in future periodic reports.
        </p>
 
-       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">III. Plaintiff Fails to Plead Fraud with Particularity Under Rule 9(b)</h4>
+       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">III. Greenhouse Gas Metrics and Assurance</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Even if the fraud claim were not duplicative, it fails to meet the heightened pleading standard of Federal Rule of Civil Procedure 9(b). Rule 9(b) requires a party alleging fraud to "state with particularity the circumstances constituting fraud or mistake." 
+         Where a registrant discloses Scope 1 and Scope 2 emissions, it must describe the methodology, organizational boundaries, and assurance status of those metrics.
          <Citation 
            id="cit-5"
            type="statute"
-           source="FRCP"
-           title="Federal Rule of Civil Procedure 9(b)"
-           snippet='Requires a party alleging fraud to "state with particularity the circumstances constituting fraud or mistake."'
+           source="17 C.F.R. § 229.1505"
+           title="Regulation S-K, Item 1505 (GHG Emissions Metrics)"
+           snippet="Requires disclosure of the methodology, organizational boundaries, and any assurance obtained with respect to greenhouse gas emissions metrics."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         This means the plaintiff must (1) specify the statements that the plaintiff contends were fraudulent, (2) identify the speaker, (3) state where and when the statements were made, and (4) explain why the statements were fraudulent. 
+         The Company confirms that its Scope 1 and Scope 2 emissions are calculated using the operational control approach consistent with the GHG Protocol Corporate Standard and are currently subject to limited assurance by an independent third party.
          <Citation 
            id="cit-6"
-           type="case"
-           source="2d Cir."
-           title="Mills v. Polar Molecular Corp."
-           snippet="Clarified the requirements for pleading fraud with particularity under Rule 9(b)."
+           type="record"
+           source="GHG Protocol"
+           title="Corporate Accounting and Reporting Standard"
+           snippet="Provides the operational control approach and accounting boundaries widely used for Scope 1 and Scope 2 emissions reporting."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Plaintiff's Complaint contains only vague and conclusory allegations that Defendant "concealed" the substitution of materials. She fails to identify who made the alleged misrepresentations, when they were made, or the specific content of any false statement. Such generalized allegations are insufficient to survive a motion to dismiss. Without specific details, Defendant cannot adequately prepare a defense.
+         In response to the Staff's comment, the Company will expand its disclosure to describe the organizational boundaries, methodology, emission factors, and assurance level applied to these metrics.
        </p>
 
-       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">IV. The Negligent Misrepresentation Claim Fails for Lack of a Special Relationship</h4>
+       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">IV. Disclosure Controls and Procedures</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         To state a claim for negligent misrepresentation, a plaintiff must demonstrate the existence of a special or privity-like relationship imposing a duty on the defendant to impart correct information. 
+         A registrant must maintain disclosure controls and procedures designed to ensure that information required to be disclosed is recorded, processed, and reported accurately and on a timely basis.
          <Citation 
            id="cit-7"
-           type="case"
-           source="N.Y. Ct. App."
-           title="J.A.O. Acquisition Corp. v. Stavitsky"
-           snippet="Held that a negligent misrepresentation claim requires a special or privity-like relationship imposing a duty on the defendant to impart correct information."
+           type="statute"
+           source="17 C.F.R. § 240.13a-15"
+           title="Exchange Act Rule 13a-15"
+           snippet="Requires issuers to maintain disclosure controls and procedures and to evaluate their effectiveness."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         An arm's-length business relationship between a contractor and a property owner does not give rise to such a special relationship. The parties here are sophisticated entities who negotiated a contract.
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Here, the relationship between Plaintiff and Defendant is defined solely by the Contract. There are no allegations suggesting a unique degree of trust or confidence that would elevate this commercial transaction into a fiduciary or special relationship. Without this element, the negligent misrepresentation claim must be dismissed.
+         The Company is enhancing its disclosure controls to incorporate the collection and review of climate-related data, including emissions metrics, ahead of the applicable compliance dates.
        </p>
        
-       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">V. Plaintiff's Claim for Punitive Damages Must Be Stricken</h4>
+       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">V. Acknowledgments</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Punitive damages are generally not available in breach of contract actions in New York. To recover punitive damages, a plaintiff must establish that the defendant's conduct was actionable as an independent tort, was egregious in nature, was directed at the plaintiff, and was part of a pattern directed at the public generally.
+         The Company acknowledges that it is responsible for the adequacy and accuracy of the disclosure in its filings, and that Staff comments do not foreclose any action the Commission may take with respect to the filing.
          <Citation 
            id="cit-8"
-           type="case"
-           source="N.Y. Ct. App."
-           title="Rocanova v. Equitable Life Assur. Soc'y"
-           snippet="Established the four-part test for punitive damages in contract actions."
+           type="record"
+           source="SEC Staff Guidance"
+           title="Standard Acknowledgments in Comment Responses"
+           snippet="Reflects the customary acknowledgments that registrants are responsible for the adequacy and accuracy of their disclosures."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Plaintiff has not alleged any conduct directed at the public generally. At most, this is a private dispute between two parties. There is no public interest involved that would justify the imposition of punitive damages. Therefore, the request for punitive damages should be stricken from the Complaint.
+         The Company believes its responses are fully responsive to the Staff's comments and welcomes the opportunity to discuss any remaining questions.
        </p>
 
        <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">CONCLUSION</h3>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         For the foregoing reasons, Defendant respectfully requests that the Court grant this Motion to Dismiss Counts II and III of the Complaint with prejudice and strike the demand for punitive damages.
+         For the foregoing reasons, the Company respectfully submits that the revised disclosures it has agreed to provide in future filings address each of the Staff's comments in full.
        </p>
     </div>
   ),
-  "Complaint.docx": (
+  "Compliance Risk Assessment.docx": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-2xl font-bold mb-6 text-center">UNITED STATES DISTRICT COURT<br/>SOUTHERN DISTRICT OF NEW YORK</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">MERIDIAN FINANCIAL GROUP, INC.<br/>ENTERPRISE COMPLIANCE RISK ASSESSMENT</h1>
       <div className="flex justify-between mb-12 text-sm border-b-2 border-black pb-8">
         <div className="w-1/2 border-r-2 border-black pr-4">
-          <p className="font-bold">MARIA HERNANDEZ,</p>
-          <p className="ml-8 italic">Plaintiff,</p>
-          <p className="my-4 text-center">- against -</p>
-          <p className="font-bold">PACIFIC BUILDERS INC., a Delaware Corporation,</p>
-          <p className="ml-8 italic">Defendant.</p>
+          <p className="font-bold">PREPARED FOR:</p>
+          <p className="ml-8 italic">Board Risk Committee</p>
+          <p className="my-4 text-center">— and —</p>
+          <p className="font-bold">PREPARED BY: Office of the General Counsel</p>
+          <p className="ml-8 italic">Privacy & Regulatory Compliance</p>
         </div>
         <div className="w-1/2 pl-4 flex flex-col justify-center">
-          <p>Civil Action No. 24-cv-01234</p>
-          <p className="font-bold mt-4 text-lg">COMPLAINT</p>
-          <p className="mt-2 font-bold">JURY TRIAL DEMANDED</p>
+          <p>Assessment No. CRA-2026-Q1</p>
+          <p className="font-bold mt-4 text-lg">ANNUAL ENTERPRISE COMPLIANCE RISK ASSESSMENT</p>
+          <p className="mt-2 font-bold">PRIVILEGED & CONFIDENTIAL</p>
         </div>
       </div>
       
       <p className="mb-6 text-[15px] leading-relaxed text-justify">
-        Plaintiff Maria Hernandez ("Plaintiff"), by and through her undersigned counsel, complaining of Defendant Pacific Builders Inc. ("Defendant"), hereby alleges as follows:
+        This assessment summarizes the principal regulatory compliance risks facing Meridian Financial Group, Inc. ("Meridian" or the "Company") for the current fiscal year, and identifies the priority remediation actions recommended by the Office of the General Counsel.
       </p>
 
-      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">I. NATURE OF THE ACTION</h3>
+      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">I. PURPOSE AND SCOPE</h3>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        1. This is a civil action seeking monetary damages, specific performance, and other relief arising out of Defendant's breach of contract, professional negligence, and fraudulent misrepresentation in connection with a major residential construction project located at 123 Main Street, New York, New York (the "Property"). Defendant, holding itself out as a premier luxury home builder, engaged in a systematic pattern of deception to substitute inferior building materials for the high-grade specifications required by the architectural plans and the construction agreement.
+        1. This assessment evaluates Meridian's exposure across its core regulatory obligations, including securities disclosure, data privacy, AI governance, and anti-money-laundering requirements. It is intended to inform the Board Risk Committee's annual review and to prioritize the compliance program's resourcing for the coming year.
       </p>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        2. As detailed herein, Defendant—a licensed general contractor—agreed to construct a custom single-family home for Plaintiff using specific high-grade materials. Instead, Defendant surreptitiously substituted inferior materials, failed to adhere to architectural plans, and repeatedly delayed the project without cause, resulting in significant structural defects and financial loss to Plaintiff. The substitution of "Grade C" concrete for the specified "Grade A" reinforced concrete has compromised the structural integrity of the foundation, rendering the home unsafe for occupancy.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        3. Plaintiff brings this action to recover the costs of remediation, which are estimated to exceed $1.5 million, as well as punitive damages for Defendant's willful and deceptive conduct. The conduct alleged herein was not merely a breach of contract but a fraudulent scheme to defraud Plaintiff and potentially other homeowners.
+        2. As a publicly-traded financial services company operating in the United States and the European Union, Meridian is subject to overlapping regulatory regimes administered by the SEC, FinCEN, the FTC, and EU data-protection authorities. The assessment treats areas where these regimes intersect as elevated-priority risks.
       </p>
 
-      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">II. THE PARTIES</h3>
+      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">II. KEY RISK AREAS</h3>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        4. Plaintiff Maria Hernandez is an individual residing in the County of New York, State of New York. Plaintiff is the owner of the Property.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        5. Defendant Pacific Builders Inc. is a corporation organized and existing under the laws of the State of Delaware, with its principal place of business located at 450 Lexington Avenue, New York, NY. At all relevant times, Defendant conducted business as a general contractor in the State of New York.
-      </p>
-
-      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">III. JURISDICTION AND VENUE</h3>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        6. This Court has subject matter jurisdiction over this action pursuant to 28 U.S.C. § 1332(a) because there is complete diversity of citizenship between the parties and the amount in controversy exceeds the sum or value of $75,000, exclusive of interest and costs.
+        3. <strong>Securities disclosure.</strong> The SEC's climate disclosure rules impose new governance, strategy, and emissions-reporting obligations. Meridian's current disclosure controls do not yet capture the climate-related data required for its 10-K, creating a near-term disclosure risk.
         <Citation 
            id="cit-c1"
            type="statute"
-           source="28 U.S.C. § 1332"
-           title="Diversity of Citizenship"
-           snippet="The district courts shall have original jurisdiction of all civil actions where the matter in controversy exceeds the sum or value of $75,000... and is between citizens of different States."
+           source="17 C.F.R. § 229.1500"
+           title="Regulation S-K, Subpart 1500 (Climate Disclosures)"
+           snippet="Requires registrants to disclose climate-related risks, governance, strategy, and certain greenhouse gas emissions metrics in registration statements and annual reports."
          />
       </p>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        7. Venue is proper in this District pursuant to 28 U.S.C. § 1391(b)(2) because a substantial part of the events or omissions giving rise to the claim occurred in this District, and the Property that is the subject of the action is situated in this District.
-      </p>
-
-      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">IV. FACTUAL ALLEGATIONS</h3>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        8. On or about January 15, 2023, Plaintiff and Defendant entered into a written construction agreement (the "Contract") wherein Defendant agreed to build a 3,500 square foot residence on the Property for a fixed price of $2,500,000.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        9. The Contract explicitly required the use of "Grade A" reinforced concrete for the foundation and structural pillars, as specified by Plaintiff's architect. The use of this specific material was a material term of the Contract due to the specific soil conditions at the Property. Specifically, Section 4.2 of the Contract states: "All foundation work shall be performed using 5,000 PSI reinforced concrete ('Grade A') mixed with a water-reducer admixture."
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        10. Work commenced on March 1, 2023. From the outset, the project was plagued by delays. Defendant failed to staff the site adequately and frequently left the site dormant for weeks at a time.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        11. Upon information and belief, on or about May 10, 2023, Defendant's project manager, John Smith, authorized the substitution of "Grade C" concrete—a cheaper and weaker alternative—for the foundation pour, without notifying Plaintiff or obtaining approval from the architect. This decision was motivated solely by Defendant's desire to increase its profit margin at the expense of safety and quality.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        12. This substitution was concealed from Plaintiff. Defendant submitted progress reports falsely stating that "Grade A" concrete had been procured and installed. Defendant invoiced Plaintiff for the higher cost of Grade A concrete, which Plaintiff paid in full.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        13. On August 20, 2023, Plaintiff discovered significant cracking in the foundation walls. An independent engineering inspection revealed the use of inferior concrete and demonstrated that the foundation does not meet the load-bearing requirements for the structure. The core samples tested at 3,200 PSI, far below the required 5,000 PSI.
-      </p>
-
-      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">V. CAUSES OF ACTION</h3>
-      
-      <h4 className="font-bold mt-6 mb-2 uppercase text-sm tracking-wide">Count I: Breach of Contract</h4>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        14. Plaintiff repeats and realleges the allegations contained in paragraphs 1 through 13 as if fully set forth herein.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        15. The Contract is a valid and binding agreement between Plaintiff and Defendant. Plaintiff has performed all conditions precedent to the Defendant's performance under the Contract.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        16. Plaintiff has fully performed all of her obligations under the Contract, including the timely payment of all invoices.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        17. Defendant breached the Contract by, among other things:
-      </p>
-      <ul className="list-disc pl-10 mb-4 space-y-2 text-[15px]">
-        <li>Failing to complete the project by the agreed-upon completion date;</li>
-        <li>Using materials that did not meet the specifications set forth in the Contract;</li>
-        <li>Failing to perform work in a workmanlike manner; and</li>
-        <li>Failing to adhere to applicable building codes and regulations.</li>
-      </ul>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        18. As a direct and proximate result of Defendant's breach, Plaintiff has suffered damages in an amount to be determined at trial, but estimated to exceed $1,000,000. These damages include the cost of removing the defective foundation, shoring up the existing structure, and pouring a new foundation.
-      </p>
-
-      <h4 className="font-bold mt-6 mb-2 uppercase text-sm tracking-wide">Count II: Fraudulent Misrepresentation</h4>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        19. Plaintiff repeats and realleges the allegations contained in paragraphs 1 through 18 as if fully set forth herein.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        20. Defendant made material misrepresentations of fact to Plaintiff regarding the quality of materials used in the construction of the home. Specifically, Defendant represented in written invoices and progress reports that it had purchased and installed "Grade A" concrete.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        21. Defendant knew these representations were false at the time they were made. Defendant's project manager explicitly authorized the substitution of inferior materials.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        22. Defendant made these misrepresentations with the intent to induce Plaintiff to rely on them and to continue making payments under the Contract.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        23. Plaintiff justifiably relied on Defendant's misrepresentations. Plaintiff is not a construction professional and relied on the expertise and honesty of her licensed contractor.
-      </p>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        24. As a result of this reliance, Plaintiff has suffered damages.
-      </p>
-
-       <h4 className="font-bold mt-6 mb-2 uppercase text-sm tracking-wide">Count III: Negligence</h4>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         25. Plaintiff repeats and realleges the allegations contained in paragraphs 1 through 24 as if fully set forth herein.
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         26. Defendant, as a licensed general contractor, owed a duty of care to Plaintiff to perform construction services with the degree of skill and care reasonably expected of a competent contractor. This duty exists independent of the contract.
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         27. Defendant breached this duty by failing to properly supervise the foundation pour, failing to test the materials used, and failing to construct the residence in accordance with industry standards.
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         28. As a direct and proximate result of Defendant's negligence, Plaintiff has suffered significant property damage and financial loss.
-       </p>
-
-       <h4 className="font-bold mt-6 mb-2 uppercase text-sm tracking-wide">Count IV: Unjust Enrichment</h4>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         29. Plaintiff repeats and realleges the allegations contained in paragraphs 1 through 28 as if fully set forth herein.
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         30. Plaintiff conferred a benefit on Defendant by paying the full contract price, including the premium cost for "Grade A" concrete.
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         31. Defendant accepted and retained this benefit while providing inferior "Grade C" concrete.
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         32. It would be inequitable and unjust for Defendant to retain the benefit of these payments without compensating Plaintiff for the value of the materials actually received.
-       </p>
-
-       <h4 className="font-bold mt-6 mb-2 uppercase text-sm tracking-wide">Count V: Violation of GBL § 349</h4>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         33. Plaintiff repeats and realleges the allegations contained in paragraphs 1 through 32.
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         34. Defendant's deceptive practices in misrepresenting the quality of building materials constitute "deceptive acts or practices in the conduct of any business, trade or commerce" in violation of New York General Business Law § 349.
-         <Citation 
+        4. <strong>Cross-border data transfers.</strong> Meridian transfers EU customer personal data to U.S. vendors. Several transfers lack executed Standard Contractual Clauses or completed transfer impact assessments, exposing the Company to GDPR enforcement risk.
+        <Citation 
            id="cit-c2"
            type="statute"
-           source="N.Y. Gen. Bus. Law § 349"
-           title="Deceptive Acts and Practices"
-           snippet="Deceptive acts or practices in the conduct of any business, trade or commerce or in the furnishing of any service in this state are hereby declared unlawful."
+           source="GDPR Art. 44"
+           title="General principle for transfers"
+           snippet="Any transfer of personal data to a third country shall take place only if the conditions of Chapter V are met."
          />
-       </p>
-       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         35. As a result of Defendant's violation of GBL § 349, Plaintiff is entitled to actual damages and attorney's fees.
-       </p>
-
-      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">PRAYER FOR RELIEF</h3>
-      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        WHEREFORE, Plaintiff Maria Hernandez respectfully requests that this Court enter judgment in her favor and against Defendant Pacific Builders Inc. as follows:
       </p>
-      <ol className="list-decimal pl-10 mb-8 space-y-2 text-[15px]">
-        <li>Awarding Plaintiff compensatory damages in an amount to be proven at trial;</li>
-        <li>Awarding Plaintiff punitive damages for Defendant's fraudulent conduct;</li>
-        <li>Awarding Plaintiff pre-judgment and post-judgment interest;</li>
-        <li>Awarding Plaintiff her reasonable attorneys' fees and costs;</li>
-        <li>Awarding treble damages pursuant to GBL § 349(h); and</li>
-        <li>Granting such other and further relief as the Court deems just and proper.</li>
-      </ol>
+      <p className="mb-4 text-[15px] leading-relaxed text-justify">
+        5. <strong>State privacy compliance.</strong> The expansion of state consumer privacy statutes in 2025 requires Meridian to harmonize its consumer disclosures, rights-handling processes, and opt-out mechanisms across multiple jurisdictions.
+      </p>
+      <p className="mb-4 text-[15px] leading-relaxed text-justify">
+        6. <strong>AI governance.</strong> Meridian's machine-learning credit and underwriting models are likely to be classified as high-risk systems under the EU AI Act, requiring documented risk management, human oversight, and transparency controls.
+      </p>
+      <p className="mb-4 text-[15px] leading-relaxed text-justify">
+        7. <strong>AML / KYC.</strong> Updated FinCEN guidance requires enhancements to Meridian's customer due diligence, beneficial-ownership collection, and suspicious-activity monitoring procedures.
+        <Citation 
+           id="cit-c3"
+           type="statute"
+           source="31 C.F.R. § 1020.210"
+           title="Anti-Money-Laundering Program Requirements"
+           snippet="Requires financial institutions to establish and maintain a risk-based anti-money-laundering program reasonably designed to prevent the institution from being used for money laundering."
+         />
+      </p>
+
+      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">III. RISK RATINGS</h3>
+      <p className="mb-4 text-[15px] leading-relaxed text-justify">
+        8. The Office of the General Counsel has assigned the following preliminary risk ratings, reflecting both likelihood and potential impact:
+      </p>
+      <ul className="list-disc pl-10 mb-4 space-y-2 text-[15px]">
+        <li><strong>High:</strong> Cross-border data transfers; SEC climate disclosure readiness.</li>
+        <li><strong>Medium:</strong> State privacy harmonization; AI governance controls.</li>
+        <li><strong>Monitored:</strong> AML / KYC program refresh (remediation underway).</li>
+      </ul>
+
+      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">IV. RECOMMENDED REMEDIATION</h3>
+      <p className="mb-4 text-[15px] leading-relaxed text-justify">
+        9. Execute Standard Contractual Clauses and complete transfer impact assessments for all vendors processing EU personal data.
+      </p>
+      <p className="mb-4 text-[15px] leading-relaxed text-justify">
+        10. Enhance disclosure controls to capture climate-related and emissions data ahead of the next 10-K filing.
+      </p>
+      <p className="mb-4 text-[15px] leading-relaxed text-justify">
+        11. Stand up an AI governance committee and model inventory aligned to the EU AI Act's high-risk requirements.
+      </p>
+      <p className="mb-4 text-[15px] leading-relaxed text-justify">
+        12. Complete the AML/KYC procedure refresh and deliver updated training to customer-facing teams.
+      </p>
+
+      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">V. CONCLUSION</h3>
+      <p className="mb-4 text-[15px] leading-relaxed text-justify">
+        13. The Company's most significant near-term exposure arises from cross-border data transfers and SEC climate disclosure readiness. The Office of the General Counsel recommends that the Board Risk Committee prioritize the remediation actions above and receive quarterly progress reporting.
+      </p>
       
       <div className="mt-16 mb-8">
-        <p className="mb-2">Dated: New York, New York<br/>October 1, 2024</p>
+        <p className="mb-2">Dated: New York, New York<br/>February 23, 2026</p>
         <div className="mt-8 w-64 border-t border-black pt-2">
           <p className="font-bold">By: ______________________</p>
-          <p>Robert L. Counsel</p>
-          <p>Counsel & Associates LLP</p>
-          <p>123 Legal Avenue</p>
-          <p>New York, NY 10001</p>
-          <p>(212) 555-0123</p>
-          <p>Attorneys for Plaintiff</p>
+          <p>Jordan Avery</p>
+          <p>EVP & General Counsel</p>
+          <p>Meridian Financial Group, Inc.</p>
+          <p>200 Harbor Street</p>
+          <p>New York, NY 10004</p>
+          <p>Office of the General Counsel</p>
         </div>
       </div>
     </div>
   ),
-  "Strategy.docx": (
+  "Compliance Strategy.docx": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
       <div className="flex justify-between items-start mb-8 border-b border-gray-200 pb-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#1D4B34]">CASE STRATEGY MEMORANDUM</h1>
-          <p className="text-gray-500 mt-1">Hernandez v. Pacific Builders Inc.</p>
+          <h1 className="text-2xl font-bold text-[#1D4B34]">COMPLIANCE STRATEGY MEMORANDUM</h1>
+          <p className="text-gray-500 mt-1">Meridian Financial Group — Regulatory Compliance Program</p>
         </div>
         <div className="text-right">
           <div className="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider mb-1">
@@ -489,227 +380,227 @@ export const MOCK_FILES: Record<string, React.ReactNode | (() => React.ReactNode
       
       <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4">I. EXECUTIVE SUMMARY</h2>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        Our primary objective in this litigation is to secure a favorable settlement that covers the cost of remediation ($1.5M) plus legal fees. We have a strong case for breach of contract and fraud given the documented substitution of materials. However, we must be prepared for Defendant to argue "Force Majeure" or supply chain impossibility.
+        Our primary objective this cycle is to bring Meridian into full compliance with the SEC climate disclosure rules and the GDPR cross-border transfer requirements ahead of the next 10-K filing. We have a strong foundation in our existing privacy program, but several vendor transfers and disclosure controls require remediation before the filing deadline.
       </p>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        The discovery phase will be critical. We need to uncover internal communications at Pacific Builders that prove they knowingly substituted the concrete to cut costs, rather than due to unavailability. We have already identified several potential witnesses who may have knowledge of the decision-making process.
+        The vendor review phase will be critical. We need to inventory all third parties processing EU personal data and confirm that each transfer is supported by executed Standard Contractual Clauses and a completed transfer impact assessment. We have already identified several vendors whose agreements lack adequate safeguards.
       </p>
 
-      <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">II. PROCEDURAL POSTURE</h2>
+      <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">II. PROGRAM TIMELINE</h2>
       <ul className="list-disc pl-5 space-y-2 text-[15px] mb-4">
-        <li><strong>Complaint Filed:</strong> October 1, 2024</li>
-        <li><strong>Service Effectuated:</strong> October 3, 2024</li>
-        <li><strong>Answer Deadline:</strong> October 24, 2024</li>
-        <li><strong>Rule 26(f) Conference:</strong> Anticipated mid-November 2024</li>
-        <li><strong>Initial Disclosures:</strong> Due 14 days after Rule 26(f) conference</li>
+        <li><strong>Risk Assessment Completed:</strong> February 1, 2026</li>
+        <li><strong>Vendor Inventory Due:</strong> February 28, 2026</li>
+        <li><strong>SCC Remediation Target:</strong> March 31, 2026</li>
+        <li><strong>10-K Climate Disclosure Draft:</strong> Mid-March 2026</li>
+        <li><strong>Board Risk Committee Review:</strong> Quarterly</li>
       </ul>
 
-      <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">III. KEY LEGAL ARGUMENTS</h2>
+      <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">III. KEY COMPLIANCE PRIORITIES</h2>
       
-      <h3 className="font-bold text-md mb-2">A. Breach of Contract</h3>
+      <h3 className="font-bold text-md mb-2">A. SEC Climate Disclosure</h3>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        The contract is unambiguous regarding the specifications of the concrete ("Grade A"). Pacific Builders' admission in the site foreman's log (if we can obtain it) that they used "Grade C" will be dispositive on the issue of breach.
+        The climate disclosure rules require governance, strategy, and emissions disclosures. Confirming our Risk Committee oversight language and the assurance status of our emissions metrics will be dispositive on the adequacy of the disclosure.
         <Citation 
            id="cit-s1"
-           type="case"
-           source="N.Y. Ct. App."
-           title="W.W.W. Assocs., Inc. v. Giancontieri"
-           snippet="Held that when parties set down their agreement in a clear, complete document, their writing should be enforced according to its terms."
+           type="statute"
+           source="17 C.F.R. § 229.1501"
+           title="Regulation S-K, Item 1501 (Governance)"
+           snippet="Requires disclosure of the board's oversight of climate-related risks and management's role in assessing and managing such risks."
          />
       </p>
       
-      <h3 className="font-bold text-md mb-2">B. Fraudulent Inducement / Misrepresentation</h3>
+      <h3 className="font-bold text-md mb-2">B. Cross-Border Data Transfers</h3>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        To prove fraud, we must show intent. The "smoking gun" would be an email from the Project Manager (John Smith) instructing the team to hide the substitution. We will target his communications in our first set of document requests.
+        To support EU data transfers, we must execute SCCs and document transfer impact assessments. The priority is the Cloudspan transfer, which currently lacks executed clauses. We will require completed SCC annexes in the next contract cycle.
         <Citation 
            id="cit-s2"
-           type="case"
-           source="N.Y. Ct. App."
-           title="Lama Holding Co. v. Smith Barney Inc."
-           snippet="Established the elements of fraud: misrepresentation, falsity, scienter, reliance, and injury."
+           type="statute"
+           source="GDPR Art. 46"
+           title="Transfers subject to appropriate safeguards"
+           snippet="In the absence of an adequacy decision, a controller or processor may transfer personal data to a third country only if it has provided appropriate safeguards, including approved Standard Contractual Clauses."
          />
       </p>
 
-      <h3 className="font-bold text-md mb-2">C. Anticipated Defenses</h3>
+      <h3 className="font-bold text-md mb-2">C. Anticipated Challenges</h3>
       <ul className="list-disc pl-5 space-y-2 text-[15px] mb-4">
-        <li><strong>Force Majeure:</strong> Defendant may claim supply chain issues made Grade A concrete unavailable. We have already contacted three other suppliers in the region who confirmed they had ample stock during the relevant period.</li>
-        <li><strong>Waiver:</strong> Defendant may argue Plaintiff waived the defect by paying invoices. We will counter that Plaintiff had no knowledge of the defect at the time of payment.
+        <li><strong>Vendor pushback:</strong> Some vendors may resist our standard SCC modules. We have prepared fallback positions and escalation paths for high-volume processors.</li>
+        <li><strong>Data adequacy gaps:</strong> Transfers may rely on the DPF where vendors are certified; we will verify each certification before relying on it.
           <Citation 
              id="cit-s3"
              type="case"
-             source="N.Y. Ct. App."
-             title="Gilbert Frank Corp. v. Fed. Ins. Co."
-             snippet="Held that waiver is an intentional relinquishment of a known right and should not be lightly presumed."
+             source="CJEU"
+             title="Data Protection Commissioner v. Facebook Ireland (Schrems II)"
+             snippet="Required exporters to assess the destination country's protections and adopt supplementary measures where protection is not equivalent."
            />
         </li>
       </ul>
 
-      <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">IV. DISCOVERY PLAN</h2>
+      <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">IV. VENDOR REVIEW PLAN</h2>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        We will serve the following requests immediately after the Rule 26(f) conference:
+        We will execute the following steps as part of the vendor remediation program:
       </p>
       <ol className="list-decimal pl-5 space-y-2 text-[15px] mb-4">
-        <li><strong>Interrogatories:</strong> Identify all suppliers used, all individuals with knowledge of the foundation pour, and the dates of decision-making regarding material procurement.</li>
-        <li><strong>Requests for Production:</strong> All internal emails regarding "concrete", "foundation", "substitution", or "Hernandez project"; all invoices from suppliers; site logs and daily reports.</li>
-        <li><strong>Depositions:</strong> John Smith (Project Manager), Site Foreman, and the Chief Financial Officer (to establish motive/profitability pressure).</li>
-        <li><strong>Third-Party Subpoenas:</strong> Subpoenas to the concrete supplier to verify what was ordered versus what was delivered.</li>
+        <li><strong>Inventory:</strong> Identify all vendors processing personal data and the categories of data and transfer mechanisms involved.</li>
+        <li><strong>Gap analysis:</strong> Review each data processing agreement for missing SCCs, sub-processor terms, security commitments, and breach-notification timelines.</li>
+        <li><strong>Remediation:</strong> Execute updated DPAs and SCC modules with priority vendors, including Cloudspan and Atlas Payments.</li>
+        <li><strong>Documentation:</strong> Complete and retain transfer impact assessments for each restricted transfer.</li>
       </ol>
 
-      <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">V. SETTLEMENT & BUDGET</h2>
+      <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">V. RESOURCING & BUDGET</h2>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        <strong>Estimated Budget to Trial:</strong> $250,000 - $300,000. This includes expert witness fees for structural engineers and potential forensic accounting.
+        <strong>Estimated Program Budget:</strong> $250,000 - $300,000. This includes outside privacy counsel support and emissions-data assurance services.
       </p>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        <strong>Settlement Target:</strong> We should open with a demand of $2.5M (remediation + punitive/consequential damages) and be prepared to settle in the $1.8M range. This avoids the risk of trial and gets the client the funds needed to fix the house sooner.
+        <strong>Resourcing Target:</strong> We recommend dedicating two compliance analysts to vendor remediation and engaging outside counsel for the transfer impact assessments to meet the filing timeline.
       </p>
 
        <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">VI. RISK ANALYSIS</h2>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         <strong>High Risk:</strong> The "Economic Loss Rule" could bar our negligence claim, limiting recovery to contract damages (no punitive damages). We must emphasize the independent fraudulent conduct to survive a Motion to Dismiss.
+         <strong>High Risk:</strong> Incomplete SCCs could expose Meridian to GDPR enforcement and order suspension of transfers. We must prioritize the Cloudspan remediation to mitigate this exposure.
          <Citation 
            id="cit-s4"
-           type="case"
-           source="N.Y. Ct. App."
-           title="New York Univ. v. Cont'l Ins. Co."
-           snippet="Discussing the economic loss rule and the need for a separate legal duty independent of the contract."
+           type="statute"
+           source="GDPR Art. 83"
+           title="General conditions for imposing administrative fines"
+           snippet="Infringements of the provisions on transfers of personal data to third countries may be subject to administrative fines of up to the higher statutory tier."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         <strong>Medium Risk:</strong> Defendant may attempt to shift blame to the architect or other subcontractors. We need to lock in their testimony early that they followed the plans provided by Pacific Builders.
+         <strong>Medium Risk:</strong> Disclosure controls may not fully capture emissions data in time for the 10-K. We will coordinate with Finance to lock in the data-collection process early.
        </p>
 
        <h2 className="text-lg font-bold text-[#1D4B34] border-b border-gray-200 pb-2 mb-4 mt-8">VII. NEXT STEPS</h2>
        <ol className="list-decimal pl-5 space-y-2 text-[15px] mb-4">
-         <li>Finalize and file the Amended Complaint if necessary.</li>
-         <li>Prepare Initial Disclosures.</li>
-         <li>Draft First Set of Interrogatories and Document Requests.</li>
-         <li>Schedule strategy call with Client to discuss settlement parameters.</li>
+         <li>Finalize the vendor inventory and gap analysis.</li>
+         <li>Prepare the climate disclosure draft for the 10-K.</li>
+         <li>Execute SCCs with priority vendors.</li>
+         <li>Schedule a review with the Board Risk Committee on remediation progress.</li>
        </ol>
     </div>
   ),
-  "Discovery overview": () => <DiscoveryOverviewSpreadsheet />,
-  "Amended Complaint.docx": (
+  "Vendor Risk Register": () => <DiscoveryOverviewSpreadsheet />,
+  "Updated Risk Assessment.docx": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Amended Complaint</h1>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Updated Compliance Risk Assessment</h1>
       <p className="text-[15px] leading-relaxed mb-4">
-        Plaintiff Maria Hernandez, by and through her undersigned counsel, as and for her Amended Complaint, alleges as follows:
+        The Office of the General Counsel, having completed additional vendor review, updates the enterprise compliance risk assessment as follows:
       </p>
       <p className="text-[15px] leading-relaxed mb-4">
-        1. This Amended Complaint is filed pursuant to Rule 15(a)(1)(B) of the Federal Rules of Civil Procedure.
+        1. This update supplements the annual Compliance Risk Assessment with findings from the latest vendor data-mapping exercise.
       </p>
-      <h3 className="font-bold mt-6 mb-2">ADDITIONAL ALLEGATIONS</h3>
+      <h3 className="font-bold mt-6 mb-2">ADDITIONAL FINDINGS</h3>
       <p className="text-[15px] leading-relaxed mb-4">
-        25. Since the filing of the original Complaint, Plaintiff has learned that Defendant's fraudulent conduct extended beyond the substitution of concrete.
-      </p>
-      <p className="text-[15px] leading-relaxed mb-4">
-        26. Specifically, Defendant also failed to install the specified copper piping, substituting it with PEX plastic piping in violation of the Contract.
+        25. Since the original assessment, the team has identified that the Company's exposure extends beyond the Cloudspan transfer.
       </p>
       <p className="text-[15px] leading-relaxed mb-4">
-        27. This additional breach was discovered on October 15, 2024, when a wall was opened to inspect electrical wiring.
+        26. Specifically, a second processor, Atlas Payments LLC, is receiving EU personal data without an executed data processing agreement, in violation of GDPR Article 28.
+      </p>
+      <p className="text-[15px] leading-relaxed mb-4">
+        27. This additional gap was discovered on February 15, 2026, during the vendor data-flow mapping review.
       </p>
       {/* Expanded content placeholder to imply length */}
       <div className="space-y-4 text-gray-400 mt-8">
-        <p>[... Paragraphs 28-50 detailing additional defects ...]</p>
-        <p>[... Expanded Causes of Action including Count III: Unjust Enrichment ...]</p>
+        <p>[... Findings 28-50 detailing additional vendor gaps ...]</p>
+        <p>[... Expanded Remediation Plan including sub-processor flow-down terms ...]</p>
       </div>
     </div>
   ),
-  "Motion to Dismiss.docx": (
+  "SEC Comment Letter Response.docx": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34] text-center">DEFENDANT'S MOTION TO DISMISS</h1>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34] text-center">RESPONSE TO SEC STAFF COMMENT LETTER</h1>
       <p className="text-[15px] leading-relaxed mb-6">
-        Defendant Pacific Builders Inc. respectfully moves this Court to dismiss Plaintiff's Complaint pursuant to Fed. R. Civ. P. 12(b)(6) for failure to state a claim upon which relief can be granted.
+        Meridian Financial Group, Inc. respectfully submits this response to the Staff's comment letter regarding its Annual Report on Form 10-K, addressing each comment in turn.
       </p>
-      <h3 className="font-bold mt-6 mb-2">I. ARGUMENT</h3>
-      <h4 className="font-bold mt-4 mb-2 text-sm uppercase">A. The Fraud Claim is Duplicative of the Breach of Contract Claim</h4>
+      <h3 className="font-bold mt-6 mb-2">I. RESPONSES</h3>
+      <h4 className="font-bold mt-4 mb-2 text-sm uppercase">A. Governance of Climate-Related Risks</h4>
       <p className="text-[15px] leading-relaxed mb-4">
-        Under New York law, a fraud claim that arises from the same facts as a breach of contract claim is redundant and must be dismissed. See <i>Bridgestone/Firestone, Inc. v. Recovery Credit Servs., Inc.</i>, 98 F.3d 13, 20 (2d Cir. 1996).
+        The Company confirms that the Board's Risk Committee oversees climate-related risks and receives quarterly reports from management. See Regulation S-K, Item 1501, 17 C.F.R. § 229.1501.
       </p>
       <p className="text-[15px] leading-relaxed mb-4">
-        Here, Plaintiff's allegations of fraud are based entirely on Defendant's alleged failure to perform under the Contract—specifically, the failure to use Grade A concrete. There is no separate legal duty owed by Defendant to Plaintiff independent of the Contract.
+        In response to the Staff's comment, the Company will revise its disclosure to identify the Risk Committee and the cadence of management reporting in future filings.
       </p>
-      <h4 className="font-bold mt-4 mb-2 text-sm uppercase">B. Plaintiff Fails to Plead Fraud with Particularity</h4>
+      <h4 className="font-bold mt-4 mb-2 text-sm uppercase">B. Greenhouse Gas Metrics and Assurance</h4>
       <p className="text-[15px] leading-relaxed mb-4">
-        Rule 9(b) requires that fraud be pled with particularity. Plaintiff's Complaint fails to identify the specific individual who made the alleged misrepresentations, or the time and place of such statements.
+        The Company's Scope 1 and Scope 2 emissions are calculated using the operational control approach and are subject to limited assurance. The Company will expand its disclosure to describe the methodology, boundaries, and assurance level applied.
       </p>
     </div>
   ),
-  "Expert Witness Report.pdf": (
+  "Privacy Impact Assessment.pdf": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">EXPERT WITNESS REPORT</h1>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">DATA PROTECTION IMPACT ASSESSMENT</h1>
       <div className="flex justify-between mb-8 border-b border-gray-200 pb-4">
         <div>
-          <p className="font-bold">Prepared by: Dr. Alan Grant, P.E.</p>
-          <p>Grant Structural Engineers, LLC</p>
-          <p>License No. 12345-NY</p>
+          <p className="font-bold">Prepared by: Data Protection Office</p>
+          <p>Meridian Financial Group, Inc.</p>
+          <p>DPIA Ref. No. DPIA-2026-007</p>
         </div>
         <div className="text-right">
-          <p><strong>Date:</strong> September 15, 2024</p>
-          <p><strong>Subject:</strong> 123 Main St. Foundation Analysis</p>
+          <p><strong>Date:</strong> February 15, 2026</p>
+          <p><strong>Subject:</strong> Cloudspan Vendor Data Transfer</p>
         </div>
       </div>
 
-      <h3 className="font-bold mt-6 mb-2">1. QUALIFICATIONS</h3>
+      <h3 className="font-bold mt-6 mb-2">1. SCOPE</h3>
       <p className="text-[15px] leading-relaxed mb-4">
-        I am a licensed Professional Engineer in the State of New York with over 30 years of experience in structural engineering and materials science. I hold a Ph.D. in Civil Engineering from MIT. My specialization is in concrete failure analysis and forensic engineering. I have testified as an expert witness in over 50 cases involving structural defects.
+        This Data Protection Impact Assessment ("DPIA") evaluates the processing of EU customer personal data by Cloudspan Inc., a U.S.-based cloud processor engaged by Meridian. It is conducted in accordance with the GDPR's requirement to assess high-risk processing operations before they commence.
       </p>
 
-      <h3 className="font-bold mt-6 mb-2">2. ASSIGNMENT</h3>
+      <h3 className="font-bold mt-6 mb-2">2. PROCESSING DESCRIBED</h3>
       <p className="text-[15px] leading-relaxed mb-4">
-        I was retained by Plaintiff Maria Hernandez to inspect the foundation of the residence located at 123 Main Street, New York, NY, and to determine the cause of the cracking observed on the basement walls. I was also asked to determine whether the materials used complied with the construction contract and architectural specifications.
+        The proposed processing involves the transfer of customer contact details, account identifiers, and transaction metadata to Cloudspan for analytics services. The data originates from EEA data subjects and is transferred to servers located in the United States.
       </p>
 
-      <h3 className="font-bold mt-6 mb-2">3. METHODOLOGY</h3>
+      <h3 className="font-bold mt-6 mb-2">3. NECESSITY AND PROPORTIONALITY</h3>
       <p className="text-[15px] leading-relaxed mb-4">
-        On September 1, 2024, I visited the Property to inspect the foundation. I observed extensive vertical and diagonal cracking on the North and East walls. To determine the material properties, I extracted three core samples (4-inch diameter) from the foundation walls in accordance with ASTM C42.
+        The Data Protection Office assessed whether the processing is necessary and proportionate to its purpose, applying the GDPR's data-minimization principle. The transfer relies on a restricted-transfer mechanism that must be documented before processing begins.
         <Citation 
            id="cit-e1"
-           type="record"
-           source="ASTM C42"
-           title="Standard Test Method for Obtaining and Testing Drilled Cores and Sawed Beams of Concrete"
-           snippet="Provides standardized procedures for obtaining and testing concrete core samples to determine compressive strength."
+           type="statute"
+           source="GDPR Art. 35"
+           title="Data protection impact assessment"
+           snippet="Requires a controller to carry out an assessment of the impact of envisaged processing operations where processing is likely to result in a high risk to the rights of data subjects."
          />
       </p>
       <p className="text-[15px] leading-relaxed mb-4">
-        These samples were labeled "Core A" (North Wall), "Core B" (East Wall), and "Core C" (West Wall). They were transported to my certified laboratory for compressive strength testing (ASTM C39) and petrographic analysis (ASTM C856).
+        The data categories were reviewed against the stated analytics purpose, and unnecessary fields were flagged for exclusion before any transfer proceeds.
       </p>
 
-      <h3 className="font-bold mt-6 mb-2">4. FINDINGS</h3>
-      <h4 className="font-bold mt-2 mb-1 text-sm">A. Compressive Strength</h4>
+      <h3 className="font-bold mt-6 mb-2">4. RISK FINDINGS</h3>
+      <h4 className="font-bold mt-2 mb-1 text-sm">A. Transfer Mechanism</h4>
       <p className="text-[15px] leading-relaxed mb-4">
-        The contract specifications and architectural plans called for concrete with a minimum compressive strength of 5,000 psi at 28 days ("Grade A"). The results of the compressive strength tests were as follows:
+        The GDPR requires an appropriate transfer mechanism for restricted transfers. The review identified the following deficiencies in the current arrangement:
       </p>
       <ul className="list-disc pl-10 mb-4 text-[15px]">
-        <li>Core A: 3,150 psi</li>
-        <li>Core B: 3,220 psi</li>
-        <li>Core C: 3,180 psi</li>
+        <li>No executed Standard Contractual Clauses</li>
+        <li>No completed transfer impact assessment</li>
+        <li>Breach-notification window of 14 days</li>
       </ul>
       <p className="text-[15px] leading-relaxed mb-4">
-        The average compressive strength is approximately 3,183 psi. This is consistent with "Grade C" concrete (typically 3,000 psi) and is 36% lower than the specified strength. This discrepancy is a material deviation from the design requirements.
+        Each deficiency represents a material gap relative to the GDPR's Chapter V requirements and must be remediated before the transfer proceeds.
       </p>
 
-      <h4 className="font-bold mt-2 mb-1 text-sm">B. Petrographic Analysis</h4>
+      <h4 className="font-bold mt-2 mb-1 text-sm">B. Supplementary Measures</h4>
       <p className="text-[15px] leading-relaxed mb-4">
-        Petrographic analysis reveals a water-to-cement ratio of approximately 0.65, significantly higher than the maximum 0.45 allowed for high-strength foundations. This high ratio results in increased porosity and reduced durability. I also observed a lack of the specified water-reducing admixture.
+        Following Schrems II, the assessment evaluated whether supplementary measures are required to ensure an essentially equivalent level of protection. Strong encryption with exporter-held keys and contractual transparency commitments are recommended.
         <Citation 
            id="cit-e2"
            type="record"
-           source="Lab Report #8842"
-           title="Petrographic Analysis of Concrete Samples"
-           snippet="Detailed microscopic analysis confirming high water-cement ratio and absence of admixtures."
+           source="EDPB Recommendations 01/2020"
+           title="Supplementary measures for transfer tools"
+           snippet="Provides a framework for assessing and adopting supplementary measures where the destination country's protection is not essentially equivalent."
          />
       </p>
 
       <h3 className="font-bold mt-6 mb-2">5. CONCLUSION</h3>
       <p className="text-[15px] leading-relaxed mb-4">
-        It is my professional opinion, to a reasonable degree of engineering certainty, that the concrete used in the foundation is materially non-compliant with the design specifications. The use of 3,000 psi concrete instead of the specified 5,000 psi concrete has compromised the structural integrity of the home. The observed cracking is a direct result of the foundation's inability to support the design loads.
+        It is the assessment of the Data Protection Office that the proposed transfer presents a high residual risk in its current form due to the absence of executed safeguards. The transfer is materially non-compliant with the GDPR's transfer requirements.
       </p>
       <p className="text-[15px] leading-relaxed mb-4">
-        The foundation is not safe for long-term occupancy. Immediate remediation is required, which will likely involve shoring the house and replacing the foundation walls.
+        The transfer should not proceed until Standard Contractual Clauses are executed, a transfer impact assessment is documented, and the breach-notification term is revised to meet GDPR timelines.
       </p>
     </div>
   ),
-  "Privilege Log.xlsx": (
+  "Data Inventory.xlsx": (
     <div className="flex flex-col h-full bg-white text-[#212223] text-sm font-sans">
       {/* Spreadsheet Grid */}
       <div className="flex-1 overflow-auto">
@@ -717,20 +608,20 @@ export const MOCK_FILES: Record<string, React.ReactNode | (() => React.ReactNode
             {/* Column Headers */}
             <div className="flex sticky top-0 z-10 bg-[#F5F5F5] border-b border-[#E5E5E5]">
                 <div className="w-10 shrink-0 border-r border-[#E5E5E5] bg-[#F5F5F5]"></div>
-                <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Doc ID</div>
+                <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Record ID</div>
                 <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Date</div>
-                <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Author</div>
-                <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Recipient</div>
-                <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Privilege Type</div>
+                <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Data Category</div>
+                <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">System</div>
+                <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Lawful Basis</div>
                 <div className="w-[150px] shrink-0 border-r border-[#E5E5E5] px-2 py-1.5 font-semibold text-[#4A4A4A]">Description</div>
             </div>
 
             {/* Rows */}
 
             {[
-                ['PRIV-001', '2024-01-15', 'J. Smith', 'Legal Dept', 'Attorney-Client', 'Request for legal advice re: contract terms'],
-                ['PRIV-002', '2024-02-10', 'Outside Counsel', 'CEO', 'Attorney-Client', 'Legal opinion on liability'],
-                ['PRIV-003', '2024-03-05', 'J. Smith', 'Legal Dept', 'Work Product', 'Draft timeline for litigation']
+                ['DATA-001', '2026-01-15', 'Customer Contact', 'CRM', 'Contract', 'EU customer names and email addresses'],
+                ['DATA-002', '2026-02-10', 'Transaction Data', 'Core Banking', 'Legal Obligation', 'Payment records retained for AML purposes'],
+                ['DATA-003', '2026-03-05', 'Account Identifiers', 'Analytics', 'Legitimate Interest', 'Pseudonymized identifiers shared with processor']
             ].map((row, idx) => (
                 <div key={idx} className="flex border-b border-[#E5E5E5]">
                     <div className="w-10 shrink-0 border-r border-[#E5E5E5] bg-[#F5F5F5] flex items-center justify-center font-semibold text-gray-600">{idx + 1}</div>
@@ -762,87 +653,79 @@ export const MOCK_FILES: Record<string, React.ReactNode | (() => React.ReactNode
       </div>
     </div>
   ),
-  "Federal Court Rules.docx": (
+  "SEC Disclosure Rules.docx": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Federal Rules of Civil Procedure</h1>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">SEC Climate Disclosure Rules — Reference</h1>
       
-      <h3 className="font-bold mt-4 mb-2">Rule 8. General Rules of Pleading</h3>
+      <h3 className="font-bold mt-4 mb-2">Item 1501. Governance</h3>
       <p className="mb-4 text-[15px] leading-relaxed">
-        (a) Claim for Relief. A pleading that states a claim for relief must contain:
-        (1) a short and plain statement of the grounds for the court's jurisdiction, unless the court already has jurisdiction and the claim needs no new jurisdictional support;
-        (2) a short and plain statement of the claim showing that the pleader is entitled to relief; and
-        (3) a demand for the relief sought, which may include relief in the alternative or different types of relief.
+        A registrant must describe:
+        (1) the board of directors' oversight of climate-related risks, including any board committee responsible for such oversight;
+        (2) management's role in assessing and managing the registrant's material climate-related risks; and
+        (3) the processes by which the board and management are informed about and monitor climate-related risks.
       </p>
 
-      <h3 className="font-bold mt-4 mb-2">Rule 9. Pleading Special Matters</h3>
+      <h3 className="font-bold mt-4 mb-2">Item 1502. Strategy, Risks, and Impacts</h3>
       <p className="mb-4 text-[15px] leading-relaxed">
-        (b) Fraud or Mistake; Conditions of Mind. In alleging fraud or mistake, a party must state with particularity the circumstances constituting fraud or mistake. Malice, intent, knowledge, and other conditions of a person's mind may be alleged generally.
+        A registrant must disclose any climate-related risks that have had or are reasonably likely to have a material impact on its business, results of operations, or financial condition over the short, medium, and long term, and describe how it manages those risks.
       </p>
 
-      <h3 className="font-bold mt-4 mb-2">Rule 12. Defenses and Objections</h3>
+      <h3 className="font-bold mt-4 mb-2">Item 1505. Greenhouse Gas Emissions Metrics</h3>
       <p className="mb-4 text-[15px] leading-relaxed">
-        (a) Time to Serve a Responsive Pleading.
-        (1) In General. Unless another time is specified by this rule or a federal statute, the time for serving a responsive pleading is as follows:
-        (A) A defendant must serve an answer:
-        (i) within 21 days after being served with the summons and complaint; or
-        (ii) if it has timely waived service under Rule 4(d), within 60 days after the request for a waiver was sent.
+        Where required, a registrant must disclose its Scope 1 and Scope 2 greenhouse gas emissions, including:
+        (1) the organizational boundaries used;
+        (2) the methodology, significant inputs, and significant assumptions;
+        (3) the emission factors applied; and
+        (4) the level of assurance, if any, obtained with respect to the metrics.
       </p>
       <p className="mb-4 text-[15px] leading-relaxed">
-        (b) How to Present Defenses. Every defense to a claim for relief in any pleading must be asserted in the responsive pleading if one is required. But a party may assert the following defenses by motion:
-        (1) lack of subject-matter jurisdiction;
-        (2) lack of personal jurisdiction;
-        (3) improper venue;
-        (4) insufficient process;
-        (5) insufficient service of process;
-        (6) failure to state a claim upon which relief can be granted; and
-        (7) failure to join a party under Rule 19.
+        Emissions should be presented in gross terms, and a registrant may not exclude emissions from investments or other interests solely to present a more favorable metric.
       </p>
 
-      <h3 className="font-bold mt-4 mb-2">Rule 26. Duty to Disclose; General Provisions Governing Discovery</h3>
+      <h3 className="font-bold mt-4 mb-2">Item 1506. Assurance and Attestation</h3>
       <p className="mb-4 text-[15px] leading-relaxed">
-        (a) Required Disclosures.
-        (1) Initial Disclosure.
-        (A) In General. Except as exempted by Rule 26(a)(1)(B) or as otherwise stipulated or ordered by the court, a party must, without awaiting a discovery request, provide to the other parties:
-        (i) the name and, if known, the address and telephone number of each individual likely to have discoverable information—along with the subjects of that information—that the disclosing party may use to support its claims or defenses...
-        (ii) a copy—or a description by category and location—of all documents, electronically stored information, and tangible things that the disclosing party has in its possession, custody, or control and may use to support its claims or defenses...
+        A registrant subject to the assurance requirements must:
+        (1) obtain an attestation report covering its emissions disclosures at the prescribed level of assurance;
+        (2) include the attestation report in the relevant filing; and
+        (3) disclose information about the assurance provider, including whether it is subject to oversight and any related conflicts of interest. Phase-in periods apply based on filer status.
       </p>
     </div>
   ),
-  "Memo of Law.docx": (
+  "Memo on Disclosure Obligations.docx": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34] text-center">MEMORANDUM OF LAW</h1>
-      <h2 className="text-md font-bold text-center mb-8 uppercase">In Support of Plaintiff's Opposition to Defendant's Motion to Dismiss</h2>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34] text-center">MEMORANDUM</h1>
+      <h2 className="text-md font-bold text-center mb-8 uppercase">Re: Meridian's Climate-Related Disclosure Obligations</h2>
       <h3 className="font-bold mt-4 mb-2">PRELIMINARY STATEMENT</h3>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        This memorandum is submitted in support of Plaintiff's opposition to Defendant's Motion to Dismiss. The facts as alleged in the complaint must be taken as true at this stage of the proceedings.
+        This memorandum analyzes Meridian's disclosure obligations under the SEC climate disclosure rules and recommends revisions to the Company's draft 10-K disclosures.
       </p>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        Defendant's motion relies on a misapplication of the economic loss rule. While that rule generally separates contract and tort claims, New York courts have long recognized an exception where, as here, the defendant engages in fraudulent conduct that is extraneous to the contract itself.
+        The rules require governance, strategy, and emissions disclosures. The Company's current draft adequately addresses strategy but should be strengthened with respect to governance specifics and the assurance status of its emissions metrics.
       </p>
-      <h3 className="font-bold mt-4 mb-2">ARGUMENT</h3>
-      <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">I. The Economic Loss Rule Does Not Bar Plaintiff's Fraud Claim</h4>
+      <h3 className="font-bold mt-4 mb-2">ANALYSIS</h3>
+      <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">I. Governance Disclosure Must Identify the Responsible Committee</h4>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        The misrepresentations made by Defendant's project manager regarding the specific grade of concrete purchased were distinct from the contractual obligation to build the house. They were active concealments intended to deceive the Plaintiff into making progress payments she otherwise would have withheld.
+        The governance item requires the Company to identify the board committee responsible for overseeing climate-related risks and to describe management's role. The draft should be revised to name the Risk Committee and describe the quarterly reporting cadence.
         <Citation 
            id="cit-m1"
-           type="case"
-           source="N.Y. App. Div."
-           title="Deerfield Commc'ns Corp. v. Chesebrough-Ponds, Inc."
-           snippet="Held that a fraud claim may be maintained where the misrepresentation is collateral to the contract."
+           type="statute"
+           source="17 C.F.R. § 229.1501"
+           title="Regulation S-K, Item 1501 (Governance)"
+           snippet="Requires disclosure of the board's oversight of climate-related risks and management's role in assessing and managing such risks."
          />
       </p>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        Plaintiff has alleged that Defendant made specific false statements about the grade of concrete in monthly progress reports. These statements were not merely "promises to perform" but misrepresentations of present facts (i.e., that Grade A concrete had been poured).
+        The Company should describe how the Risk Committee receives and monitors climate-related information, including the frequency of management reporting and escalation to the full Board.
       </p>
 
-      <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">II. Plaintiff Has Pled Fraud with Sufficient Particularity</h4>
+      <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">II. Emissions Metrics Require Methodology and Assurance Disclosure</h4>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        Defendant argues that the Complaint fails to meet the requirements of Rule 9(b). However, the Complaint identifies the speaker (John Smith), the approximate dates of the misrepresentations (May-June 2023), and the specific content of the falsehoods (Grade A vs. Grade C). This is sufficient to put Defendant on notice of the claims against it.
+        Where the Company discloses Scope 1 and Scope 2 emissions, it must describe the organizational boundaries, methodology, emission factors, and assurance level. The draft should be expanded to include these elements and to confirm the operational control approach used.
       </p>
 
       <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">CONCLUSION</h3>
       <p className="mb-4 text-[15px] leading-relaxed text-justify">
-        For the foregoing reasons, Plaintiff respectfully requests that the Court deny Defendant's Motion to Dismiss in its entirety.
+        For the foregoing reasons, we recommend revising the governance and emissions sections of the draft 10-K disclosures before filing.
       </p>
     </div>
   ),
