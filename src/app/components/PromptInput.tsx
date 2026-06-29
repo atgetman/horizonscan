@@ -481,14 +481,14 @@ export function PromptInput({
               ref={addMenuButtonRef}
               type="button"
               onClick={handleAddMenuClick}
-              className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${
+              className={`w-10 h-10 flex items-center justify-center rounded-lg bg-white text-[#1d4b34] transition-colors ${
                 isAddMenuOpen
-                  ? 'bg-[#1d4b34] text-white'
-                  : 'bg-[#f5f5f5] text-[#666] hover:bg-[#e5e5e5]'
+                  ? 'border-2 border-[#1d4b34]'
+                  : 'border border-[#d4d4d4] hover:bg-[#f5f5f5]'
               }`}
               title="Add content"
             >
-              <Plus className="size-[14px]" strokeWidth={2.5} />
+              <Plus className="size-5" strokeWidth={2} />
             </button>
           </div>
 
