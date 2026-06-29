@@ -14,6 +14,7 @@ interface ChatTag {
 
 // Workspaces selectable as chat tags
 const WORKSPACE_OPTIONS = [
+  "AI Governance",
   "SEC Climate Disclosure Program",
   "Vendor DPA Remediation",
   "GDPR Cross-Border Data Transfer Review",
