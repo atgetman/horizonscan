@@ -32,7 +32,7 @@ import {
 
 import { DocumentToolbar } from "../components/DocumentToolbar";
 import { SpreadsheetToolbar } from "../components/SpreadsheetToolbar";
-import { MOCK_FILES, MOCK_CHATS, ALL_FILES } from "../data/mockData";
+import { MOCK_FILES, MOCK_CHATS, ALL_FILES, getWorkspaceFiles } from "../data/mockData";
 import { useWorkspaceNavigation } from "../contexts/WorkspaceNavigationContext";
 import { PromptInput } from "../components/PromptInput";
 import { ActiveChatView } from "../components/ActiveChatView";
@@ -1439,14 +1439,15 @@ export function WorkspacePage() {
 
            <div className="flex items-end gap-1 flex-1 min-w-0">
              {tabs.map((tab) => {
-               // Helper function to build folder path from ALL_FILES
+               // Helper function to build folder path from the workspace's file tree
                const getFolderPathForFile = (fileName: string): string => {
-                 const fileItem = ALL_FILES.find(f => f.name === fileName);
+                 const workspaceFiles = getWorkspaceFiles(decodedName);
+                 const fileItem = workspaceFiles.find(f => f.name === fileName);
                  if (!fileItem || !fileItem.parentId) return '';
                  
                  const buildPath = (parentId: string | null): string[] => {
                    if (!parentId) return [];
-                   const parent = ALL_FILES.find(f => f.id === parentId);
+                   const parent = workspaceFiles.find(f => f.id === parentId);
                    if (!parent) return [];
                    return [...buildPath(parent.parentId), parent.name];
                  };

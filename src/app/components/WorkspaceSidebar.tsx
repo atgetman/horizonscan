@@ -36,7 +36,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, Link, matchPath } from "react-router";
 import { clsx } from "clsx";
 import { createPortal } from "react-dom";
-import { ALL_FILES, FileSystemItem } from "../data/mockData";
+import { getWorkspaceFiles, FileSystemItem } from "../data/mockData";
 import { useWorkspaceNavigation } from "../contexts/WorkspaceNavigationContext";
 import { useDrag } from "react-dnd";
 import {
@@ -61,6 +61,7 @@ export function WorkspaceSidebar({ onToggle, dynamicOutputs = [] }: { onToggle: 
   const match = matchPath({ path: "/workspace/:workspaceName" }, location.pathname);
   const workspaceName = match?.params.workspaceName;
   const decodedName = decodeURIComponent(workspaceName || "Untitled Project");
+  const workspaceFiles = getWorkspaceFiles(decodedName);
   const { openItem, attachItem } = useWorkspaceNavigation();
 
   const [inputsOpen, setInputsOpen] = useState(true);
@@ -87,7 +88,7 @@ export function WorkspaceSidebar({ onToggle, dynamicOutputs = [] }: { onToggle: 
   const isArtifactsFolder = currentFolderId === 'artifacts';
 
   // Derived state for current folder items
-  const currentItems = isArtifactsFolder ? [] : ALL_FILES.filter(f => f.parentId === currentFolderId);
+  const currentItems = isArtifactsFolder ? [] : workspaceFiles.filter(f => f.parentId === currentFolderId);
   const isRoot = currentFolderId === null;
   
   // Breadcrumb generation
@@ -102,7 +103,7 @@ export function WorkspaceSidebar({ onToggle, dynamicOutputs = [] }: { onToggle: 
     
     let currentId = currentFolderId;
     while (currentId) {
-      const folder = ALL_FILES.find(f => f.id === currentId);
+      const folder = workspaceFiles.find(f => f.id === currentId);
       if (folder) {
         crumbs.unshift(folder);
         currentId = folder.parentId;
@@ -347,12 +348,12 @@ export function WorkspaceSidebar({ onToggle, dynamicOutputs = [] }: { onToggle: 
                    </button>
                    <div className="px-[12px] pt-[4px] pb-[8px]">
                      <div className="text-xs text-gray-600 mb-1.5">
-                       {ALL_FILES.length} of 200 files used
+                       {workspaceFiles.length} of 200 files used
                      </div>
                      <div className="bg-gray-200 h-1.5 rounded-full overflow-hidden">
                        <div 
                          className="h-full bg-[#1D4B34] rounded-full transition-all duration-300"
-                         style={{ width: `${(ALL_FILES.length / 200) * 100}%` }}
+                         style={{ width: `${(workspaceFiles.length / 200) * 100}%` }}
                        />
                      </div>
                    </div>
@@ -447,12 +448,12 @@ export function WorkspaceSidebar({ onToggle, dynamicOutputs = [] }: { onToggle: 
                       </button>
                       <div className="px-[12px] pt-[4px] pb-[8px]">
                         <div className="text-xs text-gray-600 mb-1.5">
-                          {ALL_FILES.length} of 200 files used
+                          {workspaceFiles.length} of 200 files used
                         </div>
                         <div className="bg-gray-200 h-1.5 rounded-full overflow-hidden">
                           <div 
                             className="h-full bg-[#1D4B34] rounded-full transition-all duration-300"
-                            style={{ width: `${(ALL_FILES.length / 200) * 100}%` }}
+                            style={{ width: `${(workspaceFiles.length / 200) * 100}%` }}
                           />
                         </div>
                       </div>

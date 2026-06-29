@@ -41,6 +41,52 @@ export const ALL_FILES: FileSystemItem[] = [
   { id: '322', parentId: '32', type: 'file', name: 'Vendor_Correspondence_002.pst' },
 ];
 
+// File tree for the "AI Governance" workspace
+export const AI_GOVERNANCE_FILES: FileSystemItem[] = [
+  // Root folders
+  { id: 'g1', parentId: null, type: 'folder', name: 'Policies & Standards' },
+  { id: 'g2', parentId: null, type: 'folder', name: 'Governance & Oversight' },
+  { id: 'g3', parentId: null, type: 'folder', name: 'Model Risk & Testing' },
+  { id: 'g4', parentId: null, type: 'folder', name: 'Regulatory & Assessments' },
+  { id: 'g5', parentId: null, type: 'folder', name: 'Forms & Templates' },
+
+  // Policies & Standards
+  { id: 'g11', parentId: 'g1', type: 'file', name: 'MFG-AI-POL-001_Governance_Policy.docx' },
+  { id: 'g12', parentId: 'g1', type: 'file', name: 'MFG-AI-POL-004_Third_Party_Vendor_Policy.docx' },
+  { id: 'g13', parentId: 'g1', type: 'file', name: 'MFG-AI-POL-005_Consumer_Disclosure_Standards.docx' },
+  { id: 'g14', parentId: 'g1', type: 'file', name: 'MFG-AI-ETH-001_Ethics_Principles.docx' },
+  { id: 'g15', parentId: 'g1', type: 'file', name: 'MFG-AI-RMF-001_Risk_Management_Framework.docx' },
+
+  // Governance & Oversight
+  { id: 'g21', parentId: 'g2', type: 'file', name: 'MFG-AI-CHT-001_Board_Oversight_Charter.docx' },
+  { id: 'g22', parentId: 'g2', type: 'file', name: 'MFG-AIGC-MIN-2026-05_Committee_Minutes.docx' },
+  { id: 'g23', parentId: 'g2', type: 'file', name: 'MFG-AI-IRP-001_Incident_Response_Plan.docx' },
+
+  // Model Risk & Testing
+  { id: 'g31', parentId: 'g3', type: 'table', name: 'MFG-AI-INV-001_Model_Inventory_Q2_2026.xlsx' },
+  { id: 'g32', parentId: 'g3', type: 'file', name: 'MFG-MRM-MDL001-2024_CreditScorePro_Validation.docx' },
+  { id: 'g33', parentId: 'g3', type: 'file', name: 'MFG-AI-LOG-002_Q1-2026_Bias_Testing_Log.docx' },
+
+  // Regulatory & Assessments
+  { id: 'g41', parentId: 'g4', type: 'file', name: 'MFG-AI-LOG-001_Regulatory_Watch_Log_June2026.docx' },
+  { id: 'g42', parentId: 'g4', type: 'file', name: 'MFG-AI-GAP-CO-2025_Colorado_Gap_Assessment.docx' },
+  { id: 'g43', parentId: 'g4', type: 'file', name: 'MFG-VA-DATASENSE-2026_Vendor_Assessment_DRAFT.docx' },
+
+  // Forms & Templates
+  { id: 'g51', parentId: 'g5', type: 'file', name: 'MFG-AI-FORM-001_AI_Use_Case_Intake_Form.docx' },
+  { id: 'g52', parentId: 'g5', type: 'file', name: 'MFG-AI-FORM-002_Model_Change_Request.docx' },
+  { id: 'g53', parentId: 'g5', type: 'file', name: 'MFG-AI-TMPL-003_Adverse_Action_Notice_Template.docx' },
+  { id: 'g54', parentId: 'g5', type: 'file', name: 'MFG-AI-FORM-004_Annual_Impact_Assessment_Template.docx' },
+];
+
+// Returns the file tree scoped to a given workspace.
+export function getWorkspaceFiles(workspaceName: string): FileSystemItem[] {
+  if (workspaceName === 'AI Governance') {
+    return AI_GOVERNANCE_FILES;
+  }
+  return ALL_FILES;
+}
+
 export const MOCK_CHATS: Record<string, React.ReactNode> = {
   "Research on SEC climate rules": (
     <div className="flex flex-col gap-6 p-8 max-w-3xl mx-auto">
