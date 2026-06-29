@@ -729,113 +729,109 @@ export const MOCK_FILES: Record<string, React.ReactNode | (() => React.ReactNode
       </p>
     </div>
   ),
-  "Reply Brief.docx": (
+  "Supplemental Comment Response.docx": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34] text-center">PLAINTIFF'S REPLY BRIEF</h1>
-      <h3 className="font-bold mt-4 mb-2">ARGUMENT</h3>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34] text-center">SUPPLEMENTAL RESPONSE TO STAFF COMMENTS</h1>
+      <h3 className="font-bold mt-4 mb-2">SUPPLEMENTAL ANALYSIS</h3>
       <p className="mb-4 text-[15px] leading-relaxed">
-        Defendant's opposition brief fails to address the core holding of <i>Smith v. Jones</i>, which establishes that the discovery rule applies to latent construction defects.
+        Following our initial response, the Staff requested additional detail on the assurance status of the Company's emissions metrics. The applicable rules permit a phase-in for assurance requirements based on filer status.
         <Citation 
            id="cit-r1"
-           type="case"
-           source="N.Y. Ct. App."
-           title="Smith v. Jones Construction Co."
-           snippet="Applying the discovery rule to latent defects in residential construction."
+           type="statute"
+           source="17 C.F.R. § 229.1506"
+           title="Regulation S-K, Item 1506 (Assurance)"
+           snippet="Establishes attestation requirements for emissions disclosures, subject to phase-in periods based on filer status."
          />
       </p>
       <p className="mb-4 text-[15px] leading-relaxed">
-        Defendant argues that the statute of limitations began to run when the concrete was poured. This is nonsensical. Plaintiff could not possibly have known of the defect until the foundation walls began to crack, months later.
+        The Company confirms that its Scope 1 and Scope 2 metrics are currently subject to limited assurance and that it will transition to the required assurance level in accordance with the applicable phase-in schedule.
       </p>
       <p className="mb-4 text-[15px] leading-relaxed">
-        Furthermore, Defendant's reliance on the "merger clause" in the contract is misplaced. A general merger clause does not bar a claim for fraudulent inducement where the fraud is extraneous to the contract.
+        The Company also confirms that its emissions are presented in gross terms and that it has not excluded any sources solely to present a more favorable metric.
         <Citation 
            id="cit-r2"
-           type="case"
-           source="N.Y. Ct. App."
-           title="Sabo v. Delman"
-           snippet="Held that a general merger clause does not bar a claim for fraud in the inducement."
+           type="statute"
+           source="17 C.F.R. § 229.1505"
+           title="Regulation S-K, Item 1505 (GHG Metrics)"
+           snippet="Requires gross presentation of Scope 1 and Scope 2 emissions and disclosure of methodology and boundaries."
          />
       </p>
       <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">CONCLUSION</h3>
       <p className="mb-4 text-[15px] leading-relaxed">
-        The Motion to Dismiss should be denied.
+        The Company believes these supplemental responses fully address the Staff's remaining comments.
       </p>
     </div>
   ),
-  "Smith Deposition.pdf": (
+  "Cloudspan Interview Notes.pdf": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Deposition of John Smith</h1>
-      <p className="font-mono text-sm mb-4">Date: August 14, 2024</p>
-      <p className="font-mono text-sm mb-8">Case: Hernandez v. Pacific Builders Inc.</p>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Vendor Interview: Cloudspan Inc.</h1>
+      <p className="font-mono text-sm mb-4">Date: February 14, 2026</p>
+      <p className="font-mono text-sm mb-8">Matter: GDPR Cross-Border Data Transfer Review</p>
       <div className="font-mono text-sm space-y-6">
          <div>
-            <p><span className="font-bold">Q:</span> Please state your name for the record.</p>
-            <p><span className="font-bold">A:</span> John Michael Smith.</p>
+            <p><span className="font-bold">Q:</span> Please state your name and role for the record.</p>
+            <p><span className="font-bold">A:</span> Daniel Okafor, VP of Security, Cloudspan Inc.</p>
          </div>
          <div>
-            <p><span className="font-bold">Q:</span> What is your current position at Pacific Builders?</p>
-            <p><span className="font-bold">A:</span> Senior Project Manager.</p>
+            <p><span className="font-bold">Q:</span> Where is Meridian's EU customer data physically stored?</p>
+            <p><span className="font-bold">A:</span> Primarily in our U.S. East region, with backups in the U.S. West region.</p>
          </div>
          <div>
-            <p><span className="font-bold">Q:</span> Were you the project manager for the Hernandez residence at 123 Main Street?</p>
-            <p><span className="font-bold">A:</span> Yes, I was.</p>
+            <p><span className="font-bold">Q:</span> Are Standard Contractual Clauses currently in place for that transfer?</p>
+            <p><span className="font-bold">A:</span> The master agreement references them, but the annexes were never completed.</p>
          </div>
          <div>
-            <p><span className="font-bold">Q:</span> Did you order the concrete for the foundation?</p>
-            <p><span className="font-bold">A:</span> My assistant placed the order, but I approved it.</p>
+            <p><span className="font-bold">Q:</span> Has a transfer impact assessment been performed?</p>
+            <p><span className="font-bold">A:</span> Not formally. We rely on our standard security documentation.</p>
          </div>
          <div>
-            <p><span className="font-bold">Q:</span> Did you know at the time that the order was for Grade C concrete, not Grade A?</p>
-            <p><span className="font-bold">A:</span> (Pause) I knew there were supply issues with Grade A. We had to keep the project moving.</p>
+            <p><span className="font-bold">Q:</span> Is the EU data encrypted at rest, and who holds the keys?</p>
+            <p><span className="font-bold">A:</span> It is encrypted at rest, but we manage the keys, not Meridian.</p>
          </div>
          <div>
-            <p><span className="font-bold">Q:</span> So you knowingly authorized the substitution?</p>
-            <p><span className="font-bold">A:</span> I authorized the purchase of available materials. It was a business decision.</p>
+             <p><span className="font-bold">Q:</span> What is your breach-notification commitment to Meridian?</p>
+             <p><span className="font-bold">A:</span> The contract currently provides for notice within 14 days.</p>
          </div>
          <div>
-             <p><span className="font-bold">Q:</span> Did you inform Ms. Hernandez of this substitution?</p>
-             <p><span className="font-bold">A:</span> I don't recall specific conversations.</p>
+             <p><span className="font-bold">Q:</span> Do any sub-processors receive this data?</p>
+             <p><span className="font-bold">A:</span> Yes, we use a downstream analytics provider.</p>
          </div>
          <div>
-             <p><span className="font-bold">Q:</span> Did you review the progress reports sent to Ms. Hernandez?</p>
-             <p><span className="font-bold">A:</span> Yes.</p>
-         </div>
-         <div>
-             <p><span className="font-bold">Q:</span> And those reports stated that Grade A concrete was used, correct?</p>
-             <p><span className="font-bold">A:</span> That was the template language, yes.</p>
+             <p><span className="font-bold">Q:</span> Are flow-down terms in place with that sub-processor?</p>
+             <p><span className="font-bold">A:</span> I would have to confirm. I'm not certain they mirror our terms.</p>
          </div>
       </div>
     </div>
   ),
-  "Jones Deposition.pdf": (
+  "Beacon Analytics Interview Notes.pdf": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Deposition of Sarah Jones</h1>
-      <p className="font-mono text-sm mb-4">Date: August 15, 2024</p>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Vendor Interview: Beacon Analytics</h1>
+      <p className="font-mono text-sm mb-4">Date: February 15, 2026</p>
       <div className="font-mono text-sm space-y-6">
          <div>
-             <p><span className="font-bold">Q:</span> What is your role at Pacific Builders?</p>
-             <p><span className="font-bold">A:</span> I am the Chief Structural Engineer.</p>
+             <p><span className="font-bold">Q:</span> What is your role at Beacon Analytics?</p>
+             <p><span className="font-bold">A:</span> I am the Data Protection Officer.</p>
          </div>
          <div>
-             <p><span className="font-bold">Q:</span> Did you review the plans for the Hernandez foundation?</p>
+             <p><span className="font-bold">Q:</span> Did you review the data fields Meridian shares with you?</p>
              <p><span className="font-bold">A:</span> Yes.</p>
          </div>
          <div>
-             <p><span className="font-bold">Q:</span> Would Grade C concrete be sufficient for those plans?</p>
-             <p><span className="font-bold">A:</span> No. The load calculations assume 5,000 psi concrete.</p>
+             <p><span className="font-bold">Q:</span> Are pseudonymized identifiers sufficient for your analytics?</p>
+             <p><span className="font-bold">A:</span> No. Our current models also ingest raw account identifiers.</p>
          </div>
          <div>
              <p><span className="font-bold">Q:</span> Why?</p>
-             <p><span className="font-bold">A:</span> Because of the soil composition. It's clay-heavy. You need the extra strength to prevent shearing.</p>
+             <p><span className="font-bold">A:</span> The legacy pipeline was built before data-minimization controls were added. It pulls more than it needs.</p>
          </div>
          <div>
-             <p><span className="font-bold">Q:</span> Were you consulted about the substitution?</p>
-             <p><span className="font-bold">A:</span> No. I found out when the cracks appeared.</p>
+             <p><span className="font-bold">Q:</span> Were you consulted before that data flow was established?</p>
+             <p><span className="font-bold">A:</span> No. I found out during this review.</p>
          </div>
       </div>
     </div>
   ),
-  "Production Log.xlsx": (
+  "Data Collection Log.xlsx": (
     <div className="flex flex-col h-full bg-white text-[#212223] text-sm font-sans">
       {/* Spreadsheet Grid */}
       <div className="flex-1 overflow-auto">
@@ -852,9 +848,9 @@ export const MOCK_FILES: Record<string, React.ReactNode | (() => React.ReactNode
             {/* Rows */}
 
             {[
-                ['VOL-001', '2024-09-01', '4.2 GB', 'Email Archives (PST)'],
-                ['VOL-002', '2024-09-15', '1.8 GB', 'PDF Drawings'],
-                ['VOL-003', '2024-10-01', '0.5 GB', 'Financial Records']
+                ['VOL-001', '2026-02-01', '4.2 GB', 'Vendor Correspondence (PST)'],
+                ['VOL-002', '2026-02-15', '1.8 GB', 'Data Processing Agreements'],
+                ['VOL-003', '2026-03-01', '0.5 GB', 'Data Flow Mapping Records']
             ].map((row, idx) => (
                 <div key={idx} className="flex border-b border-[#E5E5E5]">
                     <div className="w-10 shrink-0 border-r border-[#E5E5E5] bg-[#F5F5F5] flex items-center justify-center font-semibold text-gray-600">{idx + 1}</div>
@@ -886,215 +882,215 @@ export const MOCK_FILES: Record<string, React.ReactNode | (() => React.ReactNode
       </div>
     </div>
   ),
-  "Batch 001.pst": (
+  "Vendor_Correspondence_001.pst": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Email Archive: Batch 001</h1>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Email Archive: Vendor Correspondence 001</h1>
       <div className="p-4 bg-gray-50 border border-gray-200 rounded mb-4">
         <p className="font-bold">Metadata</p>
-        <p>Custodian: John Smith</p>
-        <p>Date Range: Jan 2023 - Dec 2024</p>
+        <p>Custodian: Cloudspan Inc.</p>
+        <p>Date Range: Jan 2024 - Dec 2025</p>
         <p>Item Count: 1,402</p>
       </div>
       <p className="text-[15px]">This file is an Outlook Data File (.pst) containing email communications. Use the "Analyze document sets" tool to search and review contents.</p>
     </div>
   ),
-  "Batch 002.pst": (
+  "Vendor_Correspondence_002.pst": (
     <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Email Archive: Batch 002</h1>
+      <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Email Archive: Vendor Correspondence 002</h1>
       <div className="p-4 bg-gray-50 border border-gray-200 rounded mb-4">
         <p className="font-bold">Metadata</p>
-        <p>Custodian: Sarah Jones</p>
-        <p>Date Range: Jan 2023 - Dec 2024</p>
+        <p>Custodian: Beacon Analytics</p>
+        <p>Date Range: Jan 2024 - Dec 2025</p>
         <p>Item Count: 850</p>
       </div>
       <p className="text-[15px]">This file is an Outlook Data File (.pst) containing email communications.</p>
     </div>
   ),
-  "Motion to Dismiss Draft": (
+  "SEC Comment Response Draft": (
      <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-      <h1 className="text-2xl font-bold mb-6 text-center text-[#1D4B34]">Motion to Dismiss - DRAFT</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center text-[#1D4B34]">SEC Comment Letter Response - DRAFT</h1>
       <div className="bg-yellow-50 border border-yellow-200 rounded p-4 mb-8 text-sm text-yellow-800">
         <strong>STATUS:</strong> Working Draft v.0.1<br/>
         <strong>LAST EDITED:</strong> Just now<br/>
-        <strong>AUTHOR:</strong> CoCounsel AI
+        <strong>AUTHOR:</strong> HorizonScan AI
       </div>
 
       <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">PRELIMINARY STATEMENT</h3>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Plaintiff Maria Hernandez ("Plaintiff") attempts to transform a simple breach of contract dispute into a tort action to recover punitive damages that are not available under New York contract law. Her negligence and fraudulent misrepresentation claims are duplicative of her breach of contract claim and are barred by the economic loss rule. Accordingly, Counts II and III of the Complaint must be dismissed as a matter of law.
+         Meridian Financial Group, Inc. ("Meridian" or the "Company") respectfully submits this response to the Staff's comment letter regarding its Annual Report on Form 10-K. The Company addresses the Staff's comments concerning its climate-related governance disclosures and greenhouse gas emissions metrics below.
        </p>
        
-       <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">ARGUMENT</h3>
-       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">I. The Economic Loss Rule Bars Plaintiff's Negligence Claim</h4>
+       <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">RESPONSES</h3>
+       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">I. Governance of Climate-Related Risks</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Under New York law, a plaintiff cannot recover in tort for purely economic losses resulting from a breach of contract. 
+         The rules require a registrant to describe the board's oversight of climate-related risks and management's role in assessing and managing them. 
          <Citation 
            id="cit-d1"
-           type="case"
-           source="96 N.Y.2d 280 (2001)"
-           title="532 Madison Ave. Gourmet Foods, Inc. v. Finlandia Ctr., Inc."
-           snippet='Held that "a plaintiff cannot recover in tort for purely economic losses resulting from a breach of contract" absent personal injury or property damage.'
+           type="statute"
+           source="17 C.F.R. § 229.1501"
+           title="Regulation S-K, Item 1501 (Governance)"
+           snippet="Requires disclosure of the board's oversight of climate-related risks and management's role in assessing and managing such risks."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Here, Plaintiff alleges only economic damages—specifically, the cost to repair the foundation—arising from Defendant's alleged failure to perform under the Contract. Because Plaintiff has not alleged any personal injury or damage to property other than the subject of the contract itself, her negligence claim (Count III) is barred.
+         The Company advises the Staff that its Board Risk Committee oversees climate-related risks and receives quarterly reports from the Chief Risk Officer. The Company will revise its disclosure to identify the Risk Committee and the reporting cadence in future filings.
        </p>
 
-       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">II. The Fraudulent Misrepresentation Claim Is Duplicative of the Breach of Contract Claim</h4>
+       <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">II. Greenhouse Gas Emissions Metrics</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         A fraud claim cannot stand where the only fraud alleged is that the defendant entered into a contract with no intention of performing it. 
+         Where a registrant discloses Scope 1 and Scope 2 emissions, it must describe the methodology, boundaries, and assurance status of those metrics. 
          <Citation 
            id="cit-d2"
-           type="case"
-           source="2d Cir."
-           title="Bridgestone/Firestone, Inc. v. Recovery Credit Servs., Inc."
-           snippet="Established that a fraud claim cannot be maintained when the only fraud alleged is that the defendant entered into a contract with no intention of performing it."
+           type="statute"
+           source="17 C.F.R. § 229.1505"
+           title="Regulation S-K, Item 1505 (GHG Metrics)"
+           snippet="Requires disclosure of the methodology, organizational boundaries, and assurance obtained with respect to greenhouse gas emissions metrics."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Plaintiff's fraud allegations (Count II) are based on the same facts as her breach of contract claim: that Defendant used Grade C concrete instead of Grade A. This is a classic breach of performance, not a separate tort.
+         The Company confirms that its emissions are calculated using the operational control approach consistent with the GHG Protocol and are currently subject to limited assurance.
        </p>
 
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         New York courts consistently dismiss fraud claims that are merely duplicative of breach of contract claims. To maintain a separate fraud claim, a plaintiff must allege: (1) a legal duty separate from the duty to perform under the contract; (2) a fraudulent misrepresentation collateral or extraneous to the contract; or (3) special damages that are caused by the misrepresentation and unrecoverable as contract damages.
+         The Company will expand its disclosure to describe the organizational boundaries, methodology, emission factors, and assurance level applied to these metrics, and will transition to the required level of assurance in accordance with the applicable phase-in schedule.
          <Citation 
            id="cit-d3"
-           type="case"
-           source="S.D.N.Y."
-           title="Telecom Int'l Am., Ltd. v. AT&T Corp."
-           snippet="Held that a plaintiff must allege a legal duty separate from the duty to perform under the contract to maintain a fraud claim."
+           type="statute"
+           source="17 C.F.R. § 229.1506"
+           title="Regulation S-K, Item 1506 (Assurance)"
+           snippet="Establishes attestation requirements for emissions disclosures, subject to phase-in periods based on filer status."
          />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Plaintiff has failed to allege any of these elements.
+         The Company believes these revisions will fully address the Staff's comments.
        </p>
     </div>
   ),
-  "New York Freedom of Speech": (
+  "CCPA Consumer Rights Research": (
      <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-       <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Research: NY Freedom of Speech</h1>
+       <h1 className="text-xl font-bold mb-4 text-[#1D4B34]">Research: CCPA/CPRA Consumer Rights</h1>
        <div className="bg-gray-50 border border-gray-200 p-4 mb-6 rounded">
          <p className="text-sm font-bold text-gray-700 uppercase mb-1">Source</p>
-         <p className="text-[15px] font-serif">NY State Constitution, Article I, Section 8</p>
+         <p className="text-[15px] font-serif">California Civil Code § 1798.100 et seq.</p>
        </div>
 
-       <h3 className="font-bold mt-4 mb-2">I. Constitutional Text</h3>
+       <h3 className="font-bold mt-4 mb-2">I. Statutory Text</h3>
        <p className="mb-4 text-[15px] leading-relaxed">
-         "Every citizen may freely speak, write and publish his or her sentiments on all subjects, being responsible for the abuse of that right; and no law shall be passed to restrain or abridge the liberty of speech or of the press."
+         "A consumer shall have the right to request that a business that collects a consumer's personal information disclose to that consumer the categories and specific pieces of personal information the business has collected."
        </p>
 
-       <h3 className="font-bold mt-6 mb-2">II. Comparison with First Amendment</h3>
+       <h3 className="font-bold mt-6 mb-2">II. Comparison with Other State Laws</h3>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         While the First Amendment to the U.S. Constitution provides a floor for free speech protections, state constitutions may provide broader guarantees. The New York Court of Appeals has long recognized that Article I, Section 8 is "broader" than its federal counterpart.
+         While many state privacy statutes provide a baseline set of consumer rights, California's CCPA, as amended by the CPRA, provides among the broadest protections. The California Privacy Protection Agency has interpreted these rights expansively, particularly with respect to sensitive personal information.
          <Citation 
             id="cit-ny1"
-            type="case"
-            source="N.Y. Ct. App."
-            title="Immuno AG. v. Moor-Jankowski"
-            snippet="Noting that the state constitution's free speech provision is often interpreted more broadly than the First Amendment, particularly in libel cases."
+            type="statute"
+            source="Cal. Civ. Code § 1798.121"
+            title="Right to Limit Use of Sensitive Personal Information"
+            snippet="Grants consumers the right to direct a business to limit its use of sensitive personal information to specified purposes."
           />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         This broader protection is particularly evident in cases involving:
+         This broader protection is particularly evident in areas including:
        </p>
        <ul className="list-disc pl-5 mb-4 text-[15px] space-y-2">
-         <li><strong>Defamation:</strong> New York requires a plaintiff to prove "gross irresponsibility" by a publisher, a standard that can be more protective of the press than the federal "actual malice" standard for public figures.</li>
-         <li><strong>Prior Restraint:</strong> The state constitution has been interpreted to be even more hostile to prior restraints on speech than the First Amendment.
+         <li><strong>Right to Delete:</strong> Consumers may request deletion of their personal information, subject to enumerated exceptions such as legal-obligation retention.</li>
+         <li><strong>Right to Opt Out of Sale/Sharing:</strong> The CPRA expanded the opt-out right to cover the "sharing" of personal information for cross-context behavioral advertising.
            <Citation 
               id="cit-ny2"
-              type="case"
-              source="N.Y. Ct. App."
-              title="O'Neill v. Oakgrove Constr., Inc."
-              snippet="Discussing the strong presumption against prior restraints under the New York Constitution."
+              type="statute"
+              source="Cal. Civ. Code § 1798.120"
+              title="Right to Opt Out of Sale or Sharing"
+              snippet="Grants consumers the right to opt out of the sale or sharing of their personal information."
             />
          </li>
        </ul>
 
-       <h3 className="font-bold mt-6 mb-2">III. Speech on Private Property</h3>
+       <h3 className="font-bold mt-6 mb-2">III. Application to Service Providers</h3>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Unlike the federal constitution, which generally does not apply to private actors, the New York Constitution has been interpreted in limited circumstances to protect speech on private property that functions as a public forum, such as large shopping malls. However, this "state action" doctrine is narrow.
+         Unlike a sale, disclosures to a "service provider" under a compliant contract are not treated as a sale, provided the contract restricts the service provider's use of the data. However, this exemption is narrow and depends on appropriate contractual terms being in place.
          <Citation 
             id="cit-ny3"
-            type="case"
-            source="N.Y. Ct. App."
-            title="SHAD Alliance v. Smith Haven Mall"
-            snippet="Holding that the state constitution does not compel a private shopping mall owner to permit political leafleting."
+            type="statute"
+            source="Cal. Civ. Code § 1798.140(ag)"
+            title="Service Provider Definition"
+            snippet="Defines a service provider and the contractual restrictions required to qualify for the exemption from 'sale' treatment."
           />
        </p>
      </div>
    ),
-  "Memo for New York Freedom": (
+  "Memo on Employee Data Privacy": (
      <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
       <h1 className="text-xl font-bold mb-4 text-[#1D4B34] text-center">MEMORANDUM</h1>
        <div className="mb-8 border-b border-gray-300 pb-4">
          <div className="grid grid-cols-[80px_1fr] gap-y-2 text-[15px]">
            <span className="font-bold text-gray-600">TO:</span>
-           <span>Senior Partner</span>
+           <span>General Counsel</span>
            
            <span className="font-bold text-gray-600">FROM:</span>
-           <span>Associate</span>
+           <span>Privacy Compliance Team</span>
            
            <span className="font-bold text-gray-600">DATE:</span>
-           <span>October 20, 2024</span>
+           <span>February 20, 2026</span>
            
            <span className="font-bold text-gray-600">RE:</span>
-           <span>Employee Political Speech and "Moonlighting" Protections in New York</span>
+           <span>Employee Personal Data and Cross-Border HR Transfers</span>
          </div>
        </div>
 
        <h3 className="font-bold mt-6 mb-2 text-sm uppercase tracking-wide">Question Presented</h3>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         To what extent does New York law protect a private sector employee from termination for engaging in political speech or activities outside of working hours?
+         To what extent must Meridian apply GDPR safeguards to the transfer of EU employee personal data to its U.S. HR systems?
        </p>
 
        <h3 className="font-bold mt-6 mb-2 text-sm uppercase tracking-wide">Brief Answer</h3>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         While the First Amendment and the New York Constitution generally do not restrain private employers, New York Labor Law § 201-d provides statutory protection. It prohibits employers from discriminating against employees for their "political activities" outside of working hours, off the employer's premises, and without use of the employer's equipment. However, this protection is limited to "running for public office, campaigning for a candidate... or participating in fund-raising activities." It does not necessarily cover general political speech or social media posts.
+         The GDPR applies to employee (HR) personal data in the same manner as customer data. Transfers of EU employee data to Meridian's U.S. systems are restricted transfers and require an appropriate transfer mechanism, such as Standard Contractual Clauses, together with a documented transfer impact assessment. Employee consent is generally not a reliable lawful basis in the employment context due to the imbalance of power.
        </p>
 
        <h3 className="font-bold mt-6 mb-2 text-sm uppercase tracking-wide">Discussion</h3>
-       <h4 className="font-bold mt-4 mb-2 text-[15px]">A. Constitutional Protections (or lack thereof)</h4>
+       <h4 className="font-bold mt-4 mb-2 text-[15px]">A. Scope of Protected Personal Data</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         It is axiomatic that constitutional free speech guarantees protect against government action, not private conduct. Therefore, a private employer is generally free to terminate an at-will employee for their speech, even if that speech is political in nature.
+         The GDPR protects all personal data of identified or identifiable natural persons, including employees. There is no general carve-out for HR data.
          <Citation 
             id="cit-mny1"
-            type="case"
-            source="N.Y. Sup. Ct."
-            title="Novak v. The Sisters of the Heart of Mary"
-            snippet="Reaffirming that private employers are not subject to the First Amendment's constraints."
+            type="statute"
+            source="GDPR Art. 4(1)"
+            title="Definition of personal data"
+            snippet="Defines personal data as any information relating to an identified or identifiable natural person."
           />
        </p>
 
-       <h4 className="font-bold mt-4 mb-2 text-[15px]">B. New York Labor Law § 201-d</h4>
+       <h4 className="font-bold mt-4 mb-2 text-[15px]">B. Lawful Basis in the Employment Context</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Enacted to prevent employers from regulating the off-duty conduct of their workforce, Section 201-d makes it unlawful to discharge an employee because of their "political activities."
+         Because consent must be freely given, the EDPB has cautioned that consent is rarely a valid basis for employee data processing. Employers should instead rely on contract necessity, legal obligation, or legitimate interests.
          <Citation 
             id="cit-mny2"
             type="statute"
-            source="NY Labor Law § 201-d"
-            title="Discrimination against engagement in certain activities"
-            snippet="Prohibits discrimination based on political activities, legal use of consumable products, and legal recreational activities outside work hours."
+            source="GDPR Art. 6"
+            title="Lawfulness of processing"
+            snippet="Enumerates the lawful bases for processing, including contract, legal obligation, and legitimate interests."
           />
        </p>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         The definition of "political activities" is specific: running for public office, campaigning for a candidate, or fundraising for a candidate or party. Courts have strictly construed this definition. For example, in <i>Cavanaugh v. Doherty</i>, the court held that an employee's argument with a supervisor about a political issue was not protected "political activity" under the statute.
+         For HR transfers to the U.S., the Company should rely on Standard Contractual Clauses between the EU entity and the U.S. recipient, supported by a transfer impact assessment that evaluates U.S. surveillance laws.
        </p>
 
-       <h4 className="font-bold mt-4 mb-2 text-[15px]">C. "Recreational Activities" Catch-All?</h4>
+       <h4 className="font-bold mt-4 mb-2 text-[15px]">C. Supplementary Measures</h4>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Plaintiffs have attempted to argue that political speech falls under the statute's protection for "legal recreational activities." However, the Court of Appeals in <i>Hudson v. Goldman Sachs</i> rejected an expansive reading of this term, limiting it to leisure activities like sports or hobbies.
+         Following Schrems II, the Company should adopt supplementary measures, such as encryption and access controls, where the transfer impact assessment identifies residual risk.
          <Citation 
             id="cit-mny3"
             type="case"
-            source="N.Y. Ct. App."
-            title="Hudson v. Goldman Sachs"
-            snippet="Narrowly construing 'recreational activities' under § 201-d."
+            source="CJEU"
+            title="Data Protection Commissioner v. Facebook Ireland (Schrems II)"
+            snippet="Requires exporters to assess the destination country's protections and adopt supplementary measures where necessary."
           />
        </p>
 
        <h3 className="font-bold mt-6 mb-2 text-sm uppercase tracking-wide">Conclusion</h3>
        <p className="mb-4 text-[15px] leading-relaxed text-justify">
-         Unless the employee's conduct fits squarely within the narrow definition of "political activities" (campaigning/fundraising), New York law offers little protection against termination for off-duty political speech.
+         Meridian should execute SCCs and complete transfer impact assessments for its EU HR data transfers, and should avoid relying on employee consent as the lawful basis.
        </p>
     </div>
   ),

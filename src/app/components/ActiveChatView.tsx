@@ -183,8 +183,8 @@ function StepItem({ iconChar, text, iconColor }: { iconChar: string, text: strin
 function Plan() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full" data-name="Plan">
-      <StepItem iconChar="" text="Summarize complaint" iconColor="#d64000" />
-      <StepItem iconChar="" text="Choose arguments" />
+      <StepItem iconChar="" text="Review staff comments" iconColor="#d64000" />
+      <StepItem iconChar="" text="Choose responses" />
       <StepItem iconChar="" text="Choose authorities" />
       <StepItem iconChar="" text="Distinguish citations" />
       <StepItem iconChar="" text="Choose a template" />
@@ -239,10 +239,10 @@ function Text({ isContentGenerating, artifactCategory, artifactName }: { isConte
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start leading-[0] min-h-px min-w-px relative whitespace-nowrap" data-name="text">
       <div className={`flex flex-col font-['Clario:Medium',sans-serif] justify-center min-w-full not-italic overflow-hidden relative shrink-0 text-[14px] text-ellipsis w-[min-content] ${isContentGenerating ? 'text-[#8a8a8a] animate-shimmer' : 'text-[#212223]'}`}>
-        <p className="leading-[1.35] overflow-hidden font-medium">{artifactCategory || 'Motion draft'}</p>
+        <p className="leading-[1.35] overflow-hidden font-medium">{artifactCategory || 'Response draft'}</p>
       </div>
       <div className="flex flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center relative shrink-0 text-[#404040] text-[12px]">
-        <p className="leading-[1.35]">{artifactName || 'Motion to Dismiss - Personal Jurisdiction'}</p>
+        <p className="leading-[1.35]">{artifactName || 'SEC Comment Letter Response'}</p>
       </div>
     </div>
   );
@@ -417,7 +417,7 @@ function MessageContent({ onArtifactClick }: { onArtifactClick?: () => void }) {
     <div className="content-stretch flex flex-col gap-[12px] isolate items-start max-w-[800px] relative shrink-0 w-full" data-name="message content">
       <NonSkillHeader />
       <div className="flex flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-full relative shrink-0 text-[#212223] text-[15px] w-[min-content] z-[2]">
-        <p className="leading-[1.5] whitespace-pre-wrap">I've outlined a motion to dismiss based on the complaint and precedent provided.</p>
+        <p className="leading-[1.5] whitespace-pre-wrap">I've outlined an SEC comment letter response based on the disclosure rules and guidance provided.</p>
       </div>
       <Intake onArtifactClick={onArtifactClick} />
     </div>
@@ -537,8 +537,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [isStreamingComplete, setIsStreamingComplete] = useState(!!restoredScan);
   const [showOpeningMessage, setShowOpeningMessage] = useState(false);
   const [hasDocumentOpened, setHasDocumentOpened] = useState(false);
-  const [artifactName, setArtifactName] = useState('Motion to Dismiss');
-  const [artifactCategory, setArtifactCategory] = useState('Motion');
+  const [artifactName, setArtifactName] = useState('SEC Comment Letter Response');
+  const [artifactCategory, setArtifactCategory] = useState('Response');
   const [artifactSummary, setArtifactSummary] = useState('');
   const [showPreparingFinalOutput, setShowPreparingFinalOutput] = useState(false);
   const [taskType, setTaskType] = useState<'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis'>(restoredScan ? 'regulatory-scan' : 'draft'); // Track task type
@@ -721,41 +721,41 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       }
       
       // Extract topic for research tasks
-      if (userPrompt.includes('jurisdiction')) {
-        topic = 'Personal Jurisdiction Requirements';
-        setArtifactName('Personal Jurisdiction Research');
+      if (userPrompt.includes('transfer') || userPrompt.includes('cross-border')) {
+        topic = 'Cross-Border Data Transfer Requirements';
+        setArtifactName('Data Transfer Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('statute of limitations')) {
-        topic = 'Statute of Limitations Analysis';
-        setArtifactName('Statute of Limitations Research');
+      } else if (userPrompt.includes('climate') || userPrompt.includes('disclosure')) {
+        topic = 'SEC Climate Disclosure Requirements';
+        setArtifactName('Climate Disclosure Research');
         setArtifactCategory('Research memo');
       } else if (userPrompt.includes('gdpr') || userPrompt.includes('data privacy') || userPrompt.includes('privacy')) {
         topic = 'GDPR Compliance Requirements';
         setArtifactName('GDPR Compliance Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('discovery sanction')) {
-        topic = 'Discovery Sanctions Standards';
-        setArtifactName('Discovery Sanctions Research');
+      } else if (userPrompt.includes('ai act') || userPrompt.includes('ai governance')) {
+        topic = 'EU AI Act Requirements';
+        setArtifactName('AI Governance Research');
         setArtifactCategory('Research memo');
       } else if (userPrompt.includes('employment') || userPrompt.includes('discrimination')) {
-        topic = 'Employment Discrimination Standards';
-        setArtifactName('Employment Law Research');
+        topic = 'Employee Data Privacy Standards';
+        setArtifactName('Employee Privacy Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('patent')) {
-        topic = 'Patent Eligibility Analysis';
-        setArtifactName('Patent Law Research');
+      } else if (userPrompt.includes('aml') || userPrompt.includes('kyc')) {
+        topic = 'AML/KYC Program Requirements';
+        setArtifactName('AML/KYC Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('force majeure')) {
-        topic = 'Force Majeure Analysis';
-        setArtifactName('Force Majeure Research');
+      } else if (userPrompt.includes('ccpa') || userPrompt.includes('state privacy')) {
+        topic = 'CCPA/CPRA Compliance Analysis';
+        setArtifactName('CCPA Compliance Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('class action')) {
-        topic = 'Class Action Certification';
-        setArtifactName('Class Action Research');
+      } else if (userPrompt.includes('vendor')) {
+        topic = 'Vendor Risk Requirements';
+        setArtifactName('Vendor Risk Research');
         setArtifactCategory('Research memo');
       } else {
-        topic = 'Legal Research Analysis';
-        setArtifactName('Legal Research Memo');
+        topic = 'Compliance Research Analysis';
+        setArtifactName('Compliance Research Memo');
         setArtifactCategory('Research memo');
       }
     } else if (detectedType === 'analyze') {
@@ -768,8 +768,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       setArtifactName('M&A regulatory findings');
       setArtifactCategory('Regulatory scan');
     } else {
-      setArtifactName('Motion to Dismiss');
-      setArtifactCategory('Motion');
+      setArtifactName('SEC Comment Letter Response');
+      setArtifactCategory('Response');
     }
     
     setTaskType(detectedType);
@@ -813,13 +813,13 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       window.dispatchEvent(
         new CustomEvent("horizonScanAlert", {
           detail: {
-            title: "Documents impacted in Hernandez litigation",
-            detail: "New labor law guidance affects 3 documents in Hernandez v. Pacific Builders",
-            workspace: "Hernandez v. Pacific Builders Inc.",
+            title: "Documents impacted by SEC climate disclosure update",
+            detail: "New SEC climate disclosure guidance affects 3 documents in the SEC Climate Disclosure Program",
+            workspace: "SEC Climate Disclosure Program",
             documents: [
-              { name: "Motion to Dismiss.docx", clause: "Memorandum of Law §II", impact: "high" },
-              { name: "Complaint.docx", clause: "Negligence Claims", impact: "medium" },
-              { name: "Personal Jurisdiction Motion.docx", clause: "Due Process §III", impact: "low" },
+              { name: "SEC Comment Letter Response.docx", clause: "Governance Disclosure §I", impact: "high" },
+              { name: "Compliance Risk Assessment.docx", clause: "Securities Disclosure", impact: "medium" },
+              { name: "Memo on Disclosure Obligations.docx", clause: "Emissions Metrics §II", impact: "low" },
             ],
           },
         })
@@ -1086,13 +1086,13 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       window.dispatchEvent(
         new CustomEvent("horizonScanAlert", {
           detail: {
-            title: "Documents impacted in Hernandez litigation",
-            detail: "New labor law guidance affects 3 documents in Hernandez v. Pacific Builders",
-            workspace: "Hernandez v. Pacific Builders Inc.",
+            title: "Documents impacted by SEC climate disclosure update",
+            detail: "New SEC climate disclosure guidance affects 3 documents in the SEC Climate Disclosure Program",
+            workspace: "SEC Climate Disclosure Program",
             documents: [
-              { name: "Motion to Dismiss.docx", clause: "Memorandum of Law §II", impact: "high" },
-              { name: "Complaint.docx", clause: "Negligence Claims", impact: "medium" },
-              { name: "Personal Jurisdiction Motion.docx", clause: "Due Process §III", impact: "low" },
+              { name: "SEC Comment Letter Response.docx", clause: "Governance Disclosure §I", impact: "high" },
+              { name: "Compliance Risk Assessment.docx", clause: "Securities Disclosure", impact: "medium" },
+              { name: "Memo on Disclosure Obligations.docx", clause: "Emissions Metrics §II", impact: "low" },
             ],
           },
         })
@@ -1809,7 +1809,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       hasAddedArtifactRef.current = true;
       // Add artifact to sidebar outputs with complete chat messages
       onArtifactCreated?.({ 
-        name: 'Motion to Dismiss - Personal Jurisdiction', 
+        name: 'SEC Comment Letter Response', 
         type: 'doc',
         sourceChatMessages: messages 
       });
@@ -1915,7 +1915,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   };
 
   const handleArtifactClick = useCallback(() => {
-      onOpenTab?.({ name: artifactName || 'Motion to Dismiss - Personal Jurisdiction', type: 'doc' });
+      onOpenTab?.({ name: artifactName || 'SEC Comment Letter Response', type: 'doc' });
   }, [onOpenTab, artifactName]);
 
   // Track if we've already auto-opened to prevent repeated opens
@@ -2741,10 +2741,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <FileText className="size-5 text-[#666666] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Research Memo: Jurisdiction Analysis
+                             Research Memo: Disclosure Analysis
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Summary of key precedents and minimum contacts framework
+                             Summary of SEC climate disclosure requirements
                            </p>
                          </div>
                        </motion.div>
