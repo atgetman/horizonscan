@@ -477,19 +477,27 @@ export function PromptInput({
         <div className="flex items-center justify-between">
           {/* Left buttons */}
           <div className="flex items-center gap-2">
-            <button
-              ref={addMenuButtonRef}
-              type="button"
-              onClick={handleAddMenuClick}
-              className={`w-10 h-10 flex items-center justify-center rounded-lg bg-white text-[#1d4b34] transition-colors ${
-                isAddMenuOpen
-                  ? 'border-2 border-[#1d4b34]'
-                  : 'border border-[#d4d4d4] hover:bg-[#f5f5f5]'
-              }`}
-              title="Add content"
-            >
-              <Plus className="size-5" strokeWidth={2} />
-            </button>
+            <div className="relative group">
+              <button
+                ref={addMenuButtonRef}
+                type="button"
+                onClick={handleAddMenuClick}
+                className={`w-9 h-9 flex items-center justify-center rounded-lg text-[#1d4b34] transition-colors ${
+                  isAddMenuOpen ? 'bg-[#f0f0f0]' : 'hover:bg-[#f5f5f5]'
+                }`}
+                aria-label="Attach"
+              >
+                <Plus className="size-5" strokeWidth={2} />
+              </button>
+              {!isAddMenuOpen && (
+                <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="relative bg-[#363636] text-white text-[13px] font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">
+                    Attach
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-[6px] border-transparent border-t-[#363636]" />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right button */}
