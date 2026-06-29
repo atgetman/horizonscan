@@ -20,13 +20,13 @@ export interface HorizonScanAlert {
 }
 
 const DEFAULT_ALERT: Omit<HorizonScanAlert, "id"> = {
-  title: "Documents impacted in Hernandez litigation",
-  detail: "New labor law guidance affects 3 documents in Hernandez v. Pacific Builders",
-  workspace: "Hernandez v. Pacific Builders Inc.",
+  title: "Documents impacted by SEC climate disclosure update",
+  detail: "New SEC climate disclosure guidance affects 3 documents in the SEC Climate Disclosure Program",
+  workspace: "SEC Climate Disclosure Program",
   documents: [
-    { name: "Motion to Dismiss.docx", clause: "Memorandum of Law §II", impact: "high" },
-    { name: "Complaint.docx", clause: "Negligence Claims", impact: "medium" },
-    { name: "Personal Jurisdiction Motion.docx", clause: "Due Process §III", impact: "low" },
+    { name: "SEC Comment Letter Response.docx", clause: "Governance Disclosure §I", impact: "high" },
+    { name: "Compliance Risk Assessment.docx", clause: "Securities Disclosure", impact: "medium" },
+    { name: "Memo on Disclosure Obligations.docx", clause: "Emissions Metrics §II", impact: "low" },
   ],
 };
 

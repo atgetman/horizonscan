@@ -727,13 +727,13 @@ function DraggableItem({ item, onClick, onAttach, onShare }: {
 
     // Mock Presence Logic
     let presence: { initials: string, color: string, name: string }[] | null = null;
-    if (item.name === "Motion to Dismiss Draft") {
+    if (item.name === "SEC Comment Response Draft") {
         presence = [
             { initials: "A", color: "#EAB308", name: "Alice Johnson" }, // Yellow
             { initials: "K", color: "#2563EB", name: "Kevin Smith" }, // Blue
             { initials: "+5", color: "#F3F4F6", name: "5 others" }, // Gray
         ];
-    } else if (item.name === "Discovery overview") {
+    } else if (item.name === "Vendor Risk Register") {
         presence = [
             { initials: "M", color: "#9333EA", name: "Michael Brown" } // Purple
         ];

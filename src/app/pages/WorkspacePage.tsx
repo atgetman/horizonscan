@@ -63,23 +63,23 @@ import {
 } from "../components/ui/dropdown-menu";
 
 const HISTORICAL_CHATS_STRUCTURED: Record<string, { role: 'user' | 'assistant'; text: React.ReactNode }[]> = {
-  "Research on NY precedents": [
+  "Research on SEC climate rules": [
     {
       role: 'user',
-      text: "Find New York cases regarding \"time is of the essence\" clauses in commercial construction contracts from the last 5 years."
+      text: "Summarize the key SEC requirements for climate-related governance and emissions disclosures in the 10-K."
     },
     {
       role: 'assistant',
       text: (
         <>
-          <p className="text-[#212223] leading-relaxed mb-4">I found several relevant cases from New York courts within the last 5 years:</p>
+          <p className="text-[#212223] leading-relaxed mb-4">Here are the key requirements under the SEC's climate disclosure rules:</p>
           <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-             <h4 className="font-bold text-[#054688] mb-1">1. Apex Construction v. 550 Realty (2022)</h4>
-             <p className="text-sm text-gray-600">Held that a "time is of the essence" letter must be clear, distinct, and unequivocal, and must fix a reasonable time within which to perform.</p>
+             <h4 className="font-bold text-[#054688] mb-1">1. Governance — Regulation S-K Item 1501</h4>
+             <p className="text-sm text-gray-600">Requires disclosure of the board's oversight of climate-related risks and management's role in assessing and managing those risks.</p>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4">
-             <h4 className="font-bold text-[#054688] mb-1">2. Metro Lofts v. BuildCorp (2021)</h4>
-             <p className="text-sm text-gray-600">Court enforced the clause strictly where the parties were sophisticated entities and the contract explicitly stated that delays would cause irreparable harm.</p>
+             <h4 className="font-bold text-[#054688] mb-1">2. GHG Metrics — Regulation S-K Item 1505</h4>
+             <p className="text-sm text-gray-600">Requires gross Scope 1 and Scope 2 emissions disclosure, including methodology, organizational boundaries, and assurance status, subject to phase-in.</p>
           </div>
         </>
       )
@@ -1926,10 +1926,10 @@ export function WorkspacePage() {
                 <div className="grid grid-cols-2 gap-4" data-tour-step="8">
                   <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.1)] transition-shadow cursor-pointer">
                     <h4 className="text-[16px] font-medium text-[#1F1F1F] mb-2">
-                      Refine latest motion
+                      Refine latest response
                     </h4>
                     <p className="text-[14px] text-[#666] leading-[1.5] mb-4">
-                      Review my Daubert motion. The expert's entire opinion rests on his own say-so — no data, no
+                      Review my SEC comment response. The emissions assurance section relies on conclusory language — no methodology, no
                     </p>
                     <div className="flex items-center gap-3 pt-2 border-t border-[#F0F0F0]">
                       <div className="w-5 h-5 rounded border border-[#D0D0D0] flex items-center justify-center">

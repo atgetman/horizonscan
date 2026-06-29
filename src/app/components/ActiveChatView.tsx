@@ -915,10 +915,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                     
                                     if (detectedType === 'research') {
                                       introText = `I've completed comprehensive research on ${topic.toLowerCase()}.`;
-                                      descText = `This research memo synthesizes relevant case law, statutory provisions, and legal standards. It includes sections on legal framework, key precedents, jurisdictional variations, and practical applications. The memo provides citations to primary sources and identifies current trends in this area of law.`;
+                                      descText = `This research memo synthesizes relevant regulations, statutory provisions, and regulatory guidance. It includes sections on the regulatory framework, key requirements, jurisdictional variations, and practical compliance steps. The memo provides citations to primary sources and identifies current trends in this area of regulation.`;
                                     } else if (detectedType === 'analyze') {
                                       introText = `I've analyzed ${topic.toLowerCase()} based on the information provided.`;
-                                      descText = `This analysis examines the legal standards, applies them to the facts, and identifies key considerations. It includes discussion of relevant precedents, potential arguments, and strategic recommendations. Let me know if you'd like me to explore any particular aspect in more detail.`;
+                                      descText = `This analysis examines the regulatory requirements, applies them to your facts, and identifies key considerations. It includes discussion of relevant guidance, potential exposures, and remediation recommendations. Let me know if you'd like me to explore any particular aspect in more detail.`;
                                     } else if (detectedType === 'regulatory-scan') {
                                       introText = `I ran a regulatory horizon scan across federal and state sources to identify any changes that may impact your M&A contract templates.`;
                                       descText = ``;
@@ -927,7 +927,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                       descText = ``;
                                     } else {
                                       introText = `I've drafted ${topic.toLowerCase()}.`;
-                                      descText = `This document includes the necessary legal arguments, supporting precedents, and procedural requirements. It's structured with appropriate sections and citations. Let me know if you'd like to revise any arguments or add additional support.`;
+                                      descText = `This document includes the necessary responses, supporting regulatory authorities, and procedural requirements. It's structured with appropriate sections and citations. Let me know if you'd like to revise any responses or add additional support.`;
                                     }
                                     
                                     let introIdx = 0;
@@ -1217,7 +1217,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
         reasoningContent = `To conduct a comprehensive regulatory horizon scan, I'll:
 
-• Identify the practice area and jurisdiction scope based on your workspace documents
+• Identify the compliance domain and jurisdiction scope based on your workspace documents
 • Query federal regulatory databases (SEC, CFPB, FTC, DOJ, etc.) for recent final rules and proposed changes
 • Check state-level regulatory updates in relevant jurisdictions
 • Analyze the potential impact of each change on your existing contract templates
@@ -1327,7 +1327,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
         searchResults = [
           { websiteTitle: 'Westlaw', resourceTitle: 'Legal Research Database', url: 'https://westlaw.com' },
-          { websiteTitle: 'LexisNexis', resourceTitle: 'Case Law Library', url: 'https://lexisnexis.com' },
+          { websiteTitle: 'LexisNexis', resourceTitle: 'Regulatory Library', url: 'https://lexisnexis.com' },
           { websiteTitle: 'Practical Law', resourceTitle: 'Practice Notes', url: 'https://practicallaw.com' },
           { websiteTitle: 'Google Scholar', resourceTitle: 'Legal Cases', url: 'https://scholar.google.com' },
           { websiteTitle: 'Cornell LII', resourceTitle: 'US Code', url: 'https://law.cornell.edu' },
@@ -1409,9 +1409,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       } else if (detectedType === 'regulatory-scan') {
         // Show regulatory scan steps
         prepWork = [
-          { title: 'Identified jurisdictions and practice areas from workspace', type: 'analysis' },
+          { title: 'Identified jurisdictions and compliance domains from workspace', type: 'analysis' },
           { title: 'Searched Westlaw for proposed and final regulations', type: 'research' },
-          { title: 'Searched Practical Law for M&A guidance and practice notes', type: 'research' },
+          { title: 'Searched Practical Law for compliance guidance and practice notes', type: 'research' },
           { title: 'Evaluating impact on workspace documents', type: 'analysis' }
         ];
 
@@ -1435,9 +1435,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
         prepWork = [
           { title: 'Westlaw Deep Research Report', type: 'research' },
-          { title: 'Case Law Analysis', type: 'analysis' },
+          { title: 'Regulatory Analysis', type: 'analysis' },
           { title: 'Statutory Review', type: 'research' },
-          { title: 'Precedent Comparison', type: 'comparison' },
+          { title: 'Requirement Comparison', type: 'comparison' },
           { title: 'Compliance Checklist', type: 'checklist' }
         ];
 
@@ -1783,9 +1783,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     setIsPreparingExpanded(false);
     setIsPreparingLoading(false);
     setPrepWorkItems([
-      { title: 'Identified jurisdictions and practice areas from workspace', type: 'analysis' },
+      { title: 'Identified jurisdictions and compliance domains from workspace', type: 'analysis' },
       { title: 'Searched Westlaw for proposed and final regulations', type: 'research' },
-      { title: 'Searched Practical Law for M&A guidance and practice notes', type: 'research' },
+      { title: 'Searched Practical Law for compliance guidance and practice notes', type: 'research' },
       { title: 'Evaluating impact on workspace documents', type: 'analysis' },
     ]);
     setPreparingItems(4);
@@ -2761,10 +2761,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <Table className="size-5 text-[#217346] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Arguments & Precedents Matrix
+                             Comments & Authorities Matrix
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Comparing defendant contacts across supporting cases
+                             Mapping each staff comment to the governing rule
                            </p>
                          </div>
                        </motion.div>
@@ -2781,10 +2781,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <ClipboardList className="size-5 text-[#666666] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Motion Outline
+                             Response Letter Outline
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Structured argument framework with citation placeholders
+                             Structured response framework with citation placeholders
                            </p>
                          </div>
                        </motion.div>
@@ -2801,10 +2801,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <FileText className="size-5 text-[#666666] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Litigation Strategy Notes
+                             Compliance Strategy Notes
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Potential counter-arguments and response tactics
+                             Anticipated follow-up comments and response tactics
                            </p>
                          </div>
                        </motion.div>
@@ -2821,10 +2821,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <FileText className="size-5 text-[#666666] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Case Law Summary
+                             Regulatory Authority Summary
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Digest of 6 key jurisdiction cases with holdings
+                             Digest of 6 key rules and guidance items with takeaways
                            </p>
                          </div>
                        </motion.div>

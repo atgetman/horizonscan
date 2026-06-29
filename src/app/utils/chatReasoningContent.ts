@@ -87,23 +87,23 @@ export function getReasoningContent(
       step5: `Finally, I'll pull this together into a clear assessment with specific recommendations. I need to highlight the strongest arguments, flag potential issues, and provide a realistic evaluation of the position.`
     };
   } else {
-    // Default to draft motion content
+    // Default to draft comment-response content
     return {
-      step1: `Okay, so I need to draft a Motion to Dismiss based on lack of personal jurisdiction. Let me think through this step by step.`,
-      step2Title: `First, I'll review the project files to get a clear picture of the case. I'm looking for:`,
+      step1: `Okay, so I need to draft a response to the SEC comment letter on climate disclosures. Let me think through this step by step.`,
+      step2Title: `First, I'll review the project files to get a clear picture of the filing. I'm looking for:`,
       step2Items: [
-        'What the complaint alleges about the defendant\'s contacts with the forum',
-        'Any precedents or similar cases we\'ve dealt with before',
-        'Specific facts I can use to challenge jurisdiction'
+        'What each staff comment is asking the company to clarify or revise',
+        'The relevant disclosure language already in the filing',
+        'Specific facts I can use to support each response'
       ],
-      step3: `I should check Practical Law for motion templates and make sure I'm following the right procedural format. Don't want to miss any technical requirements that could get this kicked back.`,
-      step4Title: `Now I'll search Westlaw for the strongest authorities on personal jurisdiction. I need:`,
+      step3: `I should check Practical Law for comment-response templates and make sure I'm following the expected format. Don't want to miss any procedural requirements that could prompt a follow-up comment.`,
+      step4Title: `Now I'll search Westlaw and the rules for the controlling authorities on each comment. I need:`,
       step4Items: [
-        'Recent cases with similar fact patterns',
-        'Circuit-specific precedents that favor our position',
-        'Any Supreme Court decisions that support dismissal'
+        'The specific Regulation S-K items that govern each disclosure',
+        'Recent SEC guidance and interpretive releases on point',
+        'Any phase-in provisions that affect the company\'s obligations'
       ],
-      step5: `Finally, I'll pull this together into a compelling argument. I need to select the most persuasive authorities, distinguish any cases that might hurt our position, and craft a narrative showing why the court clearly lacks jurisdiction over the defendant.`
+      step5: `Finally, I'll pull this together into a clear response. I need to map each comment to the governing rule, cite the controlling authority, and explain the revisions the company will make in future filings.`
     };
   }
 }
@@ -146,15 +146,15 @@ export function getSourceContent(
     };
   } else if (taskType === 'research') {
     // Research-specific sources
-    if (topicLower.includes('jurisdiction')) {
+    if (topicLower.includes('disclosure') || topicLower.includes('climate') || topicLower.includes('sec')) {
       return {
         items: [
-          { icon: 'BookOpen', title: 'Personal Jurisdiction Standards - Practical Law', domain: 'practicallaw.com' },
-          { icon: 'Scale', title: 'International Shoe v. Washington Analysis', domain: 'westlaw.com' },
-          { icon: 'BookOpen', title: 'Minimum Contacts Framework - Research Guide', domain: 'practicallaw.com' },
-          { icon: 'Scale', title: 'Daimler AG v. Bauman (Supreme Court)', domain: 'supremecourt.gov' },
-          { icon: 'FileCheck', title: 'Federal Rules of Civil Procedure - Rule 12(b)(2)', domain: 'uscourts.gov' },
-          { icon: 'Scale', title: 'Recent Circuit Decisions on Personal Jurisdiction', domain: 'westlaw.com' }
+          { icon: 'BookOpen', title: 'SEC Climate Disclosure Rules - Practical Law', domain: 'practicallaw.com' },
+          { icon: 'Scale', title: 'Regulation S-K Items 1500-1507 Analysis', domain: 'westlaw.com' },
+          { icon: 'BookOpen', title: 'GHG Emissions Disclosure Framework - Research Guide', domain: 'practicallaw.com' },
+          { icon: 'Scale', title: 'SEC Final Rule: Climate-Related Disclosures', domain: 'sec.gov' },
+          { icon: 'FileCheck', title: 'Assurance Phase-In Requirements', domain: 'sec.gov' },
+          { icon: 'Scale', title: 'Recent Staff Comment Letter Trends', domain: 'westlaw.com' }
         ]
       };
     } else if (topicLower.includes('gdpr') || topicLower.includes('privacy')) {
@@ -193,15 +193,15 @@ export function getSourceContent(
       };
     }
   } else {
-    // Default motion sources
+    // Default comment-response sources
     return {
       items: [
-        { icon: 'BookOpen', title: 'Motion to Dismiss for Lack of Personal Jurisdiction - Practical Law', domain: 'practicallaw.com' },
-        { icon: 'Scale', title: 'Personal Jurisdiction Standards and Requirements', domain: 'westlaw.com' },
-        { icon: 'BookOpen', title: 'Federal Civil Procedure: Jurisdiction Challenges', domain: 'practicallaw.com' },
-        { icon: 'FileCheck', title: 'Federal Rules of Civil Procedure - Rule 12(b)(2)', domain: 'uscourts.gov' },
-        { icon: 'Scale', title: 'Recent Case Law: Minimum Contacts Analysis', domain: 'westlaw.com' },
-        { icon: 'FileCheck', title: 'Supreme Court Decisions on Personal Jurisdiction', domain: 'supremecourt.gov' }
+        { icon: 'BookOpen', title: 'Responding to SEC Comment Letters - Practical Law', domain: 'practicallaw.com' },
+        { icon: 'Scale', title: 'Regulation S-K Climate Disclosure Requirements', domain: 'westlaw.com' },
+        { icon: 'BookOpen', title: 'Securities Disclosure: Staff Comment Process', domain: 'practicallaw.com' },
+        { icon: 'FileCheck', title: 'Regulation S-K Items 1500-1507', domain: 'sec.gov' },
+        { icon: 'Scale', title: 'Recent Guidance: GHG Emissions Metrics', domain: 'westlaw.com' },
+        { icon: 'FileCheck', title: 'SEC Final Rule on Climate-Related Disclosures', domain: 'sec.gov' }
       ]
     };
   }

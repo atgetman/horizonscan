@@ -171,12 +171,12 @@ export function SidebarExpanded() {
             ) : (
               <>
                 {[
-                  { type: 'regulatory-table', name: 'M&A regulatory findings', workspace: null },
-                  { type: 'table', name: 'Discovery overview', workspace: null },
-                  { type: 'doc', name: 'Motion to Dismiss Draft', workspace: null },
-                  { type: 'chat', name: 'Research on NY precedents', workspace: null },
-                  { type: 'chat', name: 'Drafting motion arguments', workspace: null },
-                  { type: 'research', name: 'New York Freedom of Speech', workspace: null },
+                  { type: 'regulatory-table', name: 'SEC regulatory findings', workspace: null },
+                  { type: 'table', name: 'Vendor Risk Register', workspace: null },
+                  { type: 'doc', name: 'SEC Comment Response Draft', workspace: null },
+                  { type: 'chat', name: 'Research on SEC climate rules', workspace: null },
+                  { type: 'chat', name: 'Drafting disclosure language', workspace: null },
+                  { type: 'research', name: 'CCPA Consumer Rights Research', workspace: null },
                 ].map((item, i) => (
                   <ActivityItem
                     key={i}
