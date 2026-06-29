@@ -63,7 +63,7 @@ export const AI_GOVERNANCE_FILES: FileSystemItem[] = [
   { id: 'g23', parentId: 'g2', type: 'file', name: 'MFG-AI-IRP-001_Incident_Response_Plan.docx' },
 
   // Model Risk & Testing
-  { id: 'g31', parentId: 'g3', type: 'table', name: 'MFG-AI-INV-001_Model_Inventory_Q2_2026.xlsx' },
+  { id: 'g31', parentId: 'g3', type: 'file', name: 'MFG-AI-INV-001_Model_Inventory_Q2_2026.docx' },
   { id: 'g32', parentId: 'g3', type: 'file', name: 'MFG-MRM-MDL001-2024_CreditScorePro_Validation.docx' },
   { id: 'g33', parentId: 'g3', type: 'file', name: 'MFG-AI-LOG-002_Q1-2026_Bias_Testing_Log.docx' },
 

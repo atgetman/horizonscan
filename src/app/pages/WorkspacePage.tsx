@@ -33,6 +33,8 @@ import {
 import { DocumentToolbar } from "../components/DocumentToolbar";
 import { SpreadsheetToolbar } from "../components/SpreadsheetToolbar";
 import { MOCK_FILES, MOCK_CHATS, ALL_FILES, getWorkspaceFiles } from "../data/mockData";
+import { AI_GOVERNANCE_DOC_CONTENT } from "../data/aiGovernanceDocs";
+import { GovernanceDocument } from "../components/GovernanceDocument";
 import { useWorkspaceNavigation } from "../contexts/WorkspaceNavigationContext";
 import { PromptInput } from "../components/PromptInput";
 import { ActiveChatView } from "../components/ActiveChatView";
@@ -866,6 +868,11 @@ export function WorkspacePage() {
      // If content is a function, call it to get the actual component
      if (typeof content === 'function') {
        content = content();
+     }
+
+     // AI Governance workspace documents render from parsed source content
+     if (!content && AI_GOVERNANCE_DOC_CONTENT[item.name]) {
+       content = <GovernanceDocument blocks={AI_GOVERNANCE_DOC_CONTENT[item.name]} />;
      }
      
     // Use StreamingDocument for SEC Comment Letter Response
