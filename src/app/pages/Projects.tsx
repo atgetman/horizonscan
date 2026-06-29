@@ -50,6 +50,12 @@ const projectsData: Project[] = [
     timestamp: "2 days ago"
   },
   {
+    id: "8",
+    name: "AI Governance",
+    description: "Defining model risk, oversight, and responsible-AI policies across the enterprise.",
+    timestamp: "2 days ago"
+  },
+  {
     id: "7",
     name: "AML / KYC Policy Refresh",
     description: "Updating Meridian's anti-money-laundering program against new FinCEN guidance.",
