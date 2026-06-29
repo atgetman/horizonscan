@@ -477,7 +477,6 @@ export function PromptInput({
         <div className="flex items-center justify-between">
           {/* Left buttons */}
           <div className="flex items-center gap-2">
-            <FileText className="size-4 text-[#666]" strokeWidth={1.5} />
             <button
               ref={addMenuButtonRef}
               type="button"
