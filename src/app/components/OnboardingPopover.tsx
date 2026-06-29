@@ -33,7 +33,7 @@ const TOUR_STEPS = [
   {
     number: 4,
     title: "Mention files by name or drag and drop to attach.",
-    body: "No need to re-attach every time - CoCounsel already knows what's in your project. Simply say \"Based on the depositions\" or \"Using the complaint.\"",
+    body: "No need to re-attach every time - CoCounsel already knows what's in your project. Simply say \"Based on the vendor interviews\" or \"Using the comment letter.\"",
     position: "center-bottom", // Below chat input in project view
     targetSelector: null,
   },
@@ -270,12 +270,12 @@ export function OnboardingPopover({ isOpen, onNext, onSnooze }: OnboardingPopove
         if (location.pathname === '/') {
           // Use the same hard-coded recent workspaces from SidebarExpanded
           const recentWorkspaces = [
-            "Hernandez v. Pacific Builders Inc",
-            "In re: Blue Ridge Trust 2025",
-            "State v. Marcus T. Reynolds",
-            "Rivera Compliance Review",
-            "Doe v. Apex Corp.",
-            "Matter of Green Estates",
+            "SEC Climate Disclosure Program",
+            "GDPR Cross-Border Data Transfer Review",
+            "Vendor DPA Remediation",
+            "EU AI Act Readiness",
+            "Project Harbor — Fintech Acquisition Diligence",
+            "CCPA & State Privacy Compliance",
           ];
           
           if (recentWorkspaces.length > 0) {
@@ -357,15 +357,15 @@ export function OnboardingPopover({ isOpen, onNext, onSnooze }: OnboardingPopove
       // Check if we're going from step 6 to step 7 (open first document)
       if (currentStep === 5) {
         // We're at step 6, about to go to step 7
-        // Find and click "Motion to Dismiss Draft" in the Outputs section
+        // Find and click "SEC Comment Letter Response" in the Outputs section
         const outputItems = Array.from(document.querySelectorAll('.flex.items-center.gap-2.px-4.py-1\\.5.hover\\:bg-gray-100'));
         const motionDocument = outputItems.find(item => {
           const text = item.textContent || '';
-          return text.includes('Motion to Dismiss Draft');
+          return text.includes('SEC Comment Letter Response');
         }) as HTMLElement;
         
         if (motionDocument) {
-          console.log('Found Motion to Dismiss Draft, clicking...');
+          console.log('Found SEC Comment Letter Response, clicking...');
           motionDocument.click();
           
           // Poll for step 7 element before advancing
@@ -387,7 +387,7 @@ export function OnboardingPopover({ isOpen, onNext, onSnooze }: OnboardingPopove
           }, 200);
           return;
         } else {
-          console.warn('Could not find Motion to Dismiss Draft');
+          console.warn('Could not find SEC Comment Letter Response');
         }
       }
 

@@ -50,10 +50,10 @@ function Text({ isContentGenerating, title, subtitle }: { isContentGenerating?: 
   return (
     <div className="flex flex-[1_0_0] flex-col items-start min-h-px min-w-0 relative" data-name="text">
       <div className={`flex flex-col font-['Clario:Medium',sans-serif] justify-center w-full not-italic overflow-hidden relative shrink-0 text-[14px] ${isContentGenerating ? 'text-[#8a8a8a] animate-shimmer' : 'text-[#212223]'}`}>
-        <p className="leading-[1.35] overflow-hidden text-ellipsis whitespace-nowrap font-medium">{title || 'Motion draft'}</p>
+        <p className="leading-[1.35] overflow-hidden text-ellipsis whitespace-nowrap font-medium">{title || 'Response draft'}</p>
       </div>
       <div className="flex flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center relative shrink-0 text-[#404040] text-[12px] w-full overflow-hidden">
-        <p className="leading-[1.35] overflow-hidden text-ellipsis whitespace-nowrap">{subtitle || 'Motion to Dismiss - Personal Jurisdiction'}</p>
+        <p className="leading-[1.35] overflow-hidden text-ellipsis whitespace-nowrap">{subtitle || 'SEC Comment Letter Response'}</p>
       </div>
     </div>
   );
@@ -205,16 +205,16 @@ export function WorkflowPhases({ showReasoning, showSources, showPreparing, arti
                   {reasoningContent || (
                     <div className="space-y-3">
                       <p>
-                        Okay, so I need to draft a Motion to Dismiss based on lack of personal jurisdiction. Let me think through this step by step.
+                        Okay, so I need to draft a response to the SEC comment letter on climate disclosures. Let me think through this step by step.
                       </p>
                       <p>
-                        First, I'll review the project files to get a clear picture of the case. I'm looking for what the complaint alleges, any precedents, and specific facts to challenge jurisdiction.
+                        First, I'll review the project files to get a clear picture of the filing. I'm looking for what each staff comment asks, the existing disclosure language, and facts that support each response.
                       </p>
                       <p>
-                        I should check Practical Law for motion templates and make sure I'm following the right procedural format.
+                        I should check Practical Law for comment-response templates and make sure I'm following the expected format.
                       </p>
                       <p>
-                        Now I'll search Westlaw for the strongest authorities on personal jurisdiction - recent cases with similar fact patterns and circuit-specific precedents.
+                        Now I'll search Westlaw and the rules for the controlling authorities - the Regulation S-K items and recent SEC guidance on each comment.
                       </p>
                     </div>
                   )}
@@ -266,19 +266,19 @@ export function WorkflowPhases({ showReasoning, showSources, showPreparing, arti
                   <div className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors">
                     <BookOpen className="size-3.5 text-[#8a8a8a] shrink-0" />
                     <p className="text-[#212223] leading-relaxed flex-1 min-w-0 text-[12px]">
-                      Motion to Dismiss for Lack of Personal Jurisdiction
+                      Responding to SEC Comment Letters
                     </p>
                   </div>
                   <div className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors">
                     <Scale className="size-3.5 text-[#8a8a8a] shrink-0" />
                     <p className="text-[#212223] leading-relaxed flex-1 min-w-0 text-[12px]">
-                      Personal Jurisdiction Standards
+                      Regulation S-K Climate Disclosure Requirements
                     </p>
                   </div>
                   <div className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors">
                     <FileCheck className="size-3.5 text-[#8a8a8a] shrink-0" />
                     <p className="text-[#212223] leading-relaxed flex-1 min-w-0 text-[12px]">
-                      Federal Rules of Civil Procedure - Rule 12(b)(2)
+                      Regulation S-K Items 1500-1507
                     </p>
                   </div>
                   <div className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors">
@@ -335,25 +335,25 @@ export function WorkflowPhases({ showReasoning, showSources, showPreparing, arti
                   <div className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors">
                     <FileText className="size-3.5 text-[#8a8a8a] shrink-0" />
                     <p className="text-[#212223] leading-relaxed flex-1 min-w-0 text-[12px]">
-                      Research Memo: Jurisdiction Analysis
+                      Research Memo: Disclosure Analysis
                     </p>
                   </div>
                   <div className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors">
                     <Table className="size-3.5 text-[#8a8a8a] shrink-0" />
                     <p className="text-[#212223] leading-relaxed flex-1 min-w-0 text-[12px]">
-                      Arguments & Precedents Matrix
+                      Comments & Authorities Matrix
                     </p>
                   </div>
                   <div className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors">
                     <ClipboardList className="size-3.5 text-[#8a8a8a] shrink-0" />
                     <p className="text-[#212223] leading-relaxed flex-1 min-w-0 text-[12px]">
-                      Motion Outline
+                      Response Letter Outline
                     </p>
                   </div>
                   <div className="flex items-center gap-2 py-1.5 px-2 -mx-2 rounded hover:bg-[#f5f5f5] cursor-pointer transition-colors">
                     <FileText className="size-3.5 text-[#8a8a8a] shrink-0" />
                     <p className="text-[#212223] leading-relaxed flex-1 min-w-0 text-[12px]">
-                      Case Law Summary
+                      Regulatory Authority Summary
                     </p>
                   </div>
                 </div>
@@ -393,7 +393,7 @@ export function WorkflowPhases({ showReasoning, showSources, showPreparing, arti
           <div className="max-w-[400px]">
             <StatusOfReport
               title={artifactTitle}
-              subtitle="Motion to Dismiss - Personal Jurisdiction"
+              subtitle="SEC Comment Letter Response"
             />
           </div>
         </>

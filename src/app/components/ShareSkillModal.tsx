@@ -31,9 +31,9 @@ interface Workspace {
 
 const workspaces: Workspace[] = [
   {
-    id: 'hernandez-pacific',
-    name: 'Hernandez v. Pacific Builders Inc.',
-    category: 'Employment Law',
+    id: 'sec-climate',
+    name: 'SEC Climate Disclosure Program',
+    category: 'Securities Compliance',
     members: [
       { initials: 'DS', color: '#00897B', name: 'David Smith' },
       { initials: 'RM', color: '#1976D2', name: 'Rachel Martinez' },
@@ -41,18 +41,18 @@ const workspaces: Workspace[] = [
     ]
   },
   {
-    id: 'blue-ridge-trust',
-    name: 'In re: Blue Ridge Trust 2025',
-    category: 'Trusts & Estates',
+    id: 'vendor-dpa',
+    name: 'Vendor DPA Remediation',
+    category: 'Data Privacy',
     members: [
       { initials: 'DS', color: '#00897B', name: 'David Smith' },
       { initials: 'BP', color: '#C9A96E', name: 'Brian Peterson' },
     ]
   },
   {
-    id: 'meridian-tech',
-    name: 'Meridian Tech Acquisition',
-    category: 'Corporate / M&A',
+    id: 'project-harbor',
+    name: 'Project Harbor — Fintech Diligence',
+    category: 'Regulatory Diligence',
     members: [
       { initials: 'DS', color: '#00897B', name: 'David Smith' },
       { initials: 'EC', color: '#64B5F6', name: 'Emily Chen' },
@@ -63,7 +63,7 @@ const workspaces: Workspace[] = [
 
 export function ShareSkillModal({ isOpen, onClose, skillName, skills = [], onShare, hasBeenSharedToFirm, onConfirm }: ShareSkillModalProps) {
   const [shareTarget, setShareTarget] = useState<'firm' | 'workspace'>('firm');
-  const [selectedWorkspace, setSelectedWorkspace] = useState('hernandez-pacific');
+  const [selectedWorkspace, setSelectedWorkspace] = useState('sec-climate');
   const [reviewerNote, setReviewerNote] = useState('');
 
   if (!isOpen) return null;

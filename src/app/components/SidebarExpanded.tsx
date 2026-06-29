@@ -64,12 +64,12 @@ export function SidebarExpanded() {
   }, [isLoading]);
 
   const recentWorkspaces = [
-    "Hernandez v. Pacific Builders Inc",
-    "In re: Blue Ridge Trust 2025",
-    "State v. Marcus T. Reynolds",
-    "Rivera Compliance Review",
-    "Doe v. Apex Corp.",
-    "Matter of Green Estates",
+    "SEC Climate Disclosure Program",
+    "GDPR Cross-Border Data Transfer Review",
+    "Vendor DPA Remediation",
+    "EU AI Act Readiness",
+    "Project Harbor — Fintech Acquisition Diligence",
+    "CCPA & State Privacy Compliance",
   ];
 
   return (

@@ -21,12 +21,12 @@ const MOCK_ALERTS: MonitoringAlert[] = [
   {
     id: 'alert-1',
     monitorId: 'monitor-1',
-    monitorTopic: 'Personal jurisdiction developments',
-    title: 'New Second Circuit decision on minimum contacts',
-    summary: 'The Second Circuit issued a decision refining the analysis for specific jurisdiction in cases involving limited contacts with the forum state.',
+    monitorTopic: 'SEC climate disclosure developments',
+    title: 'SEC staff issues guidance on emissions assurance',
+    summary: 'The SEC staff clarified the assurance phase-in timeline for Scope 1 and Scope 2 emissions and emphasized consistent methodology and boundary disclosure.',
     date: '2 hours ago',
     isRead: false,
-    type: 'case',
+    type: 'guidance',
   },
   {
     id: 'alert-2',
@@ -41,12 +41,12 @@ const MOCK_ALERTS: MonitoringAlert[] = [
   {
     id: 'alert-3',
     monitorId: 'monitor-1',
-    monitorTopic: 'Personal jurisdiction developments',
-    title: 'District court applies Daimler in corporate presence case',
-    summary: 'Southern District of New York applies the Daimler general jurisdiction framework to dismiss claims against foreign corporation.',
+    monitorTopic: 'SEC climate disclosure developments',
+    title: 'Comment letter trends highlight governance gaps',
+    summary: 'A review of recent staff comment letters shows the SEC frequently asks registrants to name the responsible board committee and describe management reporting cadence.',
     date: '3 days ago',
     isRead: true,
-    type: 'case',
+    type: 'guidance',
   },
 ];
 

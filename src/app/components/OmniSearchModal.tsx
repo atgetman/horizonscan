@@ -127,16 +127,16 @@ export function OmniSearchModal({ isOpen, onClose }: OmniSearchModalProps) {
   const getCategoryLabel = (result: SearchResult) => {
     // Check title for common document types
     const title = result.title.toLowerCase();
-    if (title.includes('motion') || title.includes('brief')) return 'Legal brief';
-    if (title.includes('contract') || title.includes('agreement')) return 'Contract';
+    if (title.includes('response') || title.includes('comment')) return 'Response';
+    if (title.includes('contract') || title.includes('agreement') || title.includes('dpa')) return 'Contract';
     if (title.includes('memo') || title.includes('memorandum')) return 'Memo';
     if (title.includes('summary') || title.includes('report')) return 'Report';
-    if (title.includes('analysis')) return 'Analysis';
+    if (title.includes('analysis') || title.includes('assessment')) return 'Analysis';
     if (title.includes('outline')) return 'Outline';
-    if (title.includes('deposition')) return 'Deposition';
-    if (title.includes('opposition')) return 'Opposition';
-    if (title.includes('statement')) return 'Statement';
-    if (title.includes('index') || title.includes('exhibit')) return 'Exhibits';
+    if (title.includes('research')) return 'Research';
+    if (title.includes('policy')) return 'Policy';
+    if (title.includes('checklist')) return 'Checklist';
+    if (title.includes('register') || title.includes('matrix')) return 'Register';
     if (title.includes('plan')) return 'Plan';
 
     // Default based on type

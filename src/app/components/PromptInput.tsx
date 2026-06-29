@@ -14,18 +14,18 @@ interface ChatTag {
 
 // Workspaces selectable as chat tags
 const WORKSPACE_OPTIONS = [
-  "Blackwell Industries Acquisition",
-  "Chen v. Metropolitan Health",
-  "Thornton Family Trust Amendment",
-  "Global Pharma Merger",
-  "Finch Data Breach Litigation",
+  "SEC Climate Disclosure Program",
+  "Vendor DPA Remediation",
+  "GDPR Cross-Border Data Transfer Review",
+  "Project Harbor — Fintech Acquisition Diligence",
+  "EU AI Act Readiness",
 ];
 
 // Monitoring alerts created for this prototype (mirrors the Monitoring list view)
 const PROTOTYPE_ALERTS = [
-  "Personal jurisdiction developments in Second Circuit",
+  "SEC climate disclosure developments",
   "GDPR enforcement actions and guidance",
-  "Patent eligibility under Section 101",
+  "EU AI Act implementation",
 ];
 
 interface PromptInputProps {
@@ -156,8 +156,8 @@ export function PromptInput({
     },
     {
       id: '3',
-      name: 'Discovery Response Standards',
-      description: 'Firm-wide standards for responding to discovery requests in litigation matters',
+      name: 'SEC Comment Response Standards',
+      description: 'Firm-wide standards for responding to SEC staff comment letters',
       type: 'firm' as const
     },
     {
