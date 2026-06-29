@@ -125,16 +125,16 @@ export function WorkspaceSidebar({ onToggle, dynamicOutputs = [] }: { onToggle: 
 
   const outputFiles = [
     ...dynamicOutputs, // Add dynamic outputs first (at the top)
-    { type: "table", name: "Discovery overview" },
-    { type: "doc", name: "Motion to Dismiss Draft" },
-    { type: "research", name: "New York Freedom of Speech" },
-    { type: "doc", name: "Memo for New York Freedom" },
+    { type: "table", name: "Vendor Risk Register" },
+    { type: "doc", name: "SEC Comment Letter Response Draft" },
+    { type: "research", name: "GDPR Cross-Border Transfer Rules" },
+    { type: "doc", name: "Memo on Data Transfer Obligations" },
   ];
 
   const recentChats = [
-    { type: "chat", name: "Research on NY precedents" },
-    { type: "chat", name: "Summary of deposition" },
-    { type: "chat", name: "Drafting motion arguments" },
+    { type: "chat", name: "Research on SEC climate rules" },
+    { type: "chat", name: "Summary of vendor risk findings" },
+    { type: "chat", name: "Drafting disclosure language" },
   ];
 
   return (

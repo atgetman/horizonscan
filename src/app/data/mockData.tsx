@@ -13,36 +13,36 @@ export type FileSystemItem = {
 };
 
 export const ALL_FILES: FileSystemItem[] = [
-  { id: '1', parentId: null, type: 'folder', name: 'Briefs' },
-  { id: '2', parentId: null, type: 'folder', name: 'Depositions' },
-  { id: '3', parentId: null, type: 'folder', name: 'Discovery' },
-  { id: '4', parentId: null, type: 'file', name: 'Complaint.docx' },
-  { id: '5', parentId: null, type: 'file', name: 'Federal Court Rules.docx' },
-  { id: '6', parentId: null, type: 'file', name: 'Strategy.docx' },
+  { id: '1', parentId: null, type: 'folder', name: 'Disclosures' },
+  { id: '2', parentId: null, type: 'folder', name: 'Vendor Reviews' },
+  { id: '3', parentId: null, type: 'folder', name: 'Data Mapping' },
+  { id: '4', parentId: null, type: 'file', name: 'Compliance Risk Assessment.docx' },
+  { id: '5', parentId: null, type: 'file', name: 'SEC Disclosure Rules.docx' },
+  { id: '6', parentId: null, type: 'file', name: 'Compliance Strategy.docx' },
   
-  // Nested files - Briefs
-  { id: '11', parentId: '1', type: 'file', name: 'Memo of Law.docx' },
-  { id: '12', parentId: '1', type: 'file', name: 'Reply Brief.docx' },
-  { id: '13', parentId: '1', type: 'file', name: 'Amended Complaint.docx' },
-  { id: '14', parentId: '1', type: 'file', name: 'Motion to Dismiss.docx' },
+  // Nested files - Disclosures
+  { id: '11', parentId: '1', type: 'file', name: 'Memo on Disclosure Obligations.docx' },
+  { id: '12', parentId: '1', type: 'file', name: 'Climate Risk Disclosure Memo.docx' },
+  { id: '13', parentId: '1', type: 'file', name: 'Updated Risk Assessment.docx' },
+  { id: '14', parentId: '1', type: 'file', name: 'SEC Comment Letter Response.docx' },
   
-  // Nested files - Depositions
-  { id: '21', parentId: '2', type: 'file', name: 'Smith Deposition.pdf' },
-  { id: '22', parentId: '2', type: 'file', name: 'Jones Deposition.pdf' },
-  { id: '23', parentId: '2', type: 'file', name: 'Expert Witness Report.pdf' },
+  // Nested files - Vendor Reviews
+  { id: '21', parentId: '2', type: 'file', name: 'Cloudspan Vendor Review.pdf' },
+  { id: '22', parentId: '2', type: 'file', name: 'Atlas Payments Vendor Review.pdf' },
+  { id: '23', parentId: '2', type: 'file', name: 'Privacy Impact Assessment.pdf' },
   
-  // Nested files - Discovery
-  { id: '31', parentId: '3', type: 'table', name: 'Production Log.xlsx' },
-  { id: '32', parentId: '3', type: 'folder', name: 'Email Exports' },
-  { id: '33', parentId: '3', type: 'file', name: 'Privilege Log.xlsx' },
+  // Nested files - Data Mapping
+  { id: '31', parentId: '3', type: 'table', name: 'Vendor Register.xlsx' },
+  { id: '32', parentId: '3', type: 'folder', name: 'Vendor Correspondence' },
+  { id: '33', parentId: '3', type: 'file', name: 'Data Inventory.xlsx' },
   
-  // Nested files - Email Exports (Level 3)
-  { id: '321', parentId: '32', type: 'file', name: 'Batch 001.pst' },
-  { id: '322', parentId: '32', type: 'file', name: 'Batch 002.pst' },
+  // Nested files - Vendor Correspondence (Level 3)
+  { id: '321', parentId: '32', type: 'file', name: 'Vendor_Correspondence_001.pst' },
+  { id: '322', parentId: '32', type: 'file', name: 'Vendor_Correspondence_002.pst' },
 ];
 
 export const MOCK_CHATS: Record<string, React.ReactNode> = {
-  "Research on NY precedents": (
+  "Research on SEC climate rules": (
     <div className="flex flex-col gap-6 p-8 max-w-3xl mx-auto">
       <div className="flex gap-4">
         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
@@ -50,7 +50,7 @@ export const MOCK_CHATS: Record<string, React.ReactNode> = {
         </div>
         <div className="flex-1">
           <p className="font-medium text-[#212223] mb-1">You</p>
-          <p className="text-[#212223] leading-relaxed">Find New York cases regarding "time is of the essence" clauses in commercial construction contracts from the last 5 years.</p>
+          <p className="text-[#212223] leading-relaxed">Summarize the key SEC and EU guidance on climate-related disclosure for public companies from the last 2 years.</p>
         </div>
       </div>
       
@@ -60,20 +60,20 @@ export const MOCK_CHATS: Record<string, React.ReactNode> = {
         </div>
         <div className="flex-1">
           <p className="font-medium text-[#212223] mb-1">CoCounsel</p>
-          <p className="text-[#212223] leading-relaxed mb-4">I found several relevant cases from New York courts within the last 5 years:</p>
+          <p className="text-[#212223] leading-relaxed mb-4">I found several relevant authorities issued within the last 2 years:</p>
           <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-             <h4 className="font-bold text-[#054688] mb-1">1. Apex Construction v. 550 Realty (2022)</h4>
-             <p className="text-sm text-gray-600">Held that a "time is of the essence" letter must be clear, distinct, and unequivocal, and must fix a reasonable time within which to perform.</p>
+             <h4 className="font-bold text-[#054688] mb-1">1. SEC Climate Disclosure Rules (2024)</h4>
+             <p className="text-sm text-gray-600">Require registrants to disclose material climate-related risks, governance, and certain greenhouse gas metrics, with phased-in compliance and assurance requirements.</p>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4">
-             <h4 className="font-bold text-[#054688] mb-1">2. Metro Lofts v. BuildCorp (2021)</h4>
-             <p className="text-sm text-gray-600">Court enforced the clause strictly where the parties were sophisticated entities and the contract explicitly stated that delays would cause irreparable harm.</p>
+             <h4 className="font-bold text-[#054688] mb-1">2. EU CSRD Implementing Guidance (2023)</h4>
+             <p className="text-sm text-gray-600">Establishes detailed sustainability reporting standards that may apply to large issuers with EU operations, emphasizing double-materiality assessment.</p>
           </div>
         </div>
       </div>
     </div>
   ),
-  "Summary of deposition": (
+  "Summary of vendor risk findings": (
     <div className="flex flex-col gap-6 p-8 max-w-3xl mx-auto">
       <div className="flex gap-4">
         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
@@ -81,7 +81,7 @@ export const MOCK_CHATS: Record<string, React.ReactNode> = {
         </div>
         <div className="flex-1">
           <p className="font-medium text-[#212223] mb-1">You</p>
-          <p className="text-[#212223] leading-relaxed">Summarize the key admissions from John Smith's deposition.</p>
+          <p className="text-[#212223] leading-relaxed">Summarize the key compliance gaps from the Cloudspan Inc. vendor review.</p>
         </div>
       </div>
       <div className="flex gap-4">
@@ -90,17 +90,17 @@ export const MOCK_CHATS: Record<string, React.ReactNode> = {
         </div>
         <div className="flex-1">
           <p className="font-medium text-[#212223] mb-1">CoCounsel</p>
-          <p className="text-[#212223] leading-relaxed mb-4">Here are the key admissions from the deposition of John Smith on Aug 14, 2024:</p>
+          <p className="text-[#212223] leading-relaxed mb-4">Here are the key compliance gaps identified in the Cloudspan Inc. vendor review on Aug 14, 2024:</p>
           <ul className="list-disc pl-5 space-y-2 text-[15px] text-[#212223]">
-            <li>Admitted he was the site foreman on the day of the incident.</li>
-            <li>Confirmed that he did not personally inspect the concrete pour before it cured.</li>
-            <li>Acknowledged receiving the email from the supplier about the grade substitution.</li>
+            <li>No executed data processing agreement covering EU personal data transfers.</li>
+            <li>Standard Contractual Clauses are referenced but not attached or signed.</li>
+            <li>Breach-notification commitment is 14 days, exceeding the GDPR 72-hour requirement.</li>
           </ul>
         </div>
       </div>
     </div>
   ),
-  "Drafting motion arguments": (
+  "Drafting disclosure language": (
     <div className="flex flex-col gap-6 p-8 max-w-3xl mx-auto">
       <div className="flex gap-4">
         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
@@ -108,7 +108,7 @@ export const MOCK_CHATS: Record<string, React.ReactNode> = {
         </div>
         <div className="flex-1">
           <p className="font-medium text-[#212223] mb-1">You</p>
-          <p className="text-[#212223] leading-relaxed">Help me draft the argument section for the Motion to Dismiss regarding the negligence claim.</p>
+          <p className="text-[#212223] leading-relaxed">Help me draft the climate risk governance disclosure for the 10-K.</p>
         </div>
       </div>
       <div className="flex gap-4">
@@ -117,10 +117,10 @@ export const MOCK_CHATS: Record<string, React.ReactNode> = {
         </div>
         <div className="flex-1">
           <p className="font-medium text-[#212223] mb-1">CoCounsel</p>
-          <p className="text-[#212223] leading-relaxed mb-4">Certainly. The negligence claim fails because the economic loss rule bars recovery for purely economic damages in tort where the relationship is governed by contract.</p>
+          <p className="text-[#212223] leading-relaxed mb-4">Certainly. The disclosure should describe board and management oversight of climate-related risks and how those risks are integrated into the broader enterprise risk-management process.</p>
           <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-             <h4 className="font-bold text-[#054688] mb-1">Proposed Argument Text</h4>
-             <p className="text-sm text-gray-600">"Plaintiff's negligence claim must be dismissed pursuant to the economic loss rule. New York courts have long held that a plaintiff cannot recover in tort for purely economic losses resulting from a breach of contract..."</p>
+             <h4 className="font-bold text-[#054688] mb-1">Proposed Disclosure Text</h4>
+             <p className="text-sm text-gray-600">"The Board's Risk Committee oversees climate-related risks, receiving quarterly reports from management. Material physical and transition risks are assessed through the Company's enterprise risk-management framework and reflected in strategic planning..."</p>
           </div>
         </div>
       </div>

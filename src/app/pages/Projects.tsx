@@ -21,44 +21,44 @@ interface Project {
 const projectsData: Project[] = [
   {
     id: "1",
-    name: "Hernandez v. Pacific Builders Inc.",
-    description: "Employee sues for unpaid overtime wages under labor law violations.",
+    name: "SEC Climate Disclosure Program",
+    description: "Preparing Meridian's climate-related risk disclosures for the upcoming 10-K filing.",
     timestamp: "2 days ago"
   },
   {
     id: "2",
-    name: "In re: Blue Ridge Trust 2025",
-    description: "Dispute over trustee mismanagement of $2M real estate trust.",
+    name: "GDPR Cross-Border Data Transfer Review",
+    description: "Validating SCCs and transfer impact assessments for EU customer data flows.",
     timestamp: "2 days ago"
   },
   {
     id: "3",
-    name: "State v. Marcus T. Reynolds",
-    description: "Prosecution for insider trading in pharmaceutical company stock.",
+    name: "CCPA & State Privacy Compliance",
+    description: "Building a multi-state consumer privacy program across new 2025 statutes.",
     timestamp: "2 days ago"
   },
   {
     id: "5",
-    name: "Rivera Compliance Review",
-    description: "EPA compliance review for chemical plant emissions violations.",
+    name: "Vendor DPA Remediation",
+    description: "Reviewing data processing agreements across third-party vendors for compliance gaps.",
     timestamp: "2 days ago"
   },
   {
     id: "6",
-    name: "Doe v. Apex Corp.",
-    description: "Class action for data breach exposing customer personal information.",
+    name: "EU AI Act Readiness",
+    description: "Establishing governance controls for ML credit and underwriting models.",
     timestamp: "2 days ago"
   },
   {
     id: "7",
-    name: "Matter of Green Estates",
-    description: "Contested will involving division of $5M family estate assets.",
+    name: "AML / KYC Policy Refresh",
+    description: "Updating Meridian's anti-money-laundering program against new FinCEN guidance.",
     timestamp: "2 days ago"
   },
   {
     id: "4",
-    name: "Meridian Tech Acquisition",
-    description: "Due diligence review for $85M acquisition of SaaS platform company.",
+    name: "Project Harbor — Fintech Acquisition Diligence",
+    description: "Regulatory diligence for the $85M acquisition of Sterling Capital, including licensing and HSR.",
     timestamp: "3 days ago"
   }
 ];
