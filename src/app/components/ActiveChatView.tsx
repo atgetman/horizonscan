@@ -1886,6 +1886,11 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const JURISDICTION_QUESTION =
     "Which states matter most to your business? I'll cover federal developments across the board and surface these first.";
 
+  // Short lead-in CoCounsel posts in the chat; the actual question lives in the
+  // clarifying panel so it isn't repeated.
+  const JURISDICTION_INTRO =
+    "I have enough context to run the scan. One quick question before I do:";
+
   // Build the scope-confirmation recap CoCounsel posts after the jurisdiction is
   // resolved (mirrors the bullet summary in the brief).
   const buildAiGovScopeRecap = useCallback((priorityStates: string[]) => {
@@ -1958,7 +1963,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       onThinkingChange?.(false);
       setMessages(current => {
         const next = [...current];
-        next[next.length - 1] = { role: 'assistant', text: JURISDICTION_QUESTION };
+        next[next.length - 1] = { role: 'assistant', text: JURISDICTION_INTRO };
         return next;
       });
       safeSetTimeout(() => setShowJurisdictionPanel(true), 200);
