@@ -1896,46 +1896,6 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
   // Build the scope-confirmation recap CoCounsel posts after the jurisdiction is
   // resolved (mirrors the bullet summary in the brief).
-  const buildAiGovScopeRecap = useCallback((priorityStates: string[], documents?: PlanDocument[]) => {
-    const priorityLabel =
-      priorityStates.length > 0
-        ? priorityStates.join(', ')
-        : 'California and New York';
-    const docLabel =
-      documents && documents.length > 0
-        ? documents
-            .map((d) => (d.date ? `${d.title} (${d.date})` : d.title))
-            .join(', ')
-        : 'Credit Decisioning Policy (March 2026), Consumer Disclosure Templates (January 2026), and Internal AI Use Guidelines (April 2026)';
-    return (
-      <ul className="flex flex-col gap-2 list-disc pl-5 text-[#212223] text-[15px] leading-[1.5]">
-        <li>
-          <span className="font-semibold">Topic:</span> US AI regulation governing
-          automated decision-making, workplace AI, and consumer-facing applications,
-          with a focus on consumer lending and credit decisioning
-        </li>
-        <li>
-          <span className="font-semibold">Jurisdictions:</span> Federal + all 50
-          states, with priority on {priorityLabel}
-        </li>
-        <li>
-          <span className="font-semibold">Time horizon:</span> In effect now + taking
-          effect within 12 months as the primary focus; significant pending
-          legislation beyond 12 months flagged separately for planning purposes
-        </li>
-        <li>
-          <span className="font-semibold">Sources:</span> Westlaw, Practical Law,
-          International Research, and web sources
-        </li>
-        <li>
-          <span className="font-semibold">Documents:</span> From your AI Governance
-          workspace — {docLabel}. I will flag any specific clauses that may need to be
-          reviewed based on what I find.
-        </li>
-      </ul>
-    );
-  }, []);
-
   // Post a brief "Working on it..." beat, then the clarifying question, then open
   // the jurisdiction panel in the input area.
   const startJurisdictionClarification = useCallback(() => {
@@ -1998,15 +1958,15 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     safeSetTimeout(() => setShowScanPlanPanel(true), 250);
   }, [safeSetTimeout]);
 
-  // User confirmed the plan ("Looks good — proceed"): record the final plan as a
-  // scope recap message, then kick off the research workflow animation.
-  const handleScanPlanProceed = useCallback((documents: PlanDocument[]) => {
+  // User confirmed the plan ("Looks good — proceed"): record the confirmation and
+  // kick off the research workflow animation. The scope details aren't echoed back
+  // as bullets here since they already surface in the reasoning builder.
+  const handleScanPlanProceed = useCallback((_documents: PlanDocument[]) => {
     setShowScanPlanPanel(false);
 
     setMessages(prev => [
       ...prev,
       { role: 'user', text: 'Looks good — proceed' },
-      { role: 'assistant', text: buildAiGovScopeRecap(planPriorityStates, documents) },
     ]);
 
     // Drive the research animation via the sentinel prompt so naming/topic stay
@@ -2015,7 +1975,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     safeSetTimeout(() => {
       processChat([{ role: 'user', text: '__ai_gov_research__ us ai legislation' }]);
     }, 400);
-  }, [buildAiGovScopeRecap, planPriorityStates, processChat, safeSetTimeout]);
+  }, [processChat, safeSetTimeout]);
 
   // User wants to tweak the plan ("Let me adjust something"): close the panel and
   // return to the normal chat input so they can describe the change.
