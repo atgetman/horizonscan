@@ -26,7 +26,7 @@ export function SpreadsheetToolbar({ isChatOpen, onToggleChat, isCommentsOpen = 
     const handleSaveAlert = () => {
         // Create the alert (shared across surfaces via MonitoringContext)
         addAlert({
-            topic: 'M&A Regulatory Updates - Project Atlas',
+            topic: 'M&A Regulatory Updates - Project Harbor',
             criteria: 'Monitor regulatory changes affecting M&A transactions including antitrust guidelines, SPAC disclosure rules, CFIUS requirements, and other merger-related regulations',
             frequency: selectedFrequency,
             practiceAreas: ['Corporate', 'M&A'],

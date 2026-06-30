@@ -114,7 +114,7 @@ export function CPCHandoffScreen({ regulation, docsAffected, clausesAffected, im
           {expandedSection === 'what-checked' && (
             <div className="px-4 pb-4 bg-white">
               <p className="font-['Source_Sans_3'] text-[13px] text-[#666] leading-[1.5] mb-3">
-                Analyzed all M&A transaction documents in the Project Atlas workspace for compliance with {regulation}.
+                Analyzed all M&A transaction documents in the Project Harbor workspace for compliance with {regulation}.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2">
@@ -170,7 +170,7 @@ export function CPCHandoffScreen({ regulation, docsAffected, clausesAffected, im
                     <FileText className="size-4 text-[#D97706] shrink-0 mt-0.5" />
                     <div>
                       <p className="font-['Source_Sans_3'] font-medium text-[13px] text-[#212223]">
-                        Stock Purchase Agreement - Acme Corp.docx
+                        Stock Purchase Agreement - Sterling Capital.docx
                       </p>
                       <p className="font-['Source_Sans_3'] text-[12px] text-[#666]">
                         7 clauses require updates • High priority
@@ -256,7 +256,7 @@ export function CPCHandoffScreen({ regulation, docsAffected, clausesAffected, im
                       Coordinate with counterparty
                     </p>
                     <p className="font-['Source_Sans_3'] text-[12px] text-[#666]">
-                      Share compliance updates with Acme Corp legal team for alignment on required changes
+                      Share compliance updates with Sterling Capital legal team for alignment on required changes
                     </p>
                   </div>
                 </li>

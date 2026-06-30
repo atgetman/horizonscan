@@ -88,7 +88,7 @@ export function HorizonChatIntegration({ mode, onNavigate }: HorizonChatIntegrat
         documents={[
           {
             id: 'doc1',
-            title: 'Series B Investment Agreement - Acme Ventures',
+            title: 'Series B Investment Agreement - Sterling Capital',
             clauses: [
               {
                 id: 'clause1',

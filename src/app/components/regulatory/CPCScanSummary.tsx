@@ -72,7 +72,7 @@ export function CPCScanSummary({
           {expandedSections.has('what-checked') && (
             <div className="mt-2 pb-4">
               <p className="text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5] mb-3">
-                Analyzed all M&A transaction documents in the Project Atlas workspace for compliance with {regulation}.
+                Analyzed all M&A transaction documents in the Project Harbor workspace for compliance with {regulation}.
               </p>
 
               {/* Table - matching RegulatoryScanSummary */}

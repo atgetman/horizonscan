@@ -16,7 +16,43 @@ interface RegulatoryScanSummaryProps {
   topFindings: TopFinding[];
   documentsAffected: number;
   onViewAffectedClauses?: () => void;
+  variant?: 'ma' | 'ai-gov';
 }
+
+// Scenario-specific copy + alert payloads so this summary can serve both the
+// M&A regulatory scan and the AI governance legislation scan.
+const SCAN_VARIANTS = {
+  'ma': {
+    scopeText: 'Scanned federal and state regulatory sources for changes affecting M&A transactions.',
+    docsText: (n: number) => `Potential impact across ${n} standard M&A templates. Connect a document library to see impact on your own documents.`,
+    nextSteps: [
+      'Review High impact items before their compliance deadlines',
+      'Run Contract Policy Check on affected templates to identify specific clause updates needed',
+      'Set up monitoring for M&A regulatory changes to stay updated on new developments',
+    ],
+    alert: {
+      topic: 'M&A Regulatory Updates',
+      criteria: 'Monitor regulatory changes affecting M&A transactions',
+      practiceAreas: ['Corporate', 'M&A'],
+      jurisdictions: ['Federal', 'Multi-jurisdictional'],
+    },
+  },
+  'ai-gov': {
+    scopeText: 'Scanned federal and state sources for AI legislation governing automated decision-making, workplace AI, and consumer-facing products, with a focus on consumer lending and credit decisioning.',
+    docsText: (n: number) => `Potential impact across ${n} documents in your AI Governance workspace, including your Credit Decisioning Policy, Consumer Disclosure Templates, and Internal AI Use Guidelines.`,
+    nextSteps: [
+      'Review High impact items (Colorado AI Act, EU AI Act, CFPB adverse-action guidance) before their compliance deadlines',
+      'Run Contract Policy Check on affected AI governance documents to identify specific clause updates needed',
+      'Set up monitoring for AI legislation to stay ahead of pending state and federal requirements',
+    ],
+    alert: {
+      topic: 'AI Legislation Updates',
+      criteria: 'Monitor AI legislation affecting automated decision-making, consumer lending, and credit decisioning',
+      practiceAreas: ['AI Governance', 'Consumer Finance'],
+      jurisdictions: ['Federal', 'California', 'New York', 'Colorado', 'EU'],
+    },
+  },
+} as const;
 
 const impactColors = {
   High: {
@@ -38,8 +74,10 @@ export function RegulatoryScanSummary({
   highestImpact,
   topFindings,
   documentsAffected,
-  onViewAffectedClauses
+  onViewAffectedClauses,
+  variant = 'ma'
 }: RegulatoryScanSummaryProps) {
+  const config = SCAN_VARIANTS[variant];
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['what-found']));
   // Shared alert state — synced across the chat summary and the tabular toolbar
   const { savedAlerts, addAlert, removeAlert } = useMonitoring();
@@ -54,11 +92,11 @@ export function RegulatoryScanSummary({
     setShowFrequencyChips(false);
     if (!alertSaved) {
       addAlert({
-        topic: 'M&A Regulatory Updates',
-        criteria: 'Monitor regulatory changes affecting M&A transactions',
+        topic: config.alert.topic,
+        criteria: config.alert.criteria,
         frequency: 'weekly',
-        practiceAreas: ['Corporate', 'M&A'],
-        jurisdictions: ['Federal', 'Multi-jurisdictional'],
+        practiceAreas: [...config.alert.practiceAreas],
+        jurisdictions: [...config.alert.jurisdictions],
         status: 'active',
         lastScan: 'Just now',
         nextScan: '7 days',
@@ -74,11 +112,11 @@ export function RegulatoryScanSummary({
       removeAlert(regulatoryAlert.id);
     }
     addAlert({
-      topic: 'M&A Regulatory Updates',
-      criteria: 'Monitor regulatory changes affecting M&A transactions',
+      topic: config.alert.topic,
+      criteria: config.alert.criteria,
       frequency: freq,
-      practiceAreas: ['Corporate', 'M&A'],
-      jurisdictions: ['Federal', 'Multi-jurisdictional'],
+      practiceAreas: [...config.alert.practiceAreas],
+      jurisdictions: [...config.alert.jurisdictions],
       status: 'active',
       lastScan: 'Just now',
       nextScan: freq === 'daily' ? 'Tomorrow' : freq === 'weekly' ? '7 days' : '30 days',
@@ -132,7 +170,7 @@ export function RegulatoryScanSummary({
           {expandedSections.has('what-found') && (
             <div className="mt-2 pb-4">
               <p className="text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5] mb-3">
-                Scanned federal and state regulatory sources for changes affecting M&A transactions. Found {totalFindings} regulatory updates with {highestImpact} impact items requiring immediate attention.
+                {config.scopeText} Found {totalFindings} regulatory updates with {highestImpact} impact items requiring immediate attention.
               </p>
 
               {/* Top findings mini table */}
@@ -238,7 +276,7 @@ export function RegulatoryScanSummary({
           {expandedSections.has('docs-affected') && (
             <div className="mt-2">
               <p className="text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5] mb-3">
-                Potential impact across {documentsAffected} standard M&A templates. Connect a document library to see impact on your own documents.
+                {config.docsText(documentsAffected)}
               </p>
               {onViewAffectedClauses && (
                 <button
@@ -272,18 +310,12 @@ export function RegulatoryScanSummary({
           {expandedSections.has('next-steps') && (
             <div className="mt-2">
               <ul className="space-y-2 text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">•</span>
-                  <span>Review High impact items before their compliance deadlines</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">•</span>
-                  <span>Run Contract Policy Check on affected templates to identify specific clause updates needed</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#1d4b34] shrink-0">•</span>
-                  <span>Set up monitoring for M&A regulatory changes to stay updated on new developments</span>
-                </li>
+                {config.nextSteps.map((step, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-[#1d4b34] shrink-0">•</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           )}
