@@ -16,7 +16,7 @@ const COLUMN_HEADERS = [
 
 interface RegulatoryFinding {
   title: string;
-  sourceType: 'TR Product' | 'Reuters News' | 'Web Source';
+  sourceType: 'TR Product' | 'Reuters News' | 'Web Source' | 'Westlaw' | 'Practical Law' | 'International Research' | 'Web sources';
   summary: string;
   impactLevel: 'High' | 'Medium' | 'Low';
   relevance: string;
@@ -118,95 +118,97 @@ const MA_REGULATORY_DATA: RegulatoryFinding[] = [
   },
 ];
 
-// AI governance / AI legislation findings data (consumer lending & credit decisioning focus)
+// AI governance / AI legislation findings data — aligned to the chosen scope:
+// Federal + all 50 states, with priority on California and New York. Sources are
+// limited to Westlaw, Practical Law, International Research, and web sources.
 const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
   {
-    title: 'Colorado AI Act (SB 24-205) - Consumer Protections for Artificial Intelligence',
-    sourceType: 'TR Product',
-    summary: 'First comprehensive US state AI law imposing a duty of reasonable care on developers and deployers of high-risk AI systems to prevent algorithmic discrimination, including consumer lending and credit decisioning. Requires impact assessments, consumer notices, and disclosure of automated decisions.',
+    title: 'Federal — CFPB Circular 2022-03: Adverse Action Notices for AI Credit Denials',
+    sourceType: 'Westlaw',
+    summary: 'CFPB circular confirms ECOA/Regulation B require specific, accurate reasons for adverse credit actions even when lenders use complex algorithms or "black-box" AI models. Generic or checklist reasons are insufficient.',
     impactLevel: 'High',
-    relevance: '96%',
-    rationale: 'Directly governs automated credit and lending decisions. Requires impact assessments and consumer disclosures that affect your Credit Decisioning Policy and Consumer Disclosure Templates.',
-    complianceDate: '2026-06-30',
+    relevance: '95%',
+    rationale: 'Directly governs adverse action workflows and model explainability for AI-driven credit denials. Requires updates to your Credit Decisioning Policy and Consumer Disclosure Templates.',
+    complianceDate: 'In effect',
     docsAffected: 9,
     clausesAffected: 21
   },
   {
-    title: 'EU AI Act - High-Risk Classification for Creditworthiness Scoring',
-    sourceType: 'TR Product',
-    summary: 'Classifies AI systems used to evaluate creditworthiness or establish credit scores as "high-risk," triggering conformity assessments, risk management, data governance, human oversight, and transparency obligations.',
+    title: 'Federal — Interagency Model Risk Management Guidance (SR 11-7) Applied to AI/ML Models',
+    sourceType: 'Practical Law',
+    summary: 'Federal Reserve, OCC and FDIC guidance on model risk management is increasingly applied to AI/ML credit and underwriting models, expecting documented validation, monitoring, and governance controls.',
     impactLevel: 'High',
-    relevance: '93%',
-    rationale: 'Applies to any consumer-facing credit scoring offered to EU data subjects. Requires documented risk management and human oversight controls in your AI use guidelines.',
-    complianceDate: '2026-08-02',
+    relevance: '90%',
+    rationale: 'Sets supervisory expectations for validation and human oversight of credit-decisioning models. Affects your Internal AI Use Guidelines and model governance documentation.',
+    complianceDate: 'In effect',
     docsAffected: 7,
     clausesAffected: 18
   },
   {
-    title: 'CFPB Guidance on Adverse Action Notices for AI Credit Denials',
-    sourceType: 'Reuters News',
-    summary: 'CFPB circular confirms ECOA/Reg B require specific, accurate reasons for adverse credit actions even when lenders use complex algorithms or "black-box" AI models. Generic or checklist reasons are insufficient.',
-    impactLevel: 'High',
-    relevance: '91%',
-    rationale: 'Affects adverse action notice workflows and model explainability requirements for AI-driven credit denials. Impacts Consumer Disclosure Templates.',
-    complianceDate: 'In effect',
-    docsAffected: 6,
-    clausesAffected: 14
-  },
-  {
-    title: 'California ADMT Regulations (CPPA) - Automated Decisionmaking Technology',
-    sourceType: 'TR Product',
+    title: 'California — CPPA Automated Decisionmaking Technology (ADMT) Regulations',
+    sourceType: 'Westlaw',
     summary: 'CPPA rulemaking establishes consumer rights to access and opt out of automated decisionmaking technology used for significant decisions, including financial services and lending, with pre-use notice requirements.',
-    impactLevel: 'Medium',
-    relevance: '87%',
-    rationale: 'Introduces opt-out and pre-use notice obligations for ADMT in lending. Requires updates to consumer-facing disclosures and data handling procedures.',
+    impactLevel: 'High',
+    relevance: '92%',
+    rationale: 'Introduces opt-out and pre-use notice obligations for ADMT in lending. Requires updates to consumer-facing disclosures and data-handling procedures in priority jurisdiction California.',
     complianceDate: '2027-01-01',
     docsAffected: 8,
-    clausesAffected: 16
+    clausesAffected: 17
   },
   {
-    title: 'NYC Local Law 144 - Automated Employment Decision Tools (AEDT)',
-    sourceType: 'Web Source',
+    title: 'New York — NYDFS Circular Letter on AI and External Consumer Data in Underwriting',
+    sourceType: 'Practical Law',
+    summary: 'NYDFS guidance addresses the use of artificial intelligence and external consumer data sources in underwriting and pricing, requiring fairness testing, documentation, and demonstrable lack of unlawful discrimination.',
+    impactLevel: 'High',
+    relevance: '89%',
+    rationale: 'NYDFS supervises Meridian\u2019s lending activity in priority jurisdiction New York. Requires bias testing and documentation tied to your Credit Decisioning Policy.',
+    complianceDate: 'In effect',
+    docsAffected: 6,
+    clausesAffected: 15
+  },
+  {
+    title: 'California — AB 2013: Generative AI Training Data Transparency',
+    sourceType: 'Westlaw',
+    summary: 'Requires developers of generative AI systems to publicly document the datasets used to train those systems, including data sources and whether personal information is included.',
+    impactLevel: 'Medium',
+    relevance: '81%',
+    rationale: 'Applies to consumer-facing generative AI features. May require disclosure updates if Meridian deploys generative tools in California-facing products.',
+    complianceDate: '2026-01-01',
+    docsAffected: 4,
+    clausesAffected: 10
+  },
+  {
+    title: 'New York City — Local Law 144: Automated Employment Decision Tools (AEDT)',
+    sourceType: 'Web sources',
     summary: 'Requires independent bias audits and candidate notice for automated employment decision tools used in hiring and promotion within New York City.',
     impactLevel: 'Medium',
-    relevance: '78%',
-    rationale: 'Relevant to workplace AI use governed by your Internal AI Use Guidelines, though not directly tied to consumer lending.',
+    relevance: '76%',
+    rationale: 'Relevant to workplace AI use governed by your Internal AI Use Guidelines for New York-based hiring, though not tied to consumer lending.',
     complianceDate: 'In effect',
     docsAffected: 3,
     clausesAffected: 7
   },
   {
-    title: 'Utah Artificial Intelligence Policy Act (SB 149)',
-    sourceType: 'TR Product',
-    summary: 'Requires clear disclosure when consumers interact with generative AI in regulated occupations and consumer transactions, with liability for deceptive AI use under existing consumer protection law.',
-    impactLevel: 'Medium',
-    relevance: '74%',
-    rationale: 'Imposes consumer disclosure obligations for AI interactions in consumer-facing products. May require updates to chatbot and disclosure language.',
-    complianceDate: 'In effect',
-    docsAffected: 4,
-    clausesAffected: 9
-  },
-  {
-    title: 'Illinois HB 3773 - AI Use in Employment Decisions',
-    sourceType: 'Reuters News',
-    summary: 'Amends the Illinois Human Rights Act to prohibit AI that has a discriminatory effect in employment decisions and requires notice when AI is used.',
+    title: 'Federal — EEOC Guidance on AI, Algorithmic Fairness and the ADA in Employment',
+    sourceType: 'Web sources',
+    summary: 'EEOC guidance addresses how the use of AI and algorithmic tools in employment decisions can implicate the Americans with Disabilities Act and Title VII, with notice and accommodation considerations.',
     impactLevel: 'Low',
-    relevance: '69%',
-    rationale: 'Primarily workplace-focused; modest impact on internal AI governance policies rather than consumer lending products.',
-    complianceDate: '2026-01-01',
+    relevance: '68%',
+    rationale: 'Primarily workplace-focused; modest impact on Internal AI Use Guidelines rather than consumer lending products.',
+    complianceDate: 'In effect',
     docsAffected: 2,
     clausesAffected: 5
   },
   {
-    title: 'Federal — OMB / White House AI Governance Guidance',
-    sourceType: 'Web Source',
-    summary: 'Federal executive guidance directs agencies on safe, secure, and trustworthy AI, signaling forthcoming expectations for risk management and transparency that may shape financial-services supervision.',
-    impactLevel: 'Low',
-    relevance: '64%',
-    rationale: 'No direct private-sector mandate yet, but flagged for planning as it signals likely federal direction beyond 12 months.',
-    complianceDate: 'TBD (Pending)',
-    docsAffected: 1,
-    clausesAffected: 3
+    title: 'International (comparative) — EU AI Act High-Risk Classification for Creditworthiness Scoring',
+    sourceType: 'International Research',
+    summary: 'Classifies AI systems used to evaluate creditworthiness or establish credit scores as "high-risk," triggering conformity assessments, risk management, data governance, human oversight, and transparency obligations.',
+    impactLevel: 'Medium',
+    relevance: '72%',
+    rationale: 'Flagged via International Research as comparative guidance. Relevant if Meridian extends consumer credit to EU data subjects; informs emerging US human-oversight expectations.',
+    complianceDate: '2026-08-02',
+    docsAffected: 3,
+    clausesAffected: 8
   },
 ];
 
@@ -321,10 +323,12 @@ export function MARegulatoryTable() {
                   "inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium",
                   "bg-[#EDEDED] text-[#404040]"
                 )}>
-                  {finding.sourceType === 'TR Product' && <Database className="size-3 shrink-0" />}
-                  {finding.sourceType === 'Reuters News' && <Newspaper className="size-3 shrink-0" />}
-                  {finding.sourceType === 'Web Source' && <Globe className="size-3 shrink-0" />}
-                  {finding.sourceType}
+                          {(finding.sourceType === 'TR Product' || finding.sourceType === 'Westlaw') && <Database className="size-3 shrink-0" />}
+                          {finding.sourceType === 'Practical Law' && <FileText className="size-3 shrink-0" />}
+                          {finding.sourceType === 'International Research' && <Globe className="size-3 shrink-0" />}
+                          {finding.sourceType === 'Reuters News' && <Newspaper className="size-3 shrink-0" />}
+                          {(finding.sourceType === 'Web Source' || finding.sourceType === 'Web sources') && <Globe className="size-3 shrink-0" />}
+                          {finding.sourceType}
                 </span>
               </div>
 

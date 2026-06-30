@@ -41,15 +41,15 @@ const SCAN_VARIANTS = {
     scopeText: 'Scanned federal and state sources for AI legislation governing automated decision-making, workplace AI, and consumer-facing products, with a focus on consumer lending and credit decisioning.',
     docsText: (n: number) => `Potential impact across ${n} documents in your AI Governance workspace, including your Credit Decisioning Policy, Consumer Disclosure Templates, and Internal AI Use Guidelines.`,
     nextSteps: [
-      'Review High impact items (Colorado AI Act, EU AI Act, CFPB adverse-action guidance) before their compliance deadlines',
+      'Review High impact items (CFPB AI adverse-action guidance, California CPPA ADMT, NYDFS AI underwriting guidance) before their compliance deadlines',
       'Run Contract Policy Check on affected AI governance documents to identify specific clause updates needed',
-      'Set up monitoring for AI legislation to stay ahead of pending state and federal requirements',
+      'Set up monitoring for AI legislation to stay ahead of pending federal, California, and New York requirements',
     ],
     alert: {
       topic: 'AI Legislation Updates',
       criteria: 'Monitor AI legislation affecting automated decision-making, consumer lending, and credit decisioning',
       practiceAreas: ['AI Governance', 'Consumer Finance'],
-      jurisdictions: ['Federal', 'California', 'New York', 'Colorado', 'EU'],
+      jurisdictions: ['Federal', 'California', 'New York'],
     },
   },
 } as const;
