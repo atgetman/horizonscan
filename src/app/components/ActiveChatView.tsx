@@ -6,6 +6,7 @@ import { FileText, Folder, Table, X, MessageCircleQuestion, ChevronUp, ChevronDo
 import { PromptInput } from './PromptInput';
 import { SkillClarifyingQuestions } from './SkillClarifyingQuestions';
 import { JurisdictionClarifyingPanel } from './JurisdictionClarifyingPanel';
+import { ScanPlanPanel, type PlanDocument } from './ScanPlanPanel';
 import { SkillBuildingMessage } from './SkillBuildingMessage';
 import { streamChat, streamChatHybrid } from '../services/ChatService';
 import { ScrollableDropdown } from './ScrollableDropdown';
@@ -517,6 +518,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [reasoningSteps, setReasoningSteps] = useState<number>(0);
   const [showSkillQuestions, setShowSkillQuestions] = useState(false);
   const [showJurisdictionPanel, setShowJurisdictionPanel] = useState(false);
+  const [showScanPlanPanel, setShowScanPlanPanel] = useState(false);
+  const [planPriorityStates, setPlanPriorityStates] = useState<string[]>([]);
   const jurisdictionResolvedRef = useRef(false);
   const [isReasoningLoading, setIsReasoningLoading] = useState(false);
   const [showSearching, setShowSearching] = useState(false);
@@ -1893,11 +1896,17 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
   // Build the scope-confirmation recap CoCounsel posts after the jurisdiction is
   // resolved (mirrors the bullet summary in the brief).
-  const buildAiGovScopeRecap = useCallback((priorityStates: string[]) => {
+  const buildAiGovScopeRecap = useCallback((priorityStates: string[], documents?: PlanDocument[]) => {
     const priorityLabel =
       priorityStates.length > 0
         ? priorityStates.join(', ')
         : 'California and New York';
+    const docLabel =
+      documents && documents.length > 0
+        ? documents
+            .map((d) => (d.date ? `${d.title} (${d.date})` : d.title))
+            .join(', ')
+        : 'Credit Decisioning Policy (March 2026), Consumer Disclosure Templates (January 2026), and Internal AI Use Guidelines (April 2026)';
     return (
       <ul className="flex flex-col gap-2 list-disc pl-5 text-[#212223] text-[15px] leading-[1.5]">
         <li>
@@ -1919,12 +1928,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
           International Research, and web sources
         </li>
         <li>
-          <span className="font-semibold">Documents:</span> I can see the AI Governance
-          workspace — I found your Credit Decisioning Policy (March 2026), Consumer
-          Disclosure Templates (January 2026), and Internal AI Use Guidelines (April
-          2026). I will flag any specific clauses that may need to be reviewed based on
-          what I find. Let me know if there are additional documents you would like
-          included.
+          <span className="font-semibold">Documents:</span> From your AI Governance
+          workspace — {docLabel}. I will flag any specific clauses that may need to be
+          reviewed based on what I find.
         </li>
       </ul>
     );
@@ -1970,11 +1976,12 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     }, 1400);
   }, [onThinkingChange, safeSetTimeout]);
 
-  // Once the user submits or skips the jurisdiction panel, post the scope recap
-  // and kick off the research workflow animation.
+  // Once the user submits or skips the jurisdiction panel, record the user's
+  // priority selection and present the editable scan plan for review.
   const handleJurisdictionResolved = useCallback((selectedStates: string[]) => {
     setShowJurisdictionPanel(false);
     jurisdictionResolvedRef.current = true;
+    setPlanPriorityStates(selectedStates);
 
     setMessages(prev => {
       const next = [...prev];
@@ -1984,12 +1991,23 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
           text: `Prioritize: ${selectedStates.join(', ')}`,
         });
       }
-      next.push({
-        role: 'assistant',
-        text: buildAiGovScopeRecap(selectedStates),
-      });
       return next;
     });
+
+    // Show the scan plan panel so the user can confirm or edit before the scan.
+    safeSetTimeout(() => setShowScanPlanPanel(true), 250);
+  }, [safeSetTimeout]);
+
+  // User confirmed the plan ("Looks good — proceed"): record the final plan as a
+  // scope recap message, then kick off the research workflow animation.
+  const handleScanPlanProceed = useCallback((documents: PlanDocument[]) => {
+    setShowScanPlanPanel(false);
+
+    setMessages(prev => [
+      ...prev,
+      { role: 'user', text: 'Looks good — proceed' },
+      { role: 'assistant', text: buildAiGovScopeRecap(planPriorityStates, documents) },
+    ]);
 
     // Drive the research animation via the sentinel prompt so naming/topic stay
     // controlled. The visible messages are managed above; this history is only
@@ -1997,7 +2015,20 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     safeSetTimeout(() => {
       processChat([{ role: 'user', text: '__ai_gov_research__ us ai legislation' }]);
     }, 400);
-  }, [buildAiGovScopeRecap, processChat, safeSetTimeout]);
+  }, [buildAiGovScopeRecap, planPriorityStates, processChat, safeSetTimeout]);
+
+  // User wants to tweak the plan ("Let me adjust something"): close the panel and
+  // return to the normal chat input so they can describe the change.
+  const handleScanPlanAdjust = useCallback(() => {
+    setShowScanPlanPanel(false);
+    setMessages(prev => [
+      ...prev,
+      {
+        role: 'assistant',
+        text: 'No problem — what would you like to adjust? You can change the jurisdictions, time horizon, sources, or documents to include.',
+      },
+    ]);
+  }, []);
 
   const handleFollowUp = (text: string, files: StagedItem[]) => {
       // Optimistically add user message
@@ -3002,6 +3033,12 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                  question={JURISDICTION_QUESTION}
                  onSubmit={handleJurisdictionResolved}
                  onSkip={() => handleJurisdictionResolved([])}
+             />
+         ) : showScanPlanPanel ? (
+             <ScanPlanPanel
+                 priorityStates={planPriorityStates}
+                 onProceed={handleScanPlanProceed}
+                 onAdjust={handleScanPlanAdjust}
              />
          ) : showSkillQuestions ? (
              <div className="flex justify-center w-full">
