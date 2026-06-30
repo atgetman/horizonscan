@@ -118,6 +118,98 @@ const MA_REGULATORY_DATA: RegulatoryFinding[] = [
   },
 ];
 
+// AI governance / AI legislation findings data (consumer lending & credit decisioning focus)
+const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
+  {
+    title: 'Colorado AI Act (SB 24-205) - Consumer Protections for Artificial Intelligence',
+    sourceType: 'TR Product',
+    summary: 'First comprehensive US state AI law imposing a duty of reasonable care on developers and deployers of high-risk AI systems to prevent algorithmic discrimination, including consumer lending and credit decisioning. Requires impact assessments, consumer notices, and disclosure of automated decisions.',
+    impactLevel: 'High',
+    relevance: '96%',
+    rationale: 'Directly governs automated credit and lending decisions. Requires impact assessments and consumer disclosures that affect your Credit Decisioning Policy and Consumer Disclosure Templates.',
+    complianceDate: '2026-06-30',
+    docsAffected: 9,
+    clausesAffected: 21
+  },
+  {
+    title: 'EU AI Act - High-Risk Classification for Creditworthiness Scoring',
+    sourceType: 'TR Product',
+    summary: 'Classifies AI systems used to evaluate creditworthiness or establish credit scores as "high-risk," triggering conformity assessments, risk management, data governance, human oversight, and transparency obligations.',
+    impactLevel: 'High',
+    relevance: '93%',
+    rationale: 'Applies to any consumer-facing credit scoring offered to EU data subjects. Requires documented risk management and human oversight controls in your AI use guidelines.',
+    complianceDate: '2026-08-02',
+    docsAffected: 7,
+    clausesAffected: 18
+  },
+  {
+    title: 'CFPB Guidance on Adverse Action Notices for AI Credit Denials',
+    sourceType: 'Reuters News',
+    summary: 'CFPB circular confirms ECOA/Reg B require specific, accurate reasons for adverse credit actions even when lenders use complex algorithms or "black-box" AI models. Generic or checklist reasons are insufficient.',
+    impactLevel: 'High',
+    relevance: '91%',
+    rationale: 'Affects adverse action notice workflows and model explainability requirements for AI-driven credit denials. Impacts Consumer Disclosure Templates.',
+    complianceDate: 'In effect',
+    docsAffected: 6,
+    clausesAffected: 14
+  },
+  {
+    title: 'California ADMT Regulations (CPPA) - Automated Decisionmaking Technology',
+    sourceType: 'TR Product',
+    summary: 'CPPA rulemaking establishes consumer rights to access and opt out of automated decisionmaking technology used for significant decisions, including financial services and lending, with pre-use notice requirements.',
+    impactLevel: 'Medium',
+    relevance: '87%',
+    rationale: 'Introduces opt-out and pre-use notice obligations for ADMT in lending. Requires updates to consumer-facing disclosures and data handling procedures.',
+    complianceDate: '2027-01-01',
+    docsAffected: 8,
+    clausesAffected: 16
+  },
+  {
+    title: 'NYC Local Law 144 - Automated Employment Decision Tools (AEDT)',
+    sourceType: 'Web Source',
+    summary: 'Requires independent bias audits and candidate notice for automated employment decision tools used in hiring and promotion within New York City.',
+    impactLevel: 'Medium',
+    relevance: '78%',
+    rationale: 'Relevant to workplace AI use governed by your Internal AI Use Guidelines, though not directly tied to consumer lending.',
+    complianceDate: 'In effect',
+    docsAffected: 3,
+    clausesAffected: 7
+  },
+  {
+    title: 'Utah Artificial Intelligence Policy Act (SB 149)',
+    sourceType: 'TR Product',
+    summary: 'Requires clear disclosure when consumers interact with generative AI in regulated occupations and consumer transactions, with liability for deceptive AI use under existing consumer protection law.',
+    impactLevel: 'Medium',
+    relevance: '74%',
+    rationale: 'Imposes consumer disclosure obligations for AI interactions in consumer-facing products. May require updates to chatbot and disclosure language.',
+    complianceDate: 'In effect',
+    docsAffected: 4,
+    clausesAffected: 9
+  },
+  {
+    title: 'Illinois HB 3773 - AI Use in Employment Decisions',
+    sourceType: 'Reuters News',
+    summary: 'Amends the Illinois Human Rights Act to prohibit AI that has a discriminatory effect in employment decisions and requires notice when AI is used.',
+    impactLevel: 'Low',
+    relevance: '69%',
+    rationale: 'Primarily workplace-focused; modest impact on internal AI governance policies rather than consumer lending products.',
+    complianceDate: '2026-01-01',
+    docsAffected: 2,
+    clausesAffected: 5
+  },
+  {
+    title: 'Federal — OMB / White House AI Governance Guidance',
+    sourceType: 'Web Source',
+    summary: 'Federal executive guidance directs agencies on safe, secure, and trustworthy AI, signaling forthcoming expectations for risk management and transparency that may shape financial-services supervision.',
+    impactLevel: 'Low',
+    relevance: '64%',
+    rationale: 'No direct private-sector mandate yet, but flagged for planning as it signals likely federal direction beyond 12 months.',
+    complianceDate: 'TBD (Pending)',
+    docsAffected: 1,
+    clausesAffected: 3
+  },
+];
+
 export function MARegulatoryTable() {
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
@@ -125,9 +217,18 @@ export function MARegulatoryTable() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedFinding, setSelectedFinding] = useState<RegulatoryFinding | null>(null);
 
+  // Scenario variant — the AI governance scan reuses this tabular view with a
+  // different dataset and labels. Read once from sessionStorage (set when the
+  // scan artifact is opened) so the standalone route renders the right content.
+  const isAiGov =
+    typeof window !== 'undefined' &&
+    sessionStorage.getItem('regulatoryScanVariant') === 'ai-gov';
+  const REGULATORY_DATA = isAiGov ? AI_GOV_REGULATORY_DATA : MA_REGULATORY_DATA;
+  const templatesLabel = isAiGov ? 'AI governance policies' : 'standard M&A templates';
+
   const handleCellClick = (rowIndex: number) => {
     setSelectedRow(rowIndex);
-    setSelectedFinding(MA_REGULATORY_DATA[rowIndex]);
+    setSelectedFinding(REGULATORY_DATA[rowIndex]);
     setDrawerOpen(true);
   };
 
@@ -142,8 +243,8 @@ export function MARegulatoryTable() {
   };
 
   // Calculate stats
-  const totalDocuments = MA_REGULATORY_DATA.reduce((sum, finding) => sum + finding.docsAffected, 0);
-  const highPriorityCount = MA_REGULATORY_DATA.filter(f => f.impactLevel === 'High').length;
+  const totalDocuments = REGULATORY_DATA.reduce((sum, finding) => sum + finding.docsAffected, 0);
+  const highPriorityCount = REGULATORY_DATA.filter(f => f.impactLevel === 'High').length;
 
   return (
     <>
@@ -163,9 +264,9 @@ export function MARegulatoryTable() {
               <Bell className="size-3 text-white" />
             </div>
             <span className="text-[13px] text-[#1F1F1F]">
-              <span className="font-medium">{MA_REGULATORY_DATA.length} of {MA_REGULATORY_DATA.length} regulatory findings</span>
+              <span className="font-medium">{REGULATORY_DATA.length} of {REGULATORY_DATA.length} regulatory findings</span>
               <span className="text-[#666] mx-2">•</span>
-              <span className="font-medium">{totalDocuments} documents affected across standard M&A templates</span>
+              <span className="font-medium">{totalDocuments} documents affected across {templatesLabel}</span>
               <span className="text-[#666] mx-2">•</span>
               <span className="text-[#D97706] font-medium">{highPriorityCount} high priority items require immediate attention</span>
             </span>
@@ -190,7 +291,7 @@ export function MARegulatoryTable() {
           </div>
 
           {/* Rows */}
-          {MA_REGULATORY_DATA.map((finding, idx) => (
+          {REGULATORY_DATA.map((finding, idx) => (
             <div 
               key={idx} 
               className={clsx(
@@ -323,7 +424,7 @@ export function MARegulatoryTable() {
           {/* Empty Rows to fill space */}
           {Array.from({ length: 10 }).map((_, idx) => (
             <div key={`empty-${idx}`} className="flex border-b border-[#E5E5E5]">
-              <div className="w-10 shrink-0 border-r border-[#E5E5E5] bg-[#F5F5F5] flex items-center justify-center font-semibold text-gray-600 py-2">{MA_REGULATORY_DATA.length + idx + 1}</div>
+              <div className="w-10 shrink-0 border-r border-[#E5E5E5] bg-[#F5F5F5] flex items-center justify-center font-semibold text-gray-600 py-2">{REGULATORY_DATA.length + idx + 1}</div>
               <div className="w-[380px] shrink-0 border-r border-[#E5E5E5] px-2 py-2 hover:bg-[#EDF2F0] cursor-cell"></div>
               <div className="w-[140px] shrink-0 border-r border-[#E5E5E5] px-2 py-2 hover:bg-[#EDF2F0] cursor-cell"></div>
               <div className="w-[320px] shrink-0 border-r border-[#E5E5E5] px-2 py-2 hover:bg-[#EDF2F0] cursor-cell"></div>

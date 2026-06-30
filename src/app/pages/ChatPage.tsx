@@ -79,7 +79,12 @@ export function ChatPage() {
 
   const openRegulatoryTable = () => {
     sessionStorage.setItem('regulatoryTableSourceTabId', chatId || '');
-    navigate(`/chat?open=${encodeURIComponent('M&A regulatory findings')}&type=regulatory-table&from=${chatId}`);
+    // Match the tab title to the active scan variant (M&A vs AI governance).
+    const tableName =
+      sessionStorage.getItem('regulatoryScanVariant') === 'ai-gov'
+        ? 'AI legislation findings'
+        : 'M&A regulatory findings';
+    navigate(`/chat?open=${encodeURIComponent(tableName)}&type=regulatory-table&from=${chatId}`);
   };
 
   // Seed the thread with a recap of the prior regulatory scan so the CPC flow

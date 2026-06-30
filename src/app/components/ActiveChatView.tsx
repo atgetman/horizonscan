@@ -488,7 +488,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   // snapshot the finished state to sessionStorage on completion and restore it
   // here on mount so the chat returns to its completed result instantly.
   // (Skip when this is a CPC re-entry — that path seeds its own initialMessages.)
-  const [restoredScan] = useState<{ introText: string; topic: string } | null>(() => {
+  const [restoredScan] = useState<{ introText: string; topic: string; variant?: 'ma' | 'ai-gov' } | null>(() => {
     try {
       if (!currentTabId) return null;
       if (initialMessages && initialMessages.length > 1) return null;
@@ -548,6 +548,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [artifactSummary, setArtifactSummary] = useState('');
   const [showPreparingFinalOutput, setShowPreparingFinalOutput] = useState(false);
   const [taskType, setTaskType] = useState<'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis'>(restoredScan ? 'regulatory-scan' : 'draft'); // Track task type
+  // Tracks whether the active regulatory scan is the AI-governance variant, so
+  // the artifact card, summary, table, and saved alert show AI-legislation copy.
+  const [isAiGovScanActive, setIsAiGovScanActive] = useState(restoredScan?.variant === 'ai-gov');
   const [researchTopic, setResearchTopic] = useState('');
   const [reasoningContent, setReasoningContent] = useState(getReasoningContent('draft', ''));
   const [sourceContent, setSourceContent] = useState(getSourceContent('draft', ''));
@@ -783,13 +786,19 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       setArtifactCategory('Response');
     }
     
-    // Override naming/topic for the AI governance horizon scan so the research
-    // animation produces an on-theme compliance memo (detectedType is already
-    // 'research' because the sentinel contains "research").
+    // The AI governance horizon scan reuses the self-contained regulatory-scan
+    // flow (artifact card → tabular findings → summary → save as alert), themed
+    // with AI-legislation content via the 'ai-gov' variant.
     if (isAiGovScan) {
+      detectedType = 'regulatory-scan';
       topic = 'US AI Legislation & Compliance Requirements';
-      setArtifactName('AI Governance Compliance Memo');
-      setArtifactCategory('Research memo');
+      setArtifactName('AI legislation findings');
+      setArtifactCategory('Regulatory scan');
+      setIsAiGovScanActive(true);
+      sessionStorage.setItem('regulatoryScanVariant', 'ai-gov');
+    } else if (detectedType === 'regulatory-scan') {
+      setIsAiGovScanActive(false);
+      sessionStorage.setItem('regulatoryScanVariant', 'ma');
     }
 
     setTaskType(detectedType);
@@ -940,7 +949,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                       introText = `I've analyzed ${topic.toLowerCase()} based on the information provided.`;
                                       descText = `This analysis examines the regulatory requirements, applies them to your facts, and identifies key considerations. It includes discussion of relevant guidance, potential exposures, and remediation recommendations. Let me know if you'd like me to explore any particular aspect in more detail.`;
                                     } else if (detectedType === 'regulatory-scan') {
-                                      introText = `I ran a regulatory horizon scan across federal and state sources to identify any changes that may impact your M&A contract templates.`;
+                                      introText = isAiGovScan
+                                        ? `I ran a horizon scan across federal and state sources for AI legislation governing automated decision-making, workplace AI, and consumer-facing products, then cross-referenced it against the documents in your AI Governance workspace.`
+                                        : `I ran a regulatory horizon scan across federal and state sources to identify any changes that may impact your M&A contract templates.`;
                                       descText = ``;
                                     } else if (detectedType === 'cpc-analysis') {
                                       introText = `I've initiated the Cross-Product Clause analysis for ${topic}. Here's a summary of the affected documents and recommended updates:`;
@@ -981,7 +992,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                                   try {
                                                     sessionStorage.setItem(
                                                       `chat_${currentTabId}_completedScan`,
-                                                      JSON.stringify({ introText, topic })
+                                                      JSON.stringify({ introText, topic, variant: isAiGovScan ? 'ai-gov' : 'ma' })
                                                     );
                                                   } catch (e) {
                                                     console.warn('[v0] Failed to persist completed scan', e);
@@ -1780,6 +1791,12 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     if (!restoredScan || hasRestoredScanRef.current) return;
     hasRestoredScanRef.current = true;
 
+    // Re-establish the scan variant so the artifact and tabular view render the
+    // correct (M&A vs AI governance) content after a restore.
+    const restoredVariant = restoredScan.variant === 'ai-gov' ? 'ai-gov' : 'ma';
+    setIsAiGovScanActive(restoredVariant === 'ai-gov');
+    sessionStorage.setItem('regulatoryScanVariant', restoredVariant);
+
     setResearchTopic(restoredScan.topic || 'Regulatory Changes');
     setReasoningContent(getReasoningContent('regulatory-scan', restoredScan.topic || 'Regulatory Changes'));
     setSourceContent(getSourceContent('regulatory-scan', restoredScan.topic || 'Regulatory Changes'));
@@ -2092,6 +2109,53 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       }, 500);
     }
   }, [isStreamingComplete, showArtifact, taskType]); // Added taskType dependency
+
+  // Scenario-specific copy for the regulatory-scan artifact (M&A vs AI gov).
+  const scanConfig = isAiGovScanActive
+    ? {
+        tableTabName: 'AI legislation findings',
+        findingsLabel: 'AI legislation findings',
+        supportingDocs: ['Westlaw Regulatory Database', 'Practical Law AI Governance', 'Reuters News - AI Policy'],
+        monitorPrompt: 'Monitor AI legislation going forward?',
+        confirmationLabel: 'Now monitoring AI legislation',
+        alert: {
+          topic: 'AI Legislation Updates',
+          criteria: 'Monitor AI legislation affecting automated decision-making, consumer lending, and credit decisioning',
+          practiceAreas: ['AI Governance', 'Consumer Finance'],
+          jurisdictions: ['Federal', 'California', 'New York', 'Colorado', 'EU'],
+        },
+        summary: {
+          totalFindings: 8,
+          documentsAffected: 25,
+          topFindings: [
+            { regulation: 'Colorado AI Act (SB 24-205)', impact: 'High' as const, deadline: 'Jun 30, 2026' },
+            { regulation: 'EU AI Act – credit scoring (high-risk)', impact: 'High' as const, deadline: 'Aug 2, 2026' },
+            { regulation: 'CFPB adverse-action guidance for AI', impact: 'High' as const, deadline: 'In effect' },
+          ],
+        },
+      }
+    : {
+        tableTabName: 'M&A regulatory findings',
+        findingsLabel: 'M&A regulatory findings',
+        supportingDocs: ['Westlaw Regulatory Database', 'Practical Law M&A Guidance', 'Reuters News - Regulatory Updates'],
+        monitorPrompt: 'Monitor M&A regulatory changes going forward?',
+        confirmationLabel: 'Now monitoring M&A regulatory changes',
+        alert: {
+          topic: 'M&A Regulatory Updates',
+          criteria: 'Monitor regulatory changes that may affect M&A contract templates',
+          practiceAreas: ['Corporate', 'M&A'],
+          jurisdictions: ['Federal', 'Multi-jurisdictional'],
+        },
+        summary: {
+          totalFindings: 3,
+          documentsAffected: 25,
+          topFindings: [
+            { regulation: 'SEC Climate Disclosure Rules', impact: 'High' as const, deadline: 'Jan 1, 2027' },
+            { regulation: 'CFPB Consumer Data Rights Rule', impact: 'High' as const, deadline: 'Apr 1, 2027' },
+            { regulation: 'FTC Non-Compete Ban Amendments', impact: 'Medium' as const, deadline: 'TBD (Pending)' },
+          ],
+        },
+      };
 
   return (
     <div className="flex flex-col h-full relative bg-[#FCFCFC]">
@@ -2635,7 +2699,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                       if (currentTabId) {
                         sessionStorage.setItem('regulatoryTableSourceTabId', currentTabId);
                       }
-                      onOpenTab?.({ name: 'M&A regulatory findings', type: 'regulatory-table' });
+                      sessionStorage.setItem('regulatoryScanVariant', isAiGovScanActive ? 'ai-gov' : 'ma');
+                      onOpenTab?.({ name: scanConfig.tableTabName, type: 'regulatory-table' });
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -2643,7 +2708,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                         if (currentTabId) {
                           sessionStorage.setItem('regulatoryTableSourceTabId', currentTabId);
                         }
-                        onOpenTab?.({ name: 'M&A regulatory findings', type: 'regulatory-table' });
+                        sessionStorage.setItem('regulatoryScanVariant', isAiGovScanActive ? 'ai-gov' : 'ma');
+                        onOpenTab?.({ name: scanConfig.tableTabName, type: 'regulatory-table' });
                       }
                     }}
                     className="bg-white h-[48px] relative rounded-[8px] w-full hover:bg-[#F9FAFB] transition-colors cursor-pointer"
@@ -2663,7 +2729,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                               <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative">
                                 <div className="content-stretch flex items-center relative w-full">
                                   <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Clario:Medium',sans-serif] justify-center leading-[0] min-w-px not-italic overflow-hidden relative text-[#212223] text-[16px] text-ellipsis whitespace-nowrap">
-                                    <p className="leading-[1.5] overflow-hidden text-ellipsis text-left">M&A regulatory findings</p>
+                                    <p className="leading-[1.5] overflow-hidden text-ellipsis text-left">{scanConfig.findingsLabel}</p>
                                   </div>
                                 </div>
                               </div>
@@ -2692,7 +2758,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                             <FileText className="size-3 text-[#8a8a8a]" strokeWidth={1.5} />
                             <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative">
                               <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-px overflow-hidden relative text-[#212223] text-[14px] text-ellipsis whitespace-nowrap">
-                                <p className="leading-[1.35] overflow-hidden text-ellipsis">Westlaw Regulatory Database</p>
+                                <p className="leading-[1.35] overflow-hidden text-ellipsis">{scanConfig.supportingDocs[0]}</p>
                               </div>
                             </div>
                           </div>
@@ -2705,7 +2771,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                             <FileText className="size-3 text-[#8a8a8a]" strokeWidth={1.5} />
                             <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative">
                               <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-px overflow-hidden relative text-[#212223] text-[14px] text-ellipsis whitespace-nowrap">
-                                <p className="leading-[1.35] overflow-hidden text-ellipsis">Practical Law M&A Guidance</p>
+                                <p className="leading-[1.35] overflow-hidden text-ellipsis">{scanConfig.supportingDocs[1]}</p>
                               </div>
                             </div>
                           </div>
@@ -2718,7 +2784,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                             <FileText className="size-3 text-[#8a8a8a]" strokeWidth={1.5} />
                             <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative">
                               <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-px overflow-hidden relative text-[#212223] text-[14px] text-ellipsis whitespace-nowrap">
-                                <p className="leading-[1.35] overflow-hidden text-ellipsis">Reuters News - Regulatory Updates</p>
+                                <p className="leading-[1.35] overflow-hidden text-ellipsis">{scanConfig.supportingDocs[2]}</p>
                               </div>
                             </div>
                           </div>
@@ -2733,14 +2799,11 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
             {/* Regulatory Scan Summary */}
             {streamedIntroText && streamedIntroText.length > 0 && (
               <RegulatoryScanSummary
-                totalFindings={3}
+                variant={isAiGovScanActive ? 'ai-gov' : 'ma'}
+                totalFindings={scanConfig.summary.totalFindings}
                 highestImpact="High"
-                topFindings={[
-                  { regulation: 'SEC Climate Disclosure Rules', impact: 'High' as const, deadline: 'Jan 1, 2027' },
-                  { regulation: 'CFPB Consumer Data Rights Rule', impact: 'High' as const, deadline: 'Apr 1, 2027' },
-                  { regulation: 'FTC Non-Compete Ban Amendments', impact: 'Medium' as const, deadline: 'TBD (Pending)' }
-                ]}
-                documentsAffected={25}
+                topFindings={scanConfig.summary.topFindings}
+                documentsAffected={scanConfig.summary.documentsAffected}
                 onViewAffectedClauses={() => {
                   console.log('View affected clauses');
                 }}
@@ -2757,7 +2820,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
               >
                 <div className="flex items-center justify-between px-4 py-3 bg-white border border-[#E5E5E5] rounded-lg">
                   <span className="text-[14px] font-['Source_Sans_3'] text-[#212223]">
-                    Monitor M&A regulatory changes going forward?
+                    {scanConfig.monitorPrompt}
                   </span>
                   <button
                     onClick={() => {
@@ -2765,15 +2828,15 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                       // Dashboard and the Monitoring & alerts page. Guard against
                       // duplicates if the user clicks more than once.
                       const alreadyMonitoring = savedAlerts.some(
-                        a => a.topic === 'M&A Regulatory Updates'
+                        a => a.topic === scanConfig.alert.topic
                       );
                       if (!alreadyMonitoring) {
                         addAlert({
-                          topic: 'M&A Regulatory Updates',
-                          criteria: 'Monitor regulatory changes that may affect M&A contract templates',
+                          topic: scanConfig.alert.topic,
+                          criteria: scanConfig.alert.criteria,
                           frequency: 'weekly',
-                          practiceAreas: ['Corporate', 'M&A'],
-                          jurisdictions: ['Federal', 'Multi-jurisdictional'],
+                          practiceAreas: [...scanConfig.alert.practiceAreas],
+                          jurisdictions: [...scanConfig.alert.jurisdictions],
                           status: 'active',
                           lastScan: 'Just now',
                           nextScan: '7 days',
@@ -2805,7 +2868,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                   <CheckCircle2 className="size-5 text-[#16A34A] shrink-0 mt-0.5" strokeWidth={2} />
                   <div className="flex-1">
                     <p className="text-[14px] font-['Source_Sans_3'] text-[#212223] mb-1">
-                      <span className="font-semibold">Now monitoring M&A regulatory changes</span>
+                      <span className="font-semibold">{scanConfig.confirmationLabel}</span>
                     </p>
                     <p className="text-[13px] font-['Source_Sans_3'] text-[#666]">
                       Weekly scans • High-impact alerts • <button
