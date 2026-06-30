@@ -29,13 +29,13 @@ function buildHorizonScanAlertDetail() {
 
   if (isAiGov) {
     return {
-      title: 'Documents impacted by the Colorado AI Act',
-      detail: 'New AI legislation affects 3 documents in your AI Governance workspace',
+      title: 'Documents impacted by CFPB AI adverse-action guidance',
+      detail: 'New federal and state AI requirements affect 3 documents in your AI Governance workspace',
       workspace: 'AI Governance',
       documents: [
-        { name: 'Credit Decisioning Policy.docx', clause: 'Automated Decisioning §3', impact: 'high' as const },
-        { name: 'Consumer Disclosure Templates.docx', clause: 'Adverse Action Notice', impact: 'medium' as const },
-        { name: 'Internal AI Use Guidelines.docx', clause: 'Human Oversight §2', impact: 'low' as const },
+        { name: 'MFG-AI-POL-005_Consumer_Disclosure_Standards.docx', clause: 'Adverse Action Notice §4', impact: 'high' as const },
+        { name: 'MFG-AI-TMPL-003_Adverse_Action_Notice_Template.docx', clause: 'Reason Codes', impact: 'medium' as const },
+        { name: 'MFG-MRM-MDL001-2024_CreditScorePro_Validation.docx', clause: 'Model Explainability §2', impact: 'low' as const },
       ],
     };
   }
@@ -2126,22 +2126,22 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     ? {
         tableTabName: 'AI legislation findings',
         findingsLabel: 'AI legislation findings',
-        supportingDocs: ['Westlaw Regulatory Database', 'Practical Law AI Governance', 'Reuters News - AI Policy'],
+        supportingDocs: ['Westlaw', 'Practical Law', 'International Research'],
         monitorPrompt: 'Monitor AI legislation going forward?',
         confirmationLabel: 'Now monitoring AI legislation',
         alert: {
           topic: 'AI Legislation Updates',
           criteria: 'Monitor AI legislation affecting automated decision-making, consumer lending, and credit decisioning',
           practiceAreas: ['AI Governance', 'Consumer Finance'],
-          jurisdictions: ['Federal', 'California', 'New York', 'Colorado', 'EU'],
+          jurisdictions: ['Federal', 'California', 'New York'],
         },
         summary: {
           totalFindings: 8,
-          documentsAffected: 25,
+          documentsAffected: 7,
           topFindings: [
-            { regulation: 'Colorado AI Act (SB 24-205)', impact: 'High' as const, deadline: 'Jun 30, 2026' },
-            { regulation: 'EU AI Act – credit scoring (high-risk)', impact: 'High' as const, deadline: 'Aug 2, 2026' },
-            { regulation: 'CFPB adverse-action guidance for AI', impact: 'High' as const, deadline: 'In effect' },
+            { regulation: 'CFPB Circular 2022-03 – AI adverse action notices (Federal)', impact: 'High' as const, deadline: 'In effect' },
+            { regulation: 'CPPA ADMT Regulations (California)', impact: 'High' as const, deadline: 'Jan 1, 2027' },
+            { regulation: 'NYDFS AI underwriting guidance (New York)', impact: 'High' as const, deadline: 'In effect' },
           ],
         },
       }
