@@ -15,10 +15,16 @@ interface ScanPlanPanelProps {
   onAdjust: () => void;
 }
 
+// The most credit/AI-decisioning-relevant documents from the AI Governance
+// workspace (titles mirror the real MFG-AI-* files in that workspace).
 const DEFAULT_DOCUMENTS: PlanDocument[] = [
-  { title: 'Credit Decisioning Policy', date: 'March 2026' },
-  { title: 'Consumer Disclosure Templates', date: 'January 2026' },
-  { title: 'Internal AI Use Guidelines', date: 'April 2026' },
+  { title: 'AI Governance Policy', date: 'Jan 2026' },
+  { title: 'Consumer Disclosure Standards', date: 'Jan 2026' },
+  { title: 'Adverse Action Notice Template', date: 'Feb 2026' },
+  { title: 'CreditScorePro Model Validation', date: '2024' },
+  { title: 'Risk Management Framework', date: 'Jan 2026' },
+  { title: 'Model Inventory (Q2 2026)', date: 'Q2 2026' },
+  { title: 'Bias Testing Log (Q1 2026)', date: 'Q1 2026' },
 ];
 
 // Render the priority jurisdictions as a readable, comma + "and" joined list

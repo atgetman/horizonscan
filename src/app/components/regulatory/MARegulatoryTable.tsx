@@ -128,10 +128,10 @@ const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
     summary: 'CFPB circular confirms ECOA/Regulation B require specific, accurate reasons for adverse credit actions even when lenders use complex algorithms or "black-box" AI models. Generic or checklist reasons are insufficient.',
     impactLevel: 'High',
     relevance: '95%',
-    rationale: 'Directly governs adverse action workflows and model explainability for AI-driven credit denials. Requires updates to your Credit Decisioning Policy and Consumer Disclosure Templates.',
+    rationale: 'Directly governs adverse action workflows and model explainability for AI-driven credit denials. Requires updates to your Consumer Disclosure Standards and Adverse Action Notice Template.',
     complianceDate: 'In effect',
-    docsAffected: 9,
-    clausesAffected: 21
+    docsAffected: 5,
+    clausesAffected: 12
   },
   {
     title: 'Federal — Interagency Model Risk Management Guidance (SR 11-7) Applied to AI/ML Models',
@@ -139,10 +139,10 @@ const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
     summary: 'Federal Reserve, OCC and FDIC guidance on model risk management is increasingly applied to AI/ML credit and underwriting models, expecting documented validation, monitoring, and governance controls.',
     impactLevel: 'High',
     relevance: '90%',
-    rationale: 'Sets supervisory expectations for validation and human oversight of credit-decisioning models. Affects your Internal AI Use Guidelines and model governance documentation.',
+    rationale: 'Sets supervisory expectations for validation and human oversight of credit-decisioning models. Affects your Risk Management Framework, Model Inventory, and CreditScorePro Model Validation.',
     complianceDate: 'In effect',
-    docsAffected: 7,
-    clausesAffected: 18
+    docsAffected: 4,
+    clausesAffected: 11
   },
   {
     title: 'California — CPPA Automated Decisionmaking Technology (ADMT) Regulations',
@@ -150,10 +150,10 @@ const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
     summary: 'CPPA rulemaking establishes consumer rights to access and opt out of automated decisionmaking technology used for significant decisions, including financial services and lending, with pre-use notice requirements.',
     impactLevel: 'High',
     relevance: '92%',
-    rationale: 'Introduces opt-out and pre-use notice obligations for ADMT in lending. Requires updates to consumer-facing disclosures and data-handling procedures in priority jurisdiction California.',
+    rationale: 'Introduces opt-out and pre-use notice obligations for ADMT in lending. Requires updates to your Consumer Disclosure Standards and AI Governance Policy in priority jurisdiction California.',
     complianceDate: '2027-01-01',
-    docsAffected: 8,
-    clausesAffected: 17
+    docsAffected: 4,
+    clausesAffected: 10
   },
   {
     title: 'New York — NYDFS Circular Letter on AI and External Consumer Data in Underwriting',
@@ -161,10 +161,10 @@ const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
     summary: 'NYDFS guidance addresses the use of artificial intelligence and external consumer data sources in underwriting and pricing, requiring fairness testing, documentation, and demonstrable lack of unlawful discrimination.',
     impactLevel: 'High',
     relevance: '89%',
-    rationale: 'NYDFS supervises Meridian\u2019s lending activity in priority jurisdiction New York. Requires bias testing and documentation tied to your Credit Decisioning Policy.',
+    rationale: 'NYDFS supervises Meridian\u2019s lending activity in priority jurisdiction New York. Requires bias testing and documentation tied to your Bias Testing Log and Risk Management Framework.',
     complianceDate: 'In effect',
-    docsAffected: 6,
-    clausesAffected: 15
+    docsAffected: 4,
+    clausesAffected: 9
   },
   {
     title: 'California — AB 2013: Generative AI Training Data Transparency',
@@ -174,8 +174,8 @@ const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
     relevance: '81%',
     rationale: 'Applies to consumer-facing generative AI features. May require disclosure updates if Meridian deploys generative tools in California-facing products.',
     complianceDate: '2026-01-01',
-    docsAffected: 4,
-    clausesAffected: 10
+    docsAffected: 2,
+    clausesAffected: 5
   },
   {
     title: 'New York City — Local Law 144: Automated Employment Decision Tools (AEDT)',
@@ -183,10 +183,10 @@ const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
     summary: 'Requires independent bias audits and candidate notice for automated employment decision tools used in hiring and promotion within New York City.',
     impactLevel: 'Medium',
     relevance: '76%',
-    rationale: 'Relevant to workplace AI use governed by your Internal AI Use Guidelines for New York-based hiring, though not tied to consumer lending.',
+    rationale: 'Relevant to workplace AI use governed by your AI Governance Policy for New York-based hiring, though not tied to consumer lending.',
     complianceDate: 'In effect',
-    docsAffected: 3,
-    clausesAffected: 7
+    docsAffected: 2,
+    clausesAffected: 4
   },
   {
     title: 'Federal — EEOC Guidance on AI, Algorithmic Fairness and the ADA in Employment',
@@ -194,10 +194,10 @@ const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
     summary: 'EEOC guidance addresses how the use of AI and algorithmic tools in employment decisions can implicate the Americans with Disabilities Act and Title VII, with notice and accommodation considerations.',
     impactLevel: 'Low',
     relevance: '68%',
-    rationale: 'Primarily workplace-focused; modest impact on Internal AI Use Guidelines rather than consumer lending products.',
+    rationale: 'Primarily workplace-focused; modest impact on your AI Governance Policy rather than consumer lending products.',
     complianceDate: 'In effect',
-    docsAffected: 2,
-    clausesAffected: 5
+    docsAffected: 1,
+    clausesAffected: 3
   },
   {
     title: 'International (comparative) — EU AI Act High-Risk Classification for Creditworthiness Scoring',
@@ -207,8 +207,8 @@ const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
     relevance: '72%',
     rationale: 'Flagged via International Research as comparative guidance. Relevant if Meridian extends consumer credit to EU data subjects; informs emerging US human-oversight expectations.',
     complianceDate: '2026-08-02',
-    docsAffected: 3,
-    clausesAffected: 8
+    docsAffected: 2,
+    clausesAffected: 5
   },
 ];
 
@@ -244,8 +244,13 @@ export function MARegulatoryTable() {
     setSelectedFinding(null);
   };
 
-  // Calculate stats
-  const totalDocuments = REGULATORY_DATA.reduce((sum, finding) => sum + finding.docsAffected, 0);
+  // Calculate stats. For the AI governance variant, the banner reflects the
+  // number of unique documents in the workspace that have at least one affected
+  // clause (7 of the 18 AI Governance docs) rather than summing per-finding
+  // counts, which would double-count documents flagged by multiple findings.
+  const totalDocuments = isAiGov
+    ? 7
+    : REGULATORY_DATA.reduce((sum, finding) => sum + finding.docsAffected, 0);
   const highPriorityCount = REGULATORY_DATA.filter(f => f.impactLevel === 'High').length;
 
   return (

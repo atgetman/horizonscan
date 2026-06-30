@@ -33,9 +33,9 @@ function buildHorizonScanAlertDetail() {
       detail: 'New federal and state AI requirements affect 3 documents in your AI Governance workspace',
       workspace: 'AI Governance',
       documents: [
-        { name: 'Credit Decisioning Policy.docx', clause: 'Automated Decisioning §3', impact: 'high' as const },
-        { name: 'Consumer Disclosure Templates.docx', clause: 'Adverse Action Notice', impact: 'medium' as const },
-        { name: 'Internal AI Use Guidelines.docx', clause: 'Human Oversight §2', impact: 'low' as const },
+        { name: 'MFG-AI-POL-005_Consumer_Disclosure_Standards.docx', clause: 'Adverse Action Notice §4', impact: 'high' as const },
+        { name: 'MFG-AI-TMPL-003_Adverse_Action_Notice_Template.docx', clause: 'Reason Codes', impact: 'medium' as const },
+        { name: 'MFG-MRM-MDL001-2024_CreditScorePro_Validation.docx', clause: 'Model Explainability §2', impact: 'low' as const },
       ],
     };
   }
@@ -2137,7 +2137,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         },
         summary: {
           totalFindings: 8,
-          documentsAffected: 25,
+          documentsAffected: 7,
           topFindings: [
             { regulation: 'CFPB Circular 2022-03 – AI adverse action notices (Federal)', impact: 'High' as const, deadline: 'In effect' },
             { regulation: 'CPPA ADMT Regulations (California)', impact: 'High' as const, deadline: 'Jan 1, 2027' },
