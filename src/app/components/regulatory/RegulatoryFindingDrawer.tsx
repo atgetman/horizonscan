@@ -42,7 +42,7 @@ function getAffectedDocuments(finding: RegulatoryFinding | null): AffectedDocume
 
   // DOJ/FTC Merger Guidelines - affects antitrust/HSR clauses
   if (findingTitle.includes('merger guideline') || findingTitle.includes('doj') || findingTitle.includes('ftc')) {
-    const docNames = ['Atlas Acquisition Agreement', 'Merger Protocol - TechCo', 'Stock Purchase Agreement - Beta Inc', 'Asset Purchase Agreement - Gamma LLC', 'Joint Venture Agreement'];
+    const docNames = ['Sterling Capital Acquisition Agreement', 'Merger Protocol - Sterling Capital', 'Stock Purchase Agreement - Sterling Capital', 'Asset Purchase Agreement', 'Joint Venture Agreement'];
     for (let i = 0; i < docCount; i++) {
       docs.push({
         id: `doc-${i}`,
@@ -502,7 +502,7 @@ export function RegulatoryFindingDrawer({
                       <h1 className="text-xl font-bold text-gray-900 mb-4">
                         {affectedDocs[selectedDoc]?.title.replace('.docx', '').toUpperCase() || 'AGREEMENT'}
                       </h1>
-                      <p className="text-sm text-gray-600">Project Atlas</p>
+                      <p className="text-sm text-gray-600">Project Harbor</p>
                     </div>
 
                     <div className="text-sm text-gray-700 leading-relaxed space-y-6">

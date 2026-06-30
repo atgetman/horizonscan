@@ -1337,9 +1337,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       if (detectedType === 'cpc-analysis') {
         // Show CPC-specific sources
         searchResults = [
-          { websiteTitle: 'Project Atlas', resourceTitle: 'Stock Purchase Agreement - Acme Corp', url: '#' },
-          { websiteTitle: 'Project Atlas', resourceTitle: 'Disclosure Schedule 4.18 - Material Contracts', url: '#' },
-          { websiteTitle: 'Project Atlas', resourceTitle: 'Transition Services Agreement', url: '#' },
+          { websiteTitle: 'Project Harbor', resourceTitle: 'Stock Purchase Agreement - Sterling Capital', url: '#' },
+          { websiteTitle: 'Project Harbor', resourceTitle: 'Disclosure Schedule 4.18 - Material Contracts', url: '#' },
+          { websiteTitle: 'Project Harbor', resourceTitle: 'Transition Services Agreement', url: '#' },
           { websiteTitle: 'Westlaw', resourceTitle: localCpcRegulation, url: 'https://westlaw.com' },
           { websiteTitle: 'Practical Law', resourceTitle: 'M&A Compliance Guidance', url: 'https://practicallaw.com' },
           { websiteTitle: 'Thomson Reuters', resourceTitle: 'Regulatory Intelligence', url: 'https://thomsonreuters.com' }
