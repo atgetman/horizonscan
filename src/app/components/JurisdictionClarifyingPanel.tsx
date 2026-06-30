@@ -101,13 +101,13 @@ export function JurisdictionClarifyingPanel({
                 type="button"
                 onClick={() => toggleState(state)}
                 aria-pressed={isSelected}
-                className={`flex items-center gap-1.5 h-[38px] px-4 rounded-full border text-[15px] font-['Source_Sans_3:SemiBold',sans-serif] font-semibold transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all text-[14px] font-['Source_Sans_3'] font-normal ${
                   isSelected
-                    ? 'bg-[#e7f0fe] border-[#a8c5f0] text-[#1b50b3]'
-                    : 'bg-white border-[#d2d2d2] text-[#212223] hover:bg-[#f7f7f7]'
+                    ? 'bg-[#1d4b34] text-white border-[#1d4b34]'
+                    : 'bg-white text-[#212223] border-[#d2d2d2] hover:border-[#999] hover:shadow-sm'
                 }`}
               >
-                {isSelected && <Check className="size-4 shrink-0" strokeWidth={2.5} />}
+                {isSelected && <Check className="size-3.5 shrink-0 text-white" strokeWidth={2.5} />}
                 <span>{state}</span>
               </button>
             );
