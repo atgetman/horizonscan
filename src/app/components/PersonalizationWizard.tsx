@@ -92,7 +92,7 @@ const PRACTICE_AREAS = [
 ] as const;
 
 const MONITORING_TOPICS = [
-  { id: 'jurisdiction', label: 'Personal jurisdiction developments', type: 'Case law', practiceAreas: ['litigation'] },
+  { id: 'sec-climate', label: 'SEC climate disclosure developments', type: 'Regulatory', practiceAreas: ['compliance', 'corporate'] },
   { id: 'patent-eligibility', label: 'Patent eligibility under Section 101', type: 'Case law', practiceAreas: ['ip', 'litigation'] },
   { id: 'gdpr', label: 'GDPR enforcement and guidance', type: 'Regulatory', practiceAreas: ['compliance', 'corporate'] },
   { id: 'summary-judgment', label: 'Summary judgment standards', type: 'Case law', practiceAreas: ['litigation'] },

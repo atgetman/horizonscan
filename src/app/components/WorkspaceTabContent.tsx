@@ -94,12 +94,12 @@ export function WorkspaceTabContent({
     !tab.title.endsWith('.xlsx') && 
     !tab.title.endsWith('.pst') && 
     !tab.title.endsWith('.csv') && 
-    tab.title !== 'Discovery overview';
+    tab.title !== 'Vendor Risk Register';
   
   const isSpreadsheet = tab.type === 'table' || 
     tab.title.endsWith('.xlsx') || 
     tab.title.endsWith('.csv') || 
-    tab.title === 'Discovery overview';
+    tab.title === 'Vendor Risk Register';
   
   const showSourceViewer = isActive && !!activeCitation;
 

@@ -5,6 +5,7 @@ import svgPaths from '../../imports/svg-1wkqh0ufu9';
 import { FileText, Folder, Table, X, MessageCircleQuestion, ChevronUp, ChevronDown, ChevronRight, Search, BookOpen, Scale, FileCheck, ClipboardList, NotebookPen, Copy, Minimize2, MoreHorizontal, Download, ExternalLink, Share2, FolderInput, Trash2, Sparkles, CheckCircle2, Bell, Circle, CircleDot } from 'lucide-react';
 import { PromptInput } from './PromptInput';
 import { SkillClarifyingQuestions } from './SkillClarifyingQuestions';
+import { JurisdictionClarifyingPanel } from './JurisdictionClarifyingPanel';
 import { SkillBuildingMessage } from './SkillBuildingMessage';
 import { streamChat, streamChatHybrid } from '../services/ChatService';
 import { ScrollableDropdown } from './ScrollableDropdown';
@@ -183,8 +184,8 @@ function StepItem({ iconChar, text, iconColor }: { iconChar: string, text: strin
 function Plan() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full" data-name="Plan">
-      <StepItem iconChar="" text="Summarize complaint" iconColor="#d64000" />
-      <StepItem iconChar="" text="Choose arguments" />
+      <StepItem iconChar="" text="Review staff comments" iconColor="#d64000" />
+      <StepItem iconChar="" text="Choose responses" />
       <StepItem iconChar="" text="Choose authorities" />
       <StepItem iconChar="" text="Distinguish citations" />
       <StepItem iconChar="" text="Choose a template" />
@@ -239,10 +240,10 @@ function Text({ isContentGenerating, artifactCategory, artifactName }: { isConte
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start leading-[0] min-h-px min-w-px relative whitespace-nowrap" data-name="text">
       <div className={`flex flex-col font-['Clario:Medium',sans-serif] justify-center min-w-full not-italic overflow-hidden relative shrink-0 text-[14px] text-ellipsis w-[min-content] ${isContentGenerating ? 'text-[#8a8a8a] animate-shimmer' : 'text-[#212223]'}`}>
-        <p className="leading-[1.35] overflow-hidden font-medium">{artifactCategory || 'Motion draft'}</p>
+        <p className="leading-[1.35] overflow-hidden font-medium">{artifactCategory || 'Response draft'}</p>
       </div>
       <div className="flex flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center relative shrink-0 text-[#404040] text-[12px]">
-        <p className="leading-[1.35]">{artifactName || 'Motion to Dismiss - Personal Jurisdiction'}</p>
+        <p className="leading-[1.35]">{artifactName || 'SEC Comment Letter Response'}</p>
       </div>
     </div>
   );
@@ -417,7 +418,7 @@ function MessageContent({ onArtifactClick }: { onArtifactClick?: () => void }) {
     <div className="content-stretch flex flex-col gap-[12px] isolate items-start max-w-[800px] relative shrink-0 w-full" data-name="message content">
       <NonSkillHeader />
       <div className="flex flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] min-w-full relative shrink-0 text-[#212223] text-[15px] w-[min-content] z-[2]">
-        <p className="leading-[1.5] whitespace-pre-wrap">I've outlined a motion to dismiss based on the complaint and precedent provided.</p>
+        <p className="leading-[1.5] whitespace-pre-wrap">I've outlined an SEC comment letter response based on the disclosure rules and guidance provided.</p>
       </div>
       <Intake onArtifactClick={onArtifactClick} />
     </div>
@@ -515,6 +516,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [isReasoningExpanded, setIsReasoningExpanded] = useState(false);
   const [reasoningSteps, setReasoningSteps] = useState<number>(0);
   const [showSkillQuestions, setShowSkillQuestions] = useState(false);
+  const [showJurisdictionPanel, setShowJurisdictionPanel] = useState(false);
+  const jurisdictionResolvedRef = useRef(false);
   const [isReasoningLoading, setIsReasoningLoading] = useState(false);
   const [showSearching, setShowSearching] = useState(false);
   const [showSourcesDropdown, setShowSourcesDropdown] = useState(false);
@@ -537,8 +540,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   const [isStreamingComplete, setIsStreamingComplete] = useState(!!restoredScan);
   const [showOpeningMessage, setShowOpeningMessage] = useState(false);
   const [hasDocumentOpened, setHasDocumentOpened] = useState(false);
-  const [artifactName, setArtifactName] = useState('Motion to Dismiss');
-  const [artifactCategory, setArtifactCategory] = useState('Motion');
+  const [artifactName, setArtifactName] = useState('SEC Comment Letter Response');
+  const [artifactCategory, setArtifactCategory] = useState('Response');
   const [artifactSummary, setArtifactSummary] = useState('');
   const [showPreparingFinalOutput, setShowPreparingFinalOutput] = useState(false);
   const [taskType, setTaskType] = useState<'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis'>(restoredScan ? 'regulatory-scan' : 'draft'); // Track task type
@@ -675,7 +678,12 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     const userPrompt = (lastUserMsg?.text || prompt).toLowerCase();
     let detectedType: 'draft' | 'research' | 'analyze' | 'regulatory-scan' | 'cpc-analysis' = 'draft';
     let topic = '';
-    
+
+    // AI governance horizon scan — driven internally after the jurisdiction
+    // clarifying panel is resolved. The sentinel keeps "research" in it so the
+    // existing research animation runs; we override topic/name just below.
+    const isAiGovScan = userPrompt.includes('__ai_gov_research__');
+
     // Check for CPC analysis FIRST (highest priority)
     if (userPrompt.includes('initiate cross-product clause analysis') || userPrompt.includes('initiate cpc')) {
       console.log('[v0] processChat: CPC ANALYSIS DETECTED!');
@@ -721,41 +729,41 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       }
       
       // Extract topic for research tasks
-      if (userPrompt.includes('jurisdiction')) {
-        topic = 'Personal Jurisdiction Requirements';
-        setArtifactName('Personal Jurisdiction Research');
+      if (userPrompt.includes('transfer') || userPrompt.includes('cross-border')) {
+        topic = 'Cross-Border Data Transfer Requirements';
+        setArtifactName('Data Transfer Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('statute of limitations')) {
-        topic = 'Statute of Limitations Analysis';
-        setArtifactName('Statute of Limitations Research');
+      } else if (userPrompt.includes('climate') || userPrompt.includes('disclosure')) {
+        topic = 'SEC Climate Disclosure Requirements';
+        setArtifactName('Climate Disclosure Research');
         setArtifactCategory('Research memo');
       } else if (userPrompt.includes('gdpr') || userPrompt.includes('data privacy') || userPrompt.includes('privacy')) {
         topic = 'GDPR Compliance Requirements';
         setArtifactName('GDPR Compliance Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('discovery sanction')) {
-        topic = 'Discovery Sanctions Standards';
-        setArtifactName('Discovery Sanctions Research');
+      } else if (userPrompt.includes('ai act') || userPrompt.includes('ai governance')) {
+        topic = 'EU AI Act Requirements';
+        setArtifactName('AI Governance Research');
         setArtifactCategory('Research memo');
       } else if (userPrompt.includes('employment') || userPrompt.includes('discrimination')) {
-        topic = 'Employment Discrimination Standards';
-        setArtifactName('Employment Law Research');
+        topic = 'Employee Data Privacy Standards';
+        setArtifactName('Employee Privacy Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('patent')) {
-        topic = 'Patent Eligibility Analysis';
-        setArtifactName('Patent Law Research');
+      } else if (userPrompt.includes('aml') || userPrompt.includes('kyc')) {
+        topic = 'AML/KYC Program Requirements';
+        setArtifactName('AML/KYC Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('force majeure')) {
-        topic = 'Force Majeure Analysis';
-        setArtifactName('Force Majeure Research');
+      } else if (userPrompt.includes('ccpa') || userPrompt.includes('state privacy')) {
+        topic = 'CCPA/CPRA Compliance Analysis';
+        setArtifactName('CCPA Compliance Research');
         setArtifactCategory('Research memo');
-      } else if (userPrompt.includes('class action')) {
-        topic = 'Class Action Certification';
-        setArtifactName('Class Action Research');
+      } else if (userPrompt.includes('vendor')) {
+        topic = 'Vendor Risk Requirements';
+        setArtifactName('Vendor Risk Research');
         setArtifactCategory('Research memo');
       } else {
-        topic = 'Legal Research Analysis';
-        setArtifactName('Legal Research Memo');
+        topic = 'Compliance Research Analysis';
+        setArtifactName('Compliance Research Memo');
         setArtifactCategory('Research memo');
       }
     } else if (detectedType === 'analyze') {
@@ -768,10 +776,19 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       setArtifactName('M&A regulatory findings');
       setArtifactCategory('Regulatory scan');
     } else {
-      setArtifactName('Motion to Dismiss');
-      setArtifactCategory('Motion');
+      setArtifactName('SEC Comment Letter Response');
+      setArtifactCategory('Response');
     }
     
+    // Override naming/topic for the AI governance horizon scan so the research
+    // animation produces an on-theme compliance memo (detectedType is already
+    // 'research' because the sentinel contains "research").
+    if (isAiGovScan) {
+      topic = 'US AI Legislation & Compliance Requirements';
+      setArtifactName('AI Governance Compliance Memo');
+      setArtifactCategory('Research memo');
+    }
+
     setTaskType(detectedType);
     setResearchTopic(topic);
     setReasoningContent(getReasoningContent(detectedType, topic));
@@ -813,13 +830,13 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       window.dispatchEvent(
         new CustomEvent("horizonScanAlert", {
           detail: {
-            title: "Documents impacted in Hernandez litigation",
-            detail: "New labor law guidance affects 3 documents in Hernandez v. Pacific Builders",
-            workspace: "Hernandez v. Pacific Builders Inc.",
+            title: "Documents impacted by SEC climate disclosure update",
+            detail: "New SEC climate disclosure guidance affects 3 documents in the SEC Climate Disclosure Program",
+            workspace: "SEC Climate Disclosure Program",
             documents: [
-              { name: "Motion to Dismiss.docx", clause: "Memorandum of Law §II", impact: "high" },
-              { name: "Complaint.docx", clause: "Negligence Claims", impact: "medium" },
-              { name: "Personal Jurisdiction Motion.docx", clause: "Due Process §III", impact: "low" },
+              { name: "SEC Comment Letter Response.docx", clause: "Governance Disclosure §I", impact: "high" },
+              { name: "Compliance Risk Assessment.docx", clause: "Securities Disclosure", impact: "medium" },
+              { name: "Memo on Disclosure Obligations.docx", clause: "Emissions Metrics §II", impact: "low" },
             ],
           },
         })
@@ -915,10 +932,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                     
                                     if (detectedType === 'research') {
                                       introText = `I've completed comprehensive research on ${topic.toLowerCase()}.`;
-                                      descText = `This research memo synthesizes relevant case law, statutory provisions, and legal standards. It includes sections on legal framework, key precedents, jurisdictional variations, and practical applications. The memo provides citations to primary sources and identifies current trends in this area of law.`;
+                                      descText = `This research memo synthesizes relevant regulations, statutory provisions, and regulatory guidance. It includes sections on the regulatory framework, key requirements, jurisdictional variations, and practical compliance steps. The memo provides citations to primary sources and identifies current trends in this area of regulation.`;
                                     } else if (detectedType === 'analyze') {
                                       introText = `I've analyzed ${topic.toLowerCase()} based on the information provided.`;
-                                      descText = `This analysis examines the legal standards, applies them to the facts, and identifies key considerations. It includes discussion of relevant precedents, potential arguments, and strategic recommendations. Let me know if you'd like me to explore any particular aspect in more detail.`;
+                                      descText = `This analysis examines the regulatory requirements, applies them to your facts, and identifies key considerations. It includes discussion of relevant guidance, potential exposures, and remediation recommendations. Let me know if you'd like me to explore any particular aspect in more detail.`;
                                     } else if (detectedType === 'regulatory-scan') {
                                       introText = `I ran a regulatory horizon scan across federal and state sources to identify any changes that may impact your M&A contract templates.`;
                                       descText = ``;
@@ -927,7 +944,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                       descText = ``;
                                     } else {
                                       introText = `I've drafted ${topic.toLowerCase()}.`;
-                                      descText = `This document includes the necessary legal arguments, supporting precedents, and procedural requirements. It's structured with appropriate sections and citations. Let me know if you'd like to revise any arguments or add additional support.`;
+                                      descText = `This document includes the necessary responses, supporting regulatory authorities, and procedural requirements. It's structured with appropriate sections and citations. Let me know if you'd like to revise any responses or add additional support.`;
                                     }
                                     
                                     let introIdx = 0;
@@ -1086,13 +1103,13 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       window.dispatchEvent(
         new CustomEvent("horizonScanAlert", {
           detail: {
-            title: "Documents impacted in Hernandez litigation",
-            detail: "New labor law guidance affects 3 documents in Hernandez v. Pacific Builders",
-            workspace: "Hernandez v. Pacific Builders Inc.",
+            title: "Documents impacted by SEC climate disclosure update",
+            detail: "New SEC climate disclosure guidance affects 3 documents in the SEC Climate Disclosure Program",
+            workspace: "SEC Climate Disclosure Program",
             documents: [
-              { name: "Motion to Dismiss.docx", clause: "Memorandum of Law §II", impact: "high" },
-              { name: "Complaint.docx", clause: "Negligence Claims", impact: "medium" },
-              { name: "Personal Jurisdiction Motion.docx", clause: "Due Process §III", impact: "low" },
+              { name: "SEC Comment Letter Response.docx", clause: "Governance Disclosure §I", impact: "high" },
+              { name: "Compliance Risk Assessment.docx", clause: "Securities Disclosure", impact: "medium" },
+              { name: "Memo on Disclosure Obligations.docx", clause: "Emissions Metrics §II", impact: "low" },
             ],
           },
         })
@@ -1217,7 +1234,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
         reasoningContent = `To conduct a comprehensive regulatory horizon scan, I'll:
 
-• Identify the practice area and jurisdiction scope based on your workspace documents
+• Identify the compliance domain and jurisdiction scope based on your workspace documents
 • Query federal regulatory databases (SEC, CFPB, FTC, DOJ, etc.) for recent final rules and proposed changes
 • Check state-level regulatory updates in relevant jurisdictions
 • Analyze the potential impact of each change on your existing contract templates
@@ -1327,7 +1344,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
         searchResults = [
           { websiteTitle: 'Westlaw', resourceTitle: 'Legal Research Database', url: 'https://westlaw.com' },
-          { websiteTitle: 'LexisNexis', resourceTitle: 'Case Law Library', url: 'https://lexisnexis.com' },
+          { websiteTitle: 'LexisNexis', resourceTitle: 'Regulatory Library', url: 'https://lexisnexis.com' },
           { websiteTitle: 'Practical Law', resourceTitle: 'Practice Notes', url: 'https://practicallaw.com' },
           { websiteTitle: 'Google Scholar', resourceTitle: 'Legal Cases', url: 'https://scholar.google.com' },
           { websiteTitle: 'Cornell LII', resourceTitle: 'US Code', url: 'https://law.cornell.edu' },
@@ -1409,9 +1426,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       } else if (detectedType === 'regulatory-scan') {
         // Show regulatory scan steps
         prepWork = [
-          { title: 'Identified jurisdictions and practice areas from workspace', type: 'analysis' },
+          { title: 'Identified jurisdictions and compliance domains from workspace', type: 'analysis' },
           { title: 'Searched Westlaw for proposed and final regulations', type: 'research' },
-          { title: 'Searched Practical Law for M&A guidance and practice notes', type: 'research' },
+          { title: 'Searched Practical Law for compliance guidance and practice notes', type: 'research' },
           { title: 'Evaluating impact on workspace documents', type: 'analysis' }
         ];
 
@@ -1435,9 +1452,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
         prepWork = [
           { title: 'Westlaw Deep Research Report', type: 'research' },
-          { title: 'Case Law Analysis', type: 'analysis' },
+          { title: 'Regulatory Analysis', type: 'analysis' },
           { title: 'Statutory Review', type: 'research' },
-          { title: 'Precedent Comparison', type: 'comparison' },
+          { title: 'Requirement Comparison', type: 'comparison' },
           { title: 'Compliance Checklist', type: 'checklist' }
         ];
 
@@ -1783,9 +1800,9 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     setIsPreparingExpanded(false);
     setIsPreparingLoading(false);
     setPrepWorkItems([
-      { title: 'Identified jurisdictions and practice areas from workspace', type: 'analysis' },
+      { title: 'Identified jurisdictions and compliance domains from workspace', type: 'analysis' },
       { title: 'Searched Westlaw for proposed and final regulations', type: 'research' },
-      { title: 'Searched Practical Law for M&A guidance and practice notes', type: 'research' },
+      { title: 'Searched Practical Law for compliance guidance and practice notes', type: 'research' },
       { title: 'Evaluating impact on workspace documents', type: 'analysis' },
     ]);
     setPreparingItems(4);
@@ -1809,7 +1826,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       hasAddedArtifactRef.current = true;
       // Add artifact to sidebar outputs with complete chat messages
       onArtifactCreated?.({ 
-        name: 'Motion to Dismiss - Personal Jurisdiction', 
+        name: 'SEC Comment Letter Response', 
         type: 'doc',
         sourceChatMessages: messages 
       });
@@ -1833,8 +1850,14 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
             handleSkillCreationFlow();
             return;
         }
-        
-       
+
+        // AI governance scenario: ask which jurisdictions matter before scanning.
+        const firstPromptText = typeof messages[0].text === 'string' ? messages[0].text : '';
+        if (!jurisdictionResolvedRef.current && isAIGovernanceScenario(firstPromptText)) {
+            startJurisdictionClarification();
+            return;
+        }
+
         if (mode === 'hybrid') {
           processChatHybrid(messages).catch(err => {
             console.error('processChatHybrid error (initial):', err);
@@ -1844,6 +1867,137 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
         }
     }
   }, []); // Run once on mount
+
+  // --- AI Governance scenario: jurisdiction clarification before the scan ---
+
+  // Detect the specific AI-legislation horizon-scan prompt that should trigger a
+  // jurisdiction clarifying question before CoCounsel starts working.
+  const isAIGovernanceScenario = useCallback((text: string) => {
+    const t = (text || '').toLowerCase();
+    return (
+      t.includes('artificial intelligence') &&
+      (t.includes('legislation') ||
+        t.includes('enacted') ||
+        t.includes('pending') ||
+        t.includes('regulation'))
+    );
+  }, []);
+
+  const JURISDICTION_QUESTION =
+    "Which states matter most to your business? I'll cover federal developments across the board and surface these first.";
+
+  // Short lead-in CoCounsel posts in the chat; the actual question lives in the
+  // clarifying panel so it isn't repeated.
+  const JURISDICTION_INTRO =
+    "I have enough context to run the scan. One quick question before I do:";
+
+  // Build the scope-confirmation recap CoCounsel posts after the jurisdiction is
+  // resolved (mirrors the bullet summary in the brief).
+  const buildAiGovScopeRecap = useCallback((priorityStates: string[]) => {
+    const priorityLabel =
+      priorityStates.length > 0
+        ? priorityStates.join(', ')
+        : 'California and New York';
+    return (
+      <ul className="flex flex-col gap-2 list-disc pl-5 text-[#212223] text-[15px] leading-[1.5]">
+        <li>
+          <span className="font-semibold">Topic:</span> US AI regulation governing
+          automated decision-making, workplace AI, and consumer-facing applications,
+          with a focus on consumer lending and credit decisioning
+        </li>
+        <li>
+          <span className="font-semibold">Jurisdictions:</span> Federal + all 50
+          states, with priority on {priorityLabel}
+        </li>
+        <li>
+          <span className="font-semibold">Time horizon:</span> In effect now + taking
+          effect within 12 months as the primary focus; significant pending
+          legislation beyond 12 months flagged separately for planning purposes
+        </li>
+        <li>
+          <span className="font-semibold">Sources:</span> Westlaw, Practical Law,
+          International Research, and web sources
+        </li>
+        <li>
+          <span className="font-semibold">Documents:</span> I can see the AI Governance
+          workspace — I found your Credit Decisioning Policy (March 2026), Consumer
+          Disclosure Templates (January 2026), and Internal AI Use Guidelines (April
+          2026). I will flag any specific clauses that may need to be reviewed based on
+          what I find. Let me know if there are additional documents you would like
+          included.
+        </li>
+      </ul>
+    );
+  }, []);
+
+  // Post a brief "Working on it..." beat, then the clarifying question, then open
+  // the jurisdiction panel in the input area.
+  const startJurisdictionClarification = useCallback(() => {
+    setShowThinking(true);
+    onThinkingChange?.(true);
+    setMessages(prev => {
+      if (prev.length > 0 && prev[prev.length - 1].role === 'assistant') return prev;
+      return [
+        ...prev,
+        {
+          role: 'assistant',
+          text: (
+            <div className="flex gap-[8px] items-center">
+              <div className="w-[20px] h-[20px] flex items-center justify-center">
+                <div
+                  className="w-[10px] h-[10px] rotate-45 bg-[#de6633]"
+                  style={{ boxShadow: '0px 4px 33px rgba(247, 93, 27, 0.4)' }}
+                />
+              </div>
+              <div className="bg-clip-text bg-gradient-to-r flex flex-col font-['Clario:Regular',sans-serif] from-[#ededed] justify-center leading-[0] text-[15px] text-[transparent] to-[#e2e2e2] to-[58.173%] via-[#c3c3c3] via-[20.673%] whitespace-nowrap">
+                <p className="leading-[1.5]">Working on it...</p>
+              </div>
+            </div>
+          ),
+        },
+      ];
+    });
+
+    safeSetTimeout(() => {
+      setShowThinking(false);
+      onThinkingChange?.(false);
+      setMessages(current => {
+        const next = [...current];
+        next[next.length - 1] = { role: 'assistant', text: JURISDICTION_INTRO };
+        return next;
+      });
+      safeSetTimeout(() => setShowJurisdictionPanel(true), 200);
+    }, 1400);
+  }, [onThinkingChange, safeSetTimeout]);
+
+  // Once the user submits or skips the jurisdiction panel, post the scope recap
+  // and kick off the research workflow animation.
+  const handleJurisdictionResolved = useCallback((selectedStates: string[]) => {
+    setShowJurisdictionPanel(false);
+    jurisdictionResolvedRef.current = true;
+
+    setMessages(prev => {
+      const next = [...prev];
+      if (selectedStates.length > 0) {
+        next.push({
+          role: 'user',
+          text: `Prioritize: ${selectedStates.join(', ')}`,
+        });
+      }
+      next.push({
+        role: 'assistant',
+        text: buildAiGovScopeRecap(selectedStates),
+      });
+      return next;
+    });
+
+    // Drive the research animation via the sentinel prompt so naming/topic stay
+    // controlled. The visible messages are managed above; this history is only
+    // used for task detection inside processChat.
+    safeSetTimeout(() => {
+      processChat([{ role: 'user', text: '__ai_gov_research__ us ai legislation' }]);
+    }, 400);
+  }, [buildAiGovScopeRecap, processChat, safeSetTimeout]);
 
   const handleFollowUp = (text: string, files: StagedItem[]) => {
       // Optimistically add user message
@@ -1915,7 +2069,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   };
 
   const handleArtifactClick = useCallback(() => {
-      onOpenTab?.({ name: artifactName || 'Motion to Dismiss - Personal Jurisdiction', type: 'doc' });
+      onOpenTab?.({ name: artifactName || 'SEC Comment Letter Response', type: 'doc' });
   }, [onOpenTab, artifactName]);
 
   // Track if we've already auto-opened to prevent repeated opens
@@ -2741,10 +2895,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <FileText className="size-5 text-[#666666] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Research Memo: Jurisdiction Analysis
+                             Research Memo: Disclosure Analysis
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Summary of key precedents and minimum contacts framework
+                             Summary of SEC climate disclosure requirements
                            </p>
                          </div>
                        </motion.div>
@@ -2761,10 +2915,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <Table className="size-5 text-[#217346] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Arguments & Precedents Matrix
+                             Comments & Authorities Matrix
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Comparing defendant contacts across supporting cases
+                             Mapping each staff comment to the governing rule
                            </p>
                          </div>
                        </motion.div>
@@ -2781,10 +2935,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <ClipboardList className="size-5 text-[#666666] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Motion Outline
+                             Response Letter Outline
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Structured argument framework with citation placeholders
+                             Structured response framework with citation placeholders
                            </p>
                          </div>
                        </motion.div>
@@ -2801,10 +2955,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <FileText className="size-5 text-[#666666] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Litigation Strategy Notes
+                             Compliance Strategy Notes
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Potential counter-arguments and response tactics
+                             Anticipated follow-up comments and response tactics
                            </p>
                          </div>
                        </motion.div>
@@ -2821,10 +2975,10 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                          <FileText className="size-5 text-[#666666] shrink-0 mt-0.5" />
                          <div className="flex-1 min-w-0">
                            <p className="text-[#212223] font-medium leading-relaxed">
-                             Case Law Summary
+                             Regulatory Authority Summary
                            </p>
                            <p className="text-[#8a8a8a] text-[13px] mt-0.5">
-                             Digest of 6 key jurisdiction cases with holdings
+                             Digest of 6 key rules and guidance items with takeaways
                            </p>
                          </div>
                        </motion.div>
@@ -2843,7 +2997,13 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
 
       {/* Collapsed Input Area or Clarifying Questions */}
       <div className="p-4 border-t border-[#E5E5E5] bg-white">
-         {showSkillQuestions ? (
+         {showJurisdictionPanel ? (
+             <JurisdictionClarifyingPanel
+                 question={JURISDICTION_QUESTION}
+                 onSubmit={handleJurisdictionResolved}
+                 onSkip={() => handleJurisdictionResolved([])}
+             />
+         ) : showSkillQuestions ? (
              <div className="flex justify-center w-full">
                  <SkillClarifyingQuestions
                      onSubmit={(answers) => {

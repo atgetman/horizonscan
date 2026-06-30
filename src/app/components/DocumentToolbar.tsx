@@ -57,8 +57,8 @@ export function DocumentToolbar({
     { id: "h2-1", text: "Background", level: 2 },
     { id: "h2-2", text: "Legal Framework", level: 2 },
     { id: "h1-2", text: "Analysis", level: 1 },
-    { id: "h2-3", text: "Precedents", level: 2 },
-    { id: "h3-1", text: "Smith v. Jones", level: 3 },
+    { id: "h2-3", text: "Regulatory Authorities", level: 2 },
+    { id: "h3-1", text: "Regulation S-K Item 1505", level: 3 },
     { id: "h1-3", text: "Conclusion", level: 1 },
   ];
 

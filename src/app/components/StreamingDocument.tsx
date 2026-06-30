@@ -3,65 +3,56 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowDown } from 'lucide-react';
 import { Citation } from './Citation';
 
-const FULL_DOCUMENT_TEXT = `UNITED STATES DISTRICT COURT
-SOUTHERN DISTRICT OF NEW YORK
+const FULL_DOCUMENT_TEXT = `MERIDIAN FINANCIAL GROUP, INC.
+Office of the General Counsel
 
-MARIA HERNANDEZ,
-        Plaintiff,
+VIA EDGAR AND ELECTRONIC MAIL
 
-- against -
+U.S. Securities and Exchange Commission
+Division of Corporation Finance
+100 F Street, N.E.
+Washington, D.C. 20549
 
-PACIFIC BUILDERS INC., a Delaware Corporation,
-        Defendant.
+Re: Meridian Financial Group, Inc.
+    Form 10-K for the Fiscal Year Ended December 31, 2025
+    Response to Staff Comment Letter dated February 9, 2026
 
-Civil Action No. 24-cv-01234
+Ladies and Gentlemen:
 
-DEFENDANT'S NOTICE OF MOTION AND MOTION TO DISMISS COMPLAINT
+On behalf of Meridian Financial Group, Inc. ("Meridian" or the "Company"), we respectfully submit the following responses to the comments of the Staff of the Division of Corporation Finance (the "Staff") set forth in your letter dated February 9, 2026, relating to the above-referenced Annual Report on Form 10-K. For the Staff's convenience, each comment is reproduced below in italics, followed by the Company's response.
 
-ORAL ARGUMENT REQUESTED
+CLIMATE-RELATED DISCLOSURES
 
-PLEASE TAKE NOTICE that upon the accompanying Memorandum of Law, the Declaration of John Smith, and all prior pleadings and proceedings herein, Defendant Pacific Builders Inc. ("Defendant") will move this Court, before the Honorable Judge [Name], at the United States Courthouse, 500 Pearl Street, New York, New York, for an order dismissing the Complaint pursuant to Federal Rule of Civil Procedure 12(b)(6) for failure to state a claim upon which relief can be granted.
+Comment 1. We note your disclosure regarding the governance of climate-related risks. Please expand your disclosure to describe the board committee responsible for oversight of such risks and the frequency with which it receives reports from management.
 
-PRELIMINARY STATEMENT
+Response. The Company respectfully advises the Staff that the Board's Risk Committee has primary oversight responsibility for climate-related risks. The Risk Committee receives reports from the Chief Risk Officer on no less than a quarterly basis, and material climate-related matters are escalated to the full Board as appropriate. In response to the Staff's comment, the Company will revise its disclosure in future filings to include the following language: "The Risk Committee of the Board oversees the Company's climate-related risks and receives quarterly reports from management regarding the identification, assessment, and management of such risks."
 
-Plaintiff Maria Hernandez ("Plaintiff") attempts to transform a simple breach of contract dispute into a tort action to recover punitive damages that are not available under New York contract law. Her negligence and fraudulent misrepresentation claims are duplicative of her breach of contract claim and are barred by the economic loss rule. Accordingly, Counts II and III of the Complaint must be dismissed as a matter of law.
+Comment 2. Please clarify whether the material physical and transition risks you identify have had, or are reasonably likely to have, a material impact on your results of operations, and quantify such impacts where practicable.
 
-ARGUMENT
+Response. The Company advises the Staff that, based on its current assessment, the identified physical and transition risks have not had a material impact on the Company's results of operations during the periods presented. The Company assesses these risks through its enterprise risk-management framework and will disclose any reasonably likely material impacts, together with quantification where practicable, in future periodic reports as required by Item 1502 of Regulation S-K.
 
-I. THE ECONOMIC LOSS RULE BARS PLAINTIFF'S NEGLIGENCE CLAIM
+GREENHOUSE GAS METRICS
 
-Under New York law, a plaintiff cannot recover in tort for purely economic losses resulting from a breach of contract. This well-established principle prevents contract disputes from morphing into tort litigation.
+Comment 3. We note that you present Scope 1 and Scope 2 greenhouse gas emissions metrics. Please disclose the organizational boundaries used, the methodology and emission factors applied, and the assurance status of these metrics.
 
-Here, Plaintiff alleges only economic damages—specifically, the cost to repair the foundation—arising from Defendant's alleged failure to perform under the Contract. Because Plaintiff has not alleged any personal injury or damage to property other than the subject of the contract itself, her negligence claim (Count III) is barred. The damages sought are identical to those recoverable under a breach of contract theory.
-
-The purpose of the economic loss rule is to keep contract law and tort law separate. As the Second Circuit has explained, allowing tort recovery for economic loss would "blur the distinct lines between contract and tort."
-
-II. PLAINTIFF'S FRAUD CLAIM MUST BE DISMISSED BECAUSE IT IS DUPLICATIVE OF THE BREACH OF CONTRACT CLAIM
-
-Under New York law, a fraud claim that is merely a restatement of breach of contract claim must be dismissed. To survive a motion to dismiss, a fraud claim must allege a separate duty arising apart from the contractual obligations.
-
-Here, Plaintiff's fraud claim alleges that Defendant misrepresented its intention to use Grade A concrete. However, this duty to use Grade A concrete arises entirely from the Construction Contract. Plaintiff has not alleged any independent duty outside the four corners of the contract. Without such an independent duty, the fraud claim is merely duplicative and must be dismissed.
-
-Furthermore, courts have held that claims for fraudulent inducement may only survive where the plaintiff alleges fraud in the inducement of the contract itself, not fraud in the performance of contractual obligations. Here, Plaintiff does not allege that Defendant fraudulently induced her to enter into the Contract; rather, she alleges that Defendant breached its contractual duties by substituting Grade B concrete. This is a classic breach of contract claim, not fraud.
+Response. The Company confirms that its Scope 1 and Scope 2 emissions are calculated using the operational control approach consistent with the GHG Protocol Corporate Standard, applying published emission factors from recognized governmental sources. The metrics presented are currently subject to limited assurance by an independent third party. In response to the Staff's comment, the Company will expand its disclosure to describe the organizational boundaries, methodology, emission factors, and assurance level applied to these metrics.
 
 CONCLUSION
 
-For the foregoing reasons, Defendant respectfully requests that this Court grant its Motion to Dismiss Counts II and III of the Complaint pursuant to Federal Rule of Civil Procedure 12(b)(6).
-
-Dated: New York, New York
-       February 23, 2026
+The Company believes the foregoing responses, together with the revised disclosures it has agreed to include in future filings, are fully responsive to the Staff's comments. The Company acknowledges that it is responsible for the adequacy and accuracy of the disclosure in its filings. Please direct any questions regarding this response to the undersigned.
 
 Respectfully submitted,
 
-SMITH & ASSOCIATES LLP
+MERIDIAN FINANCIAL GROUP, INC.
 
 By: _________________________
-    Jonathan Smith, Esq.
-    Attorney for Defendant
-    123 Legal Plaza
+    Jordan Avery
+    Executive Vice President & General Counsel
+    Meridian Financial Group, Inc.
+    200 Harbor Street
     New York, NY 10004
-    (212) 555-0100
-    jsmith@smithlaw.com`;
+    (212) 555-0142
+    javery@meridianfg.com`;
 
 // Split document into chunks (paragraphs/sections)
 const DOCUMENT_CHUNKS = FULL_DOCUMENT_TEXT.split('\n\n').filter(chunk => chunk.trim().length > 0);

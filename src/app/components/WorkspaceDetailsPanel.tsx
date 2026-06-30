@@ -16,13 +16,13 @@ interface WorkspaceDetailsPanelProps {
 }
 
 const WORKSPACE_DATA: Record<string, WorkspaceDetails> = {
-  "Hernandez v. Pacific Builders Inc": {
-    description: "Construction defect litigation involving defective concrete work and alleged breach of contract, fraud, and negligent misrepresentation claims.",
-    matterType: "Litigation",
+  "SEC Climate Disclosure Program": {
+    description: "Securities compliance program addressing SEC climate-related disclosure requirements, including governance disclosures and Scope 1 and Scope 2 greenhouse gas emissions metrics in the annual report.",
+    matterType: "Securities Compliance",
     status: "Active",
-    client: "Maria Hernandez",
+    client: "Meridian Financial Group, Inc.",
     keyDate: "March 15, 2026",
-    agentInstructions: "Focus on construction defect law and New York contract principles. Prioritize economic loss rule arguments and ensure all citations follow Bluebook format. When drafting motions, emphasize defendant's lack of specific allegations required under Rule 9(b)."
+    agentInstructions: "Focus on Regulation S-K Items 1500-1507 and current SEC staff guidance. Map each staff comment to the governing rule, ensure citations reference the C.F.R. and relevant releases, and confirm emissions metrics are presented gross with methodology, boundaries, and assurance status disclosed."
   },
   "Default Project": {
     description: "",

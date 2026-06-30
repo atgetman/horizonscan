@@ -15,51 +15,66 @@ interface Project {
   name: string;
   description: string;
   timestamp: string;
+  recencyRank: number;
   isPlaceholder?: boolean;
 }
 
 const projectsData: Project[] = [
   {
+    id: "8",
+    name: "AI Governance",
+    description: "Defining model risk, oversight, and responsible-AI policies across the enterprise.",
+    timestamp: "30 minutes ago",
+    recencyRank: 0
+  },
+  {
     id: "1",
-    name: "Hernandez v. Pacific Builders Inc.",
-    description: "Employee sues for unpaid overtime wages under labor law violations.",
-    timestamp: "2 days ago"
+    name: "SEC Climate Disclosure Program",
+    description: "Preparing Meridian's climate-related risk disclosures for the upcoming 10-K filing.",
+    timestamp: "2 days ago",
+    recencyRank: 1
   },
   {
     id: "2",
-    name: "In re: Blue Ridge Trust 2025",
-    description: "Dispute over trustee mismanagement of $2M real estate trust.",
-    timestamp: "2 days ago"
+    name: "GDPR Cross-Border Data Transfer Review",
+    description: "Validating SCCs and transfer impact assessments for EU customer data flows.",
+    timestamp: "2 days ago",
+    recencyRank: 2
   },
   {
     id: "3",
-    name: "State v. Marcus T. Reynolds",
-    description: "Prosecution for insider trading in pharmaceutical company stock.",
-    timestamp: "2 days ago"
+    name: "CCPA & State Privacy Compliance",
+    description: "Building a multi-state consumer privacy program across new 2025 statutes.",
+    timestamp: "2 days ago",
+    recencyRank: 3
   },
   {
     id: "5",
-    name: "Rivera Compliance Review",
-    description: "EPA compliance review for chemical plant emissions violations.",
-    timestamp: "2 days ago"
+    name: "Vendor DPA Remediation",
+    description: "Reviewing data processing agreements across third-party vendors for compliance gaps.",
+    timestamp: "2 days ago",
+    recencyRank: 4
   },
   {
     id: "6",
-    name: "Doe v. Apex Corp.",
-    description: "Class action for data breach exposing customer personal information.",
-    timestamp: "2 days ago"
+    name: "EU AI Act Readiness",
+    description: "Establishing governance controls for ML credit and underwriting models.",
+    timestamp: "2 days ago",
+    recencyRank: 5
   },
   {
     id: "7",
-    name: "Matter of Green Estates",
-    description: "Contested will involving division of $5M family estate assets.",
-    timestamp: "2 days ago"
+    name: "AML / KYC Policy Refresh",
+    description: "Updating Meridian's anti-money-laundering program against new FinCEN guidance.",
+    timestamp: "2 days ago",
+    recencyRank: 6
   },
   {
     id: "4",
-    name: "Meridian Tech Acquisition",
-    description: "Due diligence review for $85M acquisition of SaaS platform company.",
-    timestamp: "3 days ago"
+    name: "Project Harbor — Fintech Acquisition Diligence",
+    description: "Regulatory diligence for the $85M acquisition of Sterling Capital, including licensing and HSR.",
+    timestamp: "3 days ago",
+    recencyRank: 7
   }
 ];
 
@@ -69,10 +84,16 @@ export function Projects() {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [shareModalItem, setShareModalItem] = useState<{ name: string; type: 'output' | 'file' | 'folder' | 'matter' | 'document' | 'tab'; initialMode?: 'share' | 'manage' }>({ name: '', type: 'matter' });
 
-  const filteredProjects = projectsData.filter(project =>
-    project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    project.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProjects = projectsData
+    .filter(project =>
+      project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.description.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) =>
+      sortBy === "A to Z"
+        ? a.name.localeCompare(b.name)
+        : a.recencyRank - b.recencyRank
+    );
 
   return (
     <div className="bg-[#fcfcfc] h-full w-full overflow-y-auto shadow-[0px_4px_12px_0px_rgba(0,0,0,0.03)]">
@@ -106,20 +127,38 @@ export function Projects() {
             </div>
           </div>
 
-          <button className="h-9 bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.01)] rounded-lg px-2.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors">
-            <span className="text-[14.5px] font-['Clario'] text-[#212223]">
-              <span className="font-normal">Sort by:</span> <span className="font-medium">{sortBy}</span>
-            </span>
-            <ChevronDown className="size-4 text-[#212223]" />
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="h-9 bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.01)] rounded-lg px-2.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors data-[state=open]:bg-gray-50">
+                <span className="text-[14.5px] font-['Clario'] text-[#212223]">
+                  <span className="font-normal">Sort by:</span> <span className="font-medium">{sortBy}</span>
+                </span>
+                <ChevronDown className="size-4 text-[#212223]" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
+              {["Recent", "A to Z"].map((option) => (
+                <DropdownMenuItem
+                  key={option}
+                  onSelect={() => setSortBy(option)}
+                  className={clsx(
+                    "text-[14.5px] font-['Source_Sans_3']",
+                    sortBy === option && "bg-gray-100 font-medium"
+                  )}
+                >
+                  {option}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Project Cards Grid */}
-        <div className="flex flex-col gap-5 pb-14">
-          {/* Row 1 */}
-          <div className="flex gap-5">
-            <ProjectCard 
-              project={filteredProjects[0]} 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pb-14">
+          {filteredProjects.map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
               onShare={(name) => {
                 setShareModalItem({ name, type: 'matter', initialMode: 'share' });
                 setShareModalOpen(true);
@@ -129,87 +168,7 @@ export function Projects() {
                 setShareModalOpen(true);
               }}
             />
-            <ProjectCard 
-              project={filteredProjects[1]} 
-              onShare={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'share' });
-                setShareModalOpen(true);
-              }}
-              onManageAccess={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'manage' });
-                setShareModalOpen(true);
-              }}
-            />
-          </div>
-
-          {/* Row 2 */}
-          <div className="flex gap-5">
-            <ProjectCard 
-              project={filteredProjects[2]} 
-              onShare={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'share' });
-                setShareModalOpen(true);
-              }}
-              onManageAccess={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'manage' });
-                setShareModalOpen(true);
-              }}
-            />
-            <ProjectCard 
-              project={filteredProjects[3]} 
-              onShare={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'share' });
-                setShareModalOpen(true);
-              }}
-              onManageAccess={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'manage' });
-                setShareModalOpen(true);
-              }}
-            />
-          </div>
-
-          {/* Row 3 */}
-          <div className="flex gap-5">
-            <ProjectCard 
-              project={filteredProjects[4]} 
-              onShare={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'share' });
-                setShareModalOpen(true);
-              }}
-              onManageAccess={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'manage' });
-                setShareModalOpen(true);
-              }}
-            />
-            <ProjectCard 
-              project={filteredProjects[5]} 
-              onShare={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'share' });
-                setShareModalOpen(true);
-              }}
-              onManageAccess={(name) => {
-                setShareModalItem({ name, type: 'matter', initialMode: 'manage' });
-                setShareModalOpen(true);
-              }}
-            />
-          </div>
-
-          {/* Row 4 - Single card */}
-          <div className="flex gap-5">
-            <div className="max-w-[530px]">
-              <ProjectCard 
-                project={filteredProjects[6]} 
-                onShare={(name) => {
-                  setShareModalItem({ name, type: 'matter', initialMode: 'share' });
-                  setShareModalOpen(true);
-                }}
-                onManageAccess={(name) => {
-                  setShareModalItem({ name, type: 'matter', initialMode: 'manage' });
-                  setShareModalOpen(true);
-                }}
-              />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
       
@@ -228,12 +187,12 @@ export function Projects() {
 function ProjectCard({ project, onShare, onManageAccess }: { project: Project | undefined, onShare: (name: string) => void, onManageAccess: (name: string) => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  if (!project) return <div className="w-[530px]" />;
+  if (!project) return <div className="w-full" />;
 
   const bgColor = project.isPlaceholder ? "bg-[#f5f7f6]" : "bg-white";
 
   return (
-    <div className={`${bgColor} relative w-[530px] rounded-lg border border-[#e5e5e5] p-5 flex flex-col gap-3 hover:border-gray-300 hover:shadow-sm transition-all group`}>
+    <div className={`${bgColor} relative w-full rounded-lg border border-[#e5e5e5] p-5 flex flex-col gap-3 hover:border-gray-300 hover:shadow-sm transition-all group`}>
       <Link
         to={`/workspace/${encodeURIComponent(project.name)}`}
         className="flex flex-col gap-3"

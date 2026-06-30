@@ -32,7 +32,9 @@ import {
 
 import { DocumentToolbar } from "../components/DocumentToolbar";
 import { SpreadsheetToolbar } from "../components/SpreadsheetToolbar";
-import { MOCK_FILES, MOCK_CHATS, ALL_FILES } from "../data/mockData";
+import { MOCK_FILES, MOCK_CHATS, ALL_FILES, getWorkspaceFiles } from "../data/mockData";
+import { AI_GOVERNANCE_DOC_CONTENT } from "../data/aiGovernanceDocs";
+import { GovernanceDocument } from "../components/GovernanceDocument";
 import { useWorkspaceNavigation } from "../contexts/WorkspaceNavigationContext";
 import { PromptInput } from "../components/PromptInput";
 import { ActiveChatView } from "../components/ActiveChatView";
@@ -63,60 +65,60 @@ import {
 } from "../components/ui/dropdown-menu";
 
 const HISTORICAL_CHATS_STRUCTURED: Record<string, { role: 'user' | 'assistant'; text: React.ReactNode }[]> = {
-  "Research on NY precedents": [
+  "Research on SEC climate rules": [
     {
       role: 'user',
-      text: "Find New York cases regarding \"time is of the essence\" clauses in commercial construction contracts from the last 5 years."
+      text: "Summarize the key SEC requirements for climate-related governance and emissions disclosures in the 10-K."
     },
     {
       role: 'assistant',
       text: (
         <>
-          <p className="text-[#212223] leading-relaxed mb-4">I found several relevant cases from New York courts within the last 5 years:</p>
+          <p className="text-[#212223] leading-relaxed mb-4">Here are the key requirements under the SEC's climate disclosure rules:</p>
           <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-             <h4 className="font-bold text-[#054688] mb-1">1. Apex Construction v. 550 Realty (2022)</h4>
-             <p className="text-sm text-gray-600">Held that a "time is of the essence" letter must be clear, distinct, and unequivocal, and must fix a reasonable time within which to perform.</p>
+             <h4 className="font-bold text-[#054688] mb-1">1. Governance — Regulation S-K Item 1501</h4>
+             <p className="text-sm text-gray-600">Requires disclosure of the board's oversight of climate-related risks and management's role in assessing and managing those risks.</p>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4">
-             <h4 className="font-bold text-[#054688] mb-1">2. Metro Lofts v. BuildCorp (2021)</h4>
-             <p className="text-sm text-gray-600">Court enforced the clause strictly where the parties were sophisticated entities and the contract explicitly stated that delays would cause irreparable harm.</p>
+             <h4 className="font-bold text-[#054688] mb-1">2. GHG Metrics — Regulation S-K Item 1505</h4>
+             <p className="text-sm text-gray-600">Requires gross Scope 1 and Scope 2 emissions disclosure, including methodology, organizational boundaries, and assurance status, subject to phase-in.</p>
           </div>
         </>
       )
     }
   ],
-  "Summary of deposition": [
+  "Summary of vendor risk findings": [
     {
       role: 'user',
-      text: "Summarize the key admissions from John Smith's deposition."
+      text: "Summarize the key compliance gaps from the Cloudspan Inc. vendor review."
     },
     {
       role: 'assistant',
       text: (
         <>
-          <p className="text-[#212223] leading-relaxed mb-4">Here are the key admissions from the deposition of John Smith on Aug 14, 2024:</p>
+          <p className="text-[#212223] leading-relaxed mb-4">Here are the key compliance gaps identified in the Cloudspan Inc. vendor review on Aug 14, 2024:</p>
           <ul className="list-disc pl-5 space-y-2 text-[15px] text-[#212223]">
-            <li>Admitted he was the site foreman on the day of the incident.</li>
-            <li>Confirmed that he did not personally inspect the concrete pour before it cured.</li>
-            <li>Acknowledged receiving the email from the supplier about the grade substitution.</li>
+            <li>No executed data processing agreement covering EU personal data transfers.</li>
+            <li>Standard Contractual Clauses are referenced but not attached or signed.</li>
+            <li>Breach-notification commitment is 14 days, exceeding the GDPR 72-hour requirement.</li>
           </ul>
         </>
       )
     }
   ],
-  "Drafting motion arguments": [
+  "Drafting disclosure language": [
     {
       role: 'user',
-      text: "Help me draft the argument section for the Motion to Dismiss regarding the negligence claim."
+      text: "Help me draft the climate risk governance disclosure for the 10-K."
     },
     {
       role: 'assistant',
       text: (
         <>
-          <p className="text-[#212223] leading-relaxed mb-4">Certainly. The negligence claim fails because the economic loss rule bars recovery for purely economic damages in tort where the relationship is governed by contract.</p>
+          <p className="text-[#212223] leading-relaxed mb-4">Certainly. The disclosure should describe board and management oversight of climate-related risks and how those risks are integrated into the broader risk-management process.</p>
           <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-             <h4 className="font-bold text-[#054688] mb-1">Proposed Argument Text</h4>
-             <p className="text-sm text-gray-600">"Plaintiff's negligence claim must be dismissed pursuant to the economic loss rule. New York courts have long held that a plaintiff cannot recover in tort for purely economic losses resulting from a breach of contract..."</p>
+             <h4 className="font-bold text-[#054688] mb-1">Proposed Disclosure Text</h4>
+             <p className="text-sm text-gray-600">"The Board's Risk Committee oversees climate-related risks, receiving quarterly reports from management. Material physical and transition risks are assessed through the Company's enterprise risk-management framework and reflected in strategic planning..."</p>
           </div>
         </>
       )
@@ -867,9 +869,14 @@ export function WorkspacePage() {
      if (typeof content === 'function') {
        content = content();
      }
+
+     // AI Governance workspace documents render from parsed source content
+     if (!content && AI_GOVERNANCE_DOC_CONTENT[item.name]) {
+       content = <GovernanceDocument blocks={AI_GOVERNANCE_DOC_CONTENT[item.name]} />;
+     }
      
-     // Use StreamingDocument for Motion to Dismiss
-     if (item.name === 'Motion to Dismiss') {
+    // Use StreamingDocument for SEC Comment Letter Response
+    if (item.name === 'SEC Comment Letter Response') {
        // Only stream on first auto-open, not on subsequent manual opens
        const shouldStream = !hasStreamedMotionToDismissRef.current;
        content = <StreamingDocument shouldStream={shouldStream} />;
@@ -1330,27 +1337,27 @@ export function WorkspacePage() {
   // Get workspace-specific regulatory alert content
   const getRegulatoryAlertContent = () => {
     const workspaceAlerts: Record<string, { title: string; description: string; tableName: string } | null> = {
-      'Project Atlas - M&A Due Diligence': {
+      'SEC Climate Disclosure Program': {
         title: 'New regulatory changes detected',
-        description: '3 regulatory updates may affect documents in this workspace: SEC Climate Disclosure Rules (12 docs), CFPB Consumer Data Rights (8 docs), FTC Non-Compete Ban (5 docs).',
-        tableName: 'M&A Regulatory Updates'
+        description: '3 regulatory updates may affect documents in this workspace: SEC Climate Disclosure Rules (12 docs), EPA GHG Reporting Updates (8 docs), EU CSRD Alignment Guidance (5 docs).',
+        tableName: 'Climate Disclosure Impact Analysis'
       },
-      'Acme Corp Acquisition': {
-        title: 'Antitrust filing requirements updated',
-        description: '5 regulatory updates detected: DOJ/FTC Merger Guidelines Update (18 docs), Hart-Scott-Rodino Filing Threshold Changes (11 docs), EU Competition Law Changes (7 docs), China Anti-Monopoly Law Updates (9 docs), UK CMA Guidance Revisions (6 docs).',
-        tableName: 'Acme Regulatory Analysis'
+      'GDPR Cross-Border Data Transfer Review': {
+        title: 'Cross-border transfer requirements updated',
+        description: '5 regulatory updates detected: EU-U.S. Data Privacy Framework Changes (18 docs), Updated Standard Contractual Clauses (11 docs), EDPB Transfer Guidance (7 docs), Schrems II Supplementary Measures (9 docs), UK IDTA Revisions (6 docs).',
+        tableName: 'Data Transfer Impact Analysis'
       },
-      'TechStart Financing Round': {
-        title: 'Securities regulation changes',
-        description: '4 new SEC rules may impact financing documents: Crowdfunding Rule Amendments (6 docs), Regulation D Updates (10 docs), Rule 701 Changes (4 docs), Form D Filing Requirements (7 docs).',
-        tableName: 'Securities Compliance Review'
+      'CCPA & State Privacy Compliance': {
+        title: 'State privacy law changes',
+        description: '4 new state privacy rules may impact consumer disclosures: CPRA Regulation Amendments (6 docs), New 2025 State Privacy Statutes (10 docs), Sensitive Data Rules (4 docs), Universal Opt-Out Requirements (7 docs).',
+        tableName: 'State Privacy Compliance Review'
       },
-      'Product Liability Case': null, // No alert for this workspace
-      'Employment Agreement Review': null, // No alert for this workspace
-      'Real Estate Transaction': {
-        title: 'Environmental compliance updates',
-        description: '2 new environmental regulations may affect property documents: EPA CERCLA Rule Updates (4 docs), State Environmental Disclosure Requirements (3 docs).',
-        tableName: 'Environmental Compliance Review'
+      'EU AI Act Readiness': null, // No alert for this workspace
+      'AML / KYC Policy Refresh': null, // No alert for this workspace
+      'Vendor DPA Remediation': {
+        title: 'Data processing requirements updated',
+        description: '2 new privacy regulations may affect vendor agreements: FTC Safeguards Rule Updates (4 docs), GDPR Article 28 Guidance (3 docs).',
+        tableName: 'Vendor DPA Compliance Review'
       }
     };
 
@@ -1439,14 +1446,15 @@ export function WorkspacePage() {
 
            <div className="flex items-end gap-1 flex-1 min-w-0">
              {tabs.map((tab) => {
-               // Helper function to build folder path from ALL_FILES
+               // Helper function to build folder path from the workspace's file tree
                const getFolderPathForFile = (fileName: string): string => {
-                 const fileItem = ALL_FILES.find(f => f.name === fileName);
+                 const workspaceFiles = getWorkspaceFiles(decodedName);
+                 const fileItem = workspaceFiles.find(f => f.name === fileName);
                  if (!fileItem || !fileItem.parentId) return '';
                  
                  const buildPath = (parentId: string | null): string[] => {
                    if (!parentId) return [];
-                   const parent = ALL_FILES.find(f => f.id === parentId);
+                   const parent = workspaceFiles.find(f => f.id === parentId);
                    if (!parent) return [];
                    return [...buildPath(parent.parentId), parent.name];
                  };
@@ -1926,10 +1934,10 @@ export function WorkspacePage() {
                 <div className="grid grid-cols-2 gap-4" data-tour-step="8">
                   <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.1)] transition-shadow cursor-pointer">
                     <h4 className="text-[16px] font-medium text-[#1F1F1F] mb-2">
-                      Refine latest motion
+                      Refine latest response
                     </h4>
                     <p className="text-[14px] text-[#666] leading-[1.5] mb-4">
-                      Review my Daubert motion. The expert's entire opinion rests on his own say-so — no data, no
+                      Review my SEC comment response. The emissions assurance section relies on conclusory language — no methodology, no
                     </p>
                     <div className="flex items-center gap-3 pt-2 border-t border-[#F0F0F0]">
                       <div className="w-5 h-5 rounded border border-[#D0D0D0] flex items-center justify-center">
@@ -2068,10 +2076,10 @@ export function WorkspacePage() {
                       <div className="bg-white border border-[#E5E5E5] rounded-lg p-4 ml-7 shadow-[0_1px_3px_rgba(0,0,0,0.06)] relative">
                         <div className="flex items-center gap-2 mb-2">
                           <FileText className="size-4 text-[#666]" />
-                          <span className="text-[14px] font-medium text-[#1F1F1F]">Motion to Dismiss</span>
+                          <span className="text-[14px] font-medium text-[#1F1F1F]">SEC Comment Letter Response</span>
                         </div>
                         <p className="text-[14px] text-[#1F1F1F] leading-[1.5]">
-                          Reviewed the summary table and suggested adding two more depositions
+                          Reviewed the response draft and suggested addressing two more staff comments
                         </p>
                         <span className="absolute bottom-3 right-3 text-[11px] text-[#999]">8:45 AM</span>
                       </div>
@@ -2127,8 +2135,8 @@ export function WorkspacePage() {
         {tabs.map((tab) => {
             if (tab.type === 'new-chat') return null;
             const isActive = activeTabId === tab.id;
-            const isDoc = (tab.type === 'file' || tab.type === 'doc' || tab.type === 'research') && !tab.title.endsWith('.pdf') && !tab.title.endsWith('.xlsx') && !tab.title.endsWith('.pst') && !tab.title.endsWith('.csv') && tab.title !== 'Discovery overview';
-            const isSpreadsheet = tab.type === 'table' || tab.type === 'regulatory-table' || tab.title.endsWith('.xlsx') || tab.title.endsWith('.csv') || tab.title === 'Discovery overview';
+    const isDoc = (tab.type === 'file' || tab.type === 'doc' || tab.type === 'research') && !tab.title.endsWith('.pdf') && !tab.title.endsWith('.xlsx') && !tab.title.endsWith('.pst') && !tab.title.endsWith('.csv') && tab.title !== 'Vendor Risk Register';
+    const isSpreadsheet = tab.type === 'table' || tab.type === 'regulatory-table' || tab.title.endsWith('.xlsx') || tab.title.endsWith('.csv') || tab.title === 'Vendor Risk Register';
             const showSourceViewer = isActive && !!activeCitation;
 
             // Visibility Logic: Panels are hidden if Source Viewer (Citation) is open
@@ -2290,12 +2298,12 @@ export function WorkspacePage() {
                                   isOpen={true}
                                   onClose={() => toggleTabComments(tab.id)}
                                   comments={[
-                                    { id: '1', number: 4, scope: 'Master Services Agreement', author: 'Sarah Chen', role: 'Associate', timestamp: '2 hours ago', text: 'Should we revise the termination clause language to align with the latest case law on contract termination?', mentions: [], avatars: ['S'] },
-                                    { id: '2', number: 6, scope: 'Master Services Agreement', author: 'Michael Torres', role: 'Partner', timestamp: '5 hours ago', text: 'The indemnification provision needs stronger language. Can we review precedents?', mentions: ['Rachel Kim'], avatars: ['M'] },
-                                    { id: '3', number: 5, scope: 'Master Services Agreement', author: 'Michael Torres', role: 'Partner', timestamp: '7 hours ago', text: 'Remove the duplicate liability cap section and consolidate into Section 8, correct?', mentions: ['Rachel Kim'], avatars: ['M'] },
-                                    { id: '4', number: 3, scope: 'Master Services Agreement', author: 'Jennifer Walsh', role: 'Senior Associate', timestamp: '1 day ago', text: 'The force majeure clause should include pandemic language based on recent developments...', mentions: ['David Park'], avatars: ['J', 'W'] },
-                                    { id: '5', number: 2, scope: 'Master Services Agreement', author: 'Jennifer Walsh', role: 'Senior Associate', timestamp: '1 day ago', text: 'Could we add choice of law provisions that align with our standard contract templates?', mentions: ['David Park'], replyCount: 1, avatars: ['J', 'D'] },
-                                    { id: '6', number: 1, scope: 'Master Services Agreement', author: 'Rachel Kim', role: 'Associate', timestamp: '2 days ago', text: 'Consider adding arbitration clause per client preference', mentions: [], avatars: ['R'] }
+                                    { id: '1', number: 4, scope: 'Master Services Agreement', author: 'Sarah Chen', role: 'Compliance Counsel', timestamp: '2 hours ago', text: 'Should we revise the data processing clause to align with the latest GDPR Article 28 guidance?', mentions: [], avatars: ['S'] },
+                                    { id: '2', number: 6, scope: 'Master Services Agreement', author: 'Michael Torres', role: 'Deputy General Counsel', timestamp: '5 hours ago', text: 'The indemnification provision needs stronger language for data breaches. Can we review our standard terms?', mentions: ['Rachel Kim'], avatars: ['M'] },
+                                    { id: '3', number: 5, scope: 'Master Services Agreement', author: 'Michael Torres', role: 'Deputy General Counsel', timestamp: '7 hours ago', text: 'Remove the duplicate liability cap section and consolidate into Section 8, correct?', mentions: ['Rachel Kim'], avatars: ['M'] },
+                                    { id: '4', number: 3, scope: 'Master Services Agreement', author: 'Jennifer Walsh', role: 'Senior Privacy Counsel', timestamp: '1 day ago', text: 'The security clause should reference our FTC Safeguards Rule controls based on recent updates...', mentions: ['David Park'], avatars: ['J', 'W'] },
+                                    { id: '5', number: 2, scope: 'Master Services Agreement', author: 'Jennifer Walsh', role: 'Senior Privacy Counsel', timestamp: '1 day ago', text: 'Could we add sub-processor approval provisions that align with our standard vendor templates?', mentions: ['David Park'], replyCount: 1, avatars: ['J', 'D'] },
+                                    { id: '6', number: 1, scope: 'Master Services Agreement', author: 'Rachel Kim', role: 'Compliance Counsel', timestamp: '2 days ago', text: 'Consider adding the Standard Contractual Clauses as an exhibit', mentions: [], avatars: ['R'] }
                                   ]}
                                   type="document"
                                 />
@@ -2314,12 +2322,12 @@ export function WorkspacePage() {
                                 <CommentsPanel 
                                   isOpen={true} 
                                   comments={[
-                                    { id: '1', document: 'Email_Batch_001.pst', column: 'Status', author: 'Sarah Chen', role: 'Senior Associate', timestamp: '2 hours ago', text: 'These interrogatory responses need more specificity. Can we schedule a call with the client to get additional details?', mentions: ['Michael Torres'], avatar: 'S', avatarColor: 'bg-[#1d4b34]' },
-                                    { id: '2', document: 'Internal_Memos_2023.pdf', column: 'Status', author: 'Michael Torres', role: 'Partner', timestamp: '4 hours ago', text: 'Agreed. Also flagging potential privilege issues on documents 1847-1852. We should review these before production.', mentions: ['Sarah Chen', 'Jessica Park'], avatar: 'M', avatarColor: 'bg-[#1d4b34]' },
-                                    { id: '3', document: 'Meeting_Minutes_2023.docx', column: 'Source/Type', author: 'Jessica Park', role: 'Paralegal', timestamp: '5 hours ago', text: 'Deposition prep materials are ready. Should we include the timeline exhibit or wait until trial?', mentions: ['Michael Torres'], avatar: 'J', avatarColor: 'bg-[#1d4b34]' },
-                                    { id: '4', document: 'Q3_Financials.xlsx', column: 'Custodian', author: 'David Kumar', role: 'Of Counsel', timestamp: '1 day ago', text: 'The opposing counsel is requesting native file formats for all emails. This could expose metadata we want to protect.', mentions: ['Sarah Chen'], avatar: 'D', avatarColor: 'bg-[#1d4b34]' },
-                                    { id: '5', document: 'Subcontractor_Agreements.pdf', column: 'Status', author: 'Emily Rodriguez', role: 'Associate', timestamp: '1 day ago', text: 'Updated privilege log attached. Found 47 additional attorney-client communications that need to be withheld.', mentions: ['Michael Torres', 'David Kumar'], replyCount: 2, avatar: 'E', avatarColor: 'bg-[#1d4b34]' },
-                                    { id: '6', document: 'Email_Batch_003.pst', column: 'Status', author: 'Robert Williams', role: 'Senior Partner', timestamp: '2 days ago', text: 'Request for production #23 is overly broad. We need to object and propose a narrower scope.', mentions: [], avatar: 'R', avatarColor: 'bg-[#1d4b34]' }
+                                    { id: '1', document: 'Vendor_Correspondence_001.pst', column: 'Status', author: 'Sarah Chen', role: 'Senior Compliance Counsel', timestamp: '2 hours ago', text: 'These vendor questionnaire responses need more specificity. Can we schedule a call to get additional details on their data flows?', mentions: ['Michael Torres'], avatar: 'S', avatarColor: 'bg-[#1d4b34]' },
+                                    { id: '2', document: 'Privacy_Assessment_2023.pdf', column: 'Status', author: 'Michael Torres', role: 'Deputy General Counsel', timestamp: '4 hours ago', text: 'Agreed. Also flagging potential transfer risk on vendors 18-22. We should review these before renewal.', mentions: ['Sarah Chen', 'Jessica Park'], avatar: 'M', avatarColor: 'bg-[#1d4b34]' },
+                                    { id: '3', document: 'Meeting_Minutes_2023.docx', column: 'Source/Type', author: 'Jessica Park', role: 'Compliance Analyst', timestamp: '5 hours ago', text: 'The remediation tracker is ready. Should we include the risk-rating exhibit or wait until the committee review?', mentions: ['Michael Torres'], avatar: 'J', avatarColor: 'bg-[#1d4b34]' },
+                                    { id: '4', document: 'Q3_Financials.xlsx', column: 'Custodian', author: 'David Kumar', role: 'Senior Counsel', timestamp: '1 day ago', text: 'The vendor is requesting we accept their standard DPA. This could leave gaps in our breach-notification timelines.', mentions: ['Sarah Chen'], avatar: 'D', avatarColor: 'bg-[#1d4b34]' },
+                                    { id: '5', document: 'Vendor_DPAs.pdf', column: 'Status', author: 'Emily Rodriguez', role: 'Compliance Counsel', timestamp: '1 day ago', text: 'Updated DPA tracker attached. Found 47 additional vendors processing personal data without an executed agreement.', mentions: ['Michael Torres', 'David Kumar'], replyCount: 2, avatar: 'E', avatarColor: 'bg-[#1d4b34]' },
+                                    { id: '6', document: 'Vendor_Correspondence_003.pst', column: 'Status', author: 'Robert Williams', role: 'General Counsel', timestamp: '2 days ago', text: 'The vendor\'s proposed audit-rights limitation is too narrow. We need to push back and propose broader access.', mentions: [], avatar: 'R', avatarColor: 'bg-[#1d4b34]' }
                                   ]}
                                   onCommentClick={handleCommentClick}
                                   onClose={() => toggleTabComments(tab.id)}

@@ -14,18 +14,19 @@ interface ChatTag {
 
 // Workspaces selectable as chat tags
 const WORKSPACE_OPTIONS = [
-  "Blackwell Industries Acquisition",
-  "Chen v. Metropolitan Health",
-  "Thornton Family Trust Amendment",
-  "Global Pharma Merger",
-  "Finch Data Breach Litigation",
+  "AI Governance",
+  "SEC Climate Disclosure Program",
+  "Vendor DPA Remediation",
+  "GDPR Cross-Border Data Transfer Review",
+  "Project Harbor — Fintech Acquisition Diligence",
+  "EU AI Act Readiness",
 ];
 
 // Monitoring alerts created for this prototype (mirrors the Monitoring list view)
 const PROTOTYPE_ALERTS = [
-  "Personal jurisdiction developments in Second Circuit",
+  "SEC climate disclosure developments",
   "GDPR enforcement actions and guidance",
-  "Patent eligibility under Section 101",
+  "EU AI Act implementation",
 ];
 
 interface PromptInputProps {
@@ -156,8 +157,8 @@ export function PromptInput({
     },
     {
       id: '3',
-      name: 'Discovery Response Standards',
-      description: 'Firm-wide standards for responding to discovery requests in litigation matters',
+      name: 'SEC Comment Response Standards',
+      description: 'Firm-wide standards for responding to SEC staff comment letters',
       type: 'firm' as const
     },
     {
@@ -477,20 +478,27 @@ export function PromptInput({
         <div className="flex items-center justify-between">
           {/* Left buttons */}
           <div className="flex items-center gap-2">
-            <FileText className="size-4 text-[#666]" strokeWidth={1.5} />
-            <button
-              ref={addMenuButtonRef}
-              type="button"
-              onClick={handleAddMenuClick}
-              className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${
-                isAddMenuOpen
-                  ? 'bg-[#1d4b34] text-white'
-                  : 'bg-[#f5f5f5] text-[#666] hover:bg-[#e5e5e5]'
-              }`}
-              title="Add content"
-            >
-              <Plus className="size-[14px]" strokeWidth={2.5} />
-            </button>
+            <div className="relative group">
+              <button
+                ref={addMenuButtonRef}
+                type="button"
+                onClick={handleAddMenuClick}
+                className={`w-9 h-9 flex items-center justify-center rounded-lg text-[#1d4b34] transition-colors ${
+                  isAddMenuOpen ? 'bg-[#f0f0f0]' : 'hover:bg-[#f5f5f5]'
+                }`}
+                aria-label="Attach"
+              >
+                <Plus className="size-5" strokeWidth={2} />
+              </button>
+              {!isAddMenuOpen && (
+                <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="relative bg-[#363636] text-white text-[13px] font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">
+                    Attach
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-[6px] border-transparent border-t-[#363636]" />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right button */}

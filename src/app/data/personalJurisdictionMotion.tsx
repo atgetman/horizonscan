@@ -3,188 +3,135 @@ import { Citation } from "../components/Citation";
 
 export const PersonalJurisdictionMotion = (
   <div className="p-12 max-w-4xl mx-auto bg-white shadow-sm min-h-full border border-gray-200 text-[#212223]">
-    <h1 className="text-2xl font-bold mb-6 text-center">UNITED STATES DISTRICT COURT<br/>SOUTHERN DISTRICT OF NEW YORK</h1>
+    <h1 className="text-2xl font-bold mb-6 text-center">MERIDIAN FINANCIAL GROUP, INC.<br/>OFFICE OF THE GENERAL COUNSEL</h1>
     <div className="flex justify-between mb-12 text-sm border-b-2 border-black pb-8">
       <div className="w-1/2 border-r-2 border-black pr-4">
-        <p className="font-bold">MARIA HERNANDEZ,</p>
-        <p className="ml-8 italic">Plaintiff,</p>
-        <p className="my-4 text-center">- against -</p>
-        <p className="font-bold">PACIFIC BUILDERS INC., a Delaware Corporation,</p>
-        <p className="ml-8 italic">Defendant.</p>
+        <p className="font-bold">PRIVILEGED &amp; CONFIDENTIAL</p>
+        <p className="ml-8 italic">Attorney Work Product</p>
+        <p className="my-4 text-center">— re —</p>
+        <p className="font-bold">CLOUDSPAN INC. — Vendor Data Transfer</p>
+        <p className="ml-8 italic">Compliance Assessment</p>
       </div>
       <div className="w-1/2 pl-4 flex flex-col justify-center">
-        <p>Civil Action No. 24-cv-01234</p>
-        <p className="font-bold mt-4 text-lg">DEFENDANT'S MEMORANDUM OF LAW IN SUPPORT OF MOTION TO DISMISS FOR LACK OF PERSONAL JURISDICTION</p>
-        <p className="mt-2 font-bold">ORAL ARGUMENT REQUESTED</p>
+        <p>Matter No. PRIV-2026-014</p>
+        <p className="font-bold mt-4 text-lg">MEMORANDUM RE: GDPR CROSS-BORDER DATA TRANSFER ASSESSMENT</p>
+        <p className="mt-2 font-bold">FOR INTERNAL REVIEW</p>
       </div>
     </div>
     
     <p className="mb-6 text-[15px] leading-relaxed text-justify">
-      Defendant Pacific Builders Inc. ("Defendant") respectfully submits this Memorandum of Law in support of its Motion to Dismiss the Complaint pursuant to Federal Rule of Civil Procedure 12(b)(2) for lack of personal jurisdiction.
+      This memorandum assesses whether Meridian Financial Group, Inc. ("Meridian" or the "Company") may lawfully transfer the personal data of its EU customers to Cloudspan Inc. ("Cloudspan"), a U.S.-based processor, under the General Data Protection Regulation ("GDPR").
     </p>
 
-     <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">PRELIMINARY STATEMENT</h3>
+     <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">EXECUTIVE SUMMARY</h3>
      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       Plaintiff Maria Hernandez ("Plaintiff") is a New York resident who has sued Defendant, a Delaware corporation with its principal place of business in California, in this Court. However, Defendant lacks sufficient minimum contacts with New York to satisfy the requirements of personal jurisdiction under the Due Process Clause of the Fourteenth Amendment. Defendant has never maintained an office or property in New York, has never been registered to do business in New York, and its sole alleged contact with the forum—a construction project managed remotely from California—is insufficient to establish jurisdiction. Accordingly, this Court lacks personal jurisdiction over Defendant, and the Complaint must be dismissed.
+       Meridian processes personal data of data subjects located in the European Economic Area ("EEA") and proposes to transfer that data to Cloudspan in the United States. Such a transfer is a restricted transfer under Chapter V of the GDPR and requires an appropriate transfer mechanism. Based on the current record, Cloudspan has not executed Standard Contractual Clauses ("SCCs"), and no transfer impact assessment has been completed. Accordingly, the transfer cannot proceed in its current form, and the deficiencies described below must be remediated before any EU personal data is shared with Cloudspan.
      </p>
      
      <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">LEGAL STANDARD</h3>
      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       A federal court sitting in diversity may exercise personal jurisdiction over a non-resident defendant only if: (1) the defendant is amenable to service of process under the forum state's long-arm statute; and (2) the exercise of jurisdiction comports with due process under the Fourteenth Amendment.
+       The GDPR prohibits the transfer of personal data to a third country unless the transfer is made to a country with an adequacy decision or is subject to appropriate safeguards.
        <Citation 
          id="cit-pj1"
-         type="case"
-         source="2d Cir."
-         title="Licci ex rel. Licci v. Lebanese Canadian Bank, SAL"
-         snippet="Held that federal courts in diversity cases apply the forum state's long-arm statute and the Due Process Clause."
+         type="statute"
+         source="GDPR Art. 44"
+         title="General principle for transfers"
+         snippet="Any transfer of personal data to a third country shall take place only if the conditions of Chapter V are met, to ensure the level of protection of natural persons is not undermined."
        />
-       New York's long-arm statute permits jurisdiction to the full extent allowed by the Constitution, so the two inquiries merge.
+       Where no adequacy decision applies, a controller or processor may transfer personal data only if it has provided appropriate safeguards, such as Standard Contractual Clauses.
        <Citation 
          id="cit-pj2"
-         type="case"
-         source="2d Cir."
-         title="Chloé v. Queen Bee of Beverly Hills, LLC"
-         snippet="Reaffirmed that New York's long-arm statute is coextensive with federal due process requirements."
+         type="statute"
+         source="GDPR Art. 46"
+         title="Transfers subject to appropriate safeguards"
+         snippet="In the absence of an adequacy decision, a controller or processor may transfer personal data to a third country only if it has provided appropriate safeguards, including approved Standard Contractual Clauses."
        />
      </p>
      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       Due process requires that a defendant have "minimum contacts" with the forum state such that the maintenance of the suit does not offend "traditional notions of fair play and substantial justice."
+       Following the invalidation of the Privacy Shield, transfers relying on SCCs must be supported by an assessment of whether the law of the destination country ensures an essentially equivalent level of protection, supplemented by additional measures where necessary.
        <Citation 
          id="cit-pj3"
          type="case"
-         source="U.S. Supreme Court"
-         title="International Shoe Co. v. Washington"
-         snippet="Established the minimum contacts test for personal jurisdiction under the Due Process Clause."
+         source="CJEU"
+         title="Data Protection Commissioner v. Facebook Ireland (Schrems II)"
+         snippet="Held that exporters relying on SCCs must verify, on a case-by-case basis, whether the law of the third country ensures adequate protection and adopt supplementary measures where it does not."
        />
-       The plaintiff bears the burden of establishing that jurisdiction exists.
+       The exporter bears the burden of demonstrating that an appropriate transfer mechanism is in place.
        <Citation 
          id="cit-pj4"
-         type="case"
-         source="2d Cir."
-         title="In re Terrorist Attacks on Sept. 11, 2001"
-         snippet="Clarified that the plaintiff bears the burden of proving the court has jurisdiction over the defendant."
+         type="record"
+         source="EDPB"
+         title="Recommendations 01/2020 on supplementary measures"
+         snippet="Clarified that the data exporter is responsible for assessing the level of protection in the destination country and documenting the transfer mechanism relied upon."
        />
      </p>
 
-     <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">ARGUMENT</h3>
-     <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">I. This Court Lacks General Jurisdiction Over Defendant</h4>
+     <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">ANALYSIS</h3>
+     <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">I. No Adequacy Decision Covers the Proposed Transfer</h4>
      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       General jurisdiction permits a court to hear any claim against a defendant, regardless of where the claim arose. However, general jurisdiction is limited to forums where the defendant is "essentially at home."
+       Transfers to a country benefiting from an adequacy decision do not require additional authorization.
        <Citation 
          id="cit-pj5"
-         type="case"
-         source="U.S. Supreme Court"
-         title="Daimler AG v. Bauman"
-         snippet="Held that general jurisdiction is limited to places where the defendant is 'essentially at home'—typically the defendant's place of incorporation and principal place of business."
+         type="statute"
+         source="GDPR Art. 45"
+         title="Transfers on the basis of an adequacy decision"
+         snippet="A transfer may take place where the Commission has decided that the third country ensures an adequate level of protection."
        />
-       For a corporation, this generally means only the state of incorporation and the state of principal place of business.
-       <Citation 
-         id="cit-pj6"
-         type="case"
-         source="U.S. Supreme Court"
-         title="Goodyear Dunlop Tires Operations, S.A. v. Brown"
-         snippet="Established that for a corporation, being 'at home' typically means the place of incorporation and principal place of business."
-       />
-     </p>
-     <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       Here, Defendant is incorporated under Delaware law and maintains its principal place of business in Los Angeles, California. Defendant has never had an office, employees, bank accounts, or property in New York. Defendant is not registered to do business in New York and does not hold any licenses issued by New York State. These facts are undisputed in Plaintiff's Complaint. Accordingly, Defendant is not "at home" in New York, and this Court lacks general jurisdiction.
+       While the EU-U.S. Data Privacy Framework ("DPF") provides an adequacy basis for transfers to certified U.S. organizations, the record does not show that Cloudspan is a current DPF participant. Until Cloudspan's certification is verified, Meridian cannot rely on the DPF as the transfer mechanism, and an alternative safeguard under Article 46 is required.
      </p>
 
-     <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">II. This Court Lacks Specific Jurisdiction Over Defendant</h4>
+     <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">II. Cloudspan Has Not Executed Standard Contractual Clauses</h4>
      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       Specific jurisdiction requires that: (1) the defendant purposefully availed itself of the privilege of conducting activities in the forum state; (2) the claim arises out of or relates to those forum-related activities; and (3) the exercise of jurisdiction is reasonable.
+       In the absence of adequacy, SCCs are the most common appropriate safeguard, but they must be incorporated in full and properly executed by both parties.
+       <Citation 
+         id="cit-pj6"
+         type="record"
+         source="Commission Decision 2021/914"
+         title="Standard Contractual Clauses for the transfer of personal data to third countries"
+         snippet="Sets out the modular Standard Contractual Clauses that, when adopted in full, provide appropriate safeguards for restricted transfers."
+       />
+       The Cloudspan data processing agreement references SCCs but does not attach or execute them. A reference to SCCs without the operative clauses and completed annexes does not constitute an appropriate safeguard. Meridian must require Cloudspan to execute the applicable SCC modules, complete the annexes describing the processing, and append its technical and organizational security measures.
+     </p>
+
+     <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">III. A Transfer Impact Assessment Is Required and Outstanding</h4>
+     <p className="mb-4 text-[15px] leading-relaxed text-justify">
+       Even where SCCs are executed, the exporter must conduct a transfer impact assessment to determine whether U.S. law affords essentially equivalent protection, and must implement supplementary measures where it does not.
        <Citation 
          id="cit-pj7"
          type="case"
-         source="2d Cir."
-         title="Metropolitan Life Ins. Co. v. Robertson-Ceco Corp."
-         snippet="Set forth the three-part test for specific personal jurisdiction in the Second Circuit."
+         source="CJEU"
+         title="Data Protection Commissioner v. Facebook Ireland (Schrems II)"
+         snippet="Required exporters to assess the destination country's surveillance laws and adopt supplementary measures, such as strong encryption, where protection is not equivalent."
        />
-       The defendant's contacts with the forum must be such that the defendant "should reasonably anticipate being haled into court there."
+       No transfer impact assessment has been completed for the Cloudspan transfer. Meridian should document an assessment of relevant U.S. surveillance authorities and adopt supplementary measures—such as end-to-end encryption with exporter-held keys and contractual transparency commitments—before the transfer proceeds.
+     </p>
+
+     <h4 className="font-bold mt-4 mb-2 uppercase text-sm tracking-wide">IV. The Breach-Notification Term Is Non-Compliant</h4>
+     <p className="mb-4 text-[15px] leading-relaxed text-justify">
+       A processor must notify the controller of a personal data breach without undue delay so the controller can meet its own 72-hour notification obligation.
        <Citation 
          id="cit-pj8"
-         type="case"
-         source="U.S. Supreme Court"
-         title="World-Wide Volkswagen Corp. v. Woodson"
-         snippet="Held that the defendant must have 'purposefully directed' activities toward the forum state and should 'reasonably anticipate being haled into court there.'"
+         type="statute"
+         source="GDPR Art. 33"
+         title="Notification of a personal data breach to the supervisory authority"
+         snippet="The controller shall notify the competent supervisory authority of a personal data breach without undue delay and, where feasible, not later than 72 hours after becoming aware of it; the processor shall notify the controller without undue delay."
        />
+       Cloudspan's proposed 14-day notification window is incompatible with this requirement. The agreement must be revised to require notification without undue delay and in any event within a timeframe that allows Meridian to comply with its 72-hour obligation.
      </p>
 
-     <h5 className="font-bold mt-3 mb-2 text-sm">A. Defendant Did Not Purposefully Avail Itself of New York</h5>
+     <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">RECOMMENDATION</h3>
      <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       Purposeful availment requires that the defendant's contacts with the forum be the result of the defendant's own actions, not the unilateral activity of the plaintiff. Mere foreseeability that a product or service will end up in the forum state is insufficient.
-       <Citation 
-         id="cit-pj9"
-         type="case"
-         source="U.S. Supreme Court"
-         title="Burger King Corp. v. Rudzewicz"
-         snippet="Held that personal jurisdiction requires the defendant's own actions, not the unilateral activity of the plaintiff or third parties."
-       />
-       The plaintiff cannot create jurisdiction by its own contacts with the defendant.
-       <Citation 
-         id="cit-pj10"
-         type="case"
-         source="2d Cir."
-         title="Sunward Electronics, Inc. v. McDonald"
-         snippet="Reaffirmed that the plaintiff cannot create personal jurisdiction over the defendant by its own unilateral contacts."
-       />
-     </p>
-     <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       Here, Defendant's involvement in the New York construction project was minimal and incidental. Although the construction site is located in New York, all project management, decision-making, and material procurement were conducted from Defendant's California headquarters. Defendant never sent employees to New York, never advertised or marketed its services in New York, and never solicited business in New York. The contract was negotiated and executed in California. The mere fact that the construction site happens to be located in New York does not establish purposeful availment.
-       <Citation 
-         id="cit-pj11"
-         type="case"
-         source="2d Cir."
-         title="Waldman v. Palestine Liberation Org."
-         snippet="Held that a defendant's minimal and incidental contacts with the forum state are insufficient to establish purposeful availment."
-       />
-     </p>
-     <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       Moreover, the contract at issue contains a choice-of-law provision specifying that California law governs, and a forum selection clause designating California state courts as the exclusive forum for disputes. These provisions further demonstrate that Defendant did not purposefully avail itself of New York law or New York courts.
-       <Citation 
-         id="cit-pj12"
-         type="case"
-         source="U.S. Supreme Court"
-         title="Carnival Cruise Lines, Inc. v. Shute"
-         snippet="Held that forum selection clauses are presumptively valid and demonstrate the parties' expectations regarding where disputes will be litigated."
-       />
-     </p>
-
-     <h5 className="font-bold mt-3 mb-2 text-sm">B. Exercising Jurisdiction Would Be Unreasonable</h5>
-     <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       Even if the first two prongs of the specific jurisdiction test were satisfied, the exercise of jurisdiction must still be reasonable. Courts consider: (1) the burden on the defendant; (2) the forum state's interest in adjudicating the dispute; (3) the plaintiff's interest in obtaining relief; (4) the interstate judicial system's interest in efficiency; and (5) the shared interest of the states in furthering substantive social policies.
-       <Citation 
-         id="cit-pj13"
-         type="case"
-         source="2d Cir."
-         title="PDK Labs, Inc. v. Friedlander"
-         snippet="Set forth the five factors for assessing the reasonableness of exercising personal jurisdiction."
-       />
-     </p>
-     <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       Here, requiring Defendant to defend this action in New York would impose a substantial burden. All of Defendant's employees, documents, and witnesses are located in California. Conversely, the contract expressly designates California law as controlling and California courts as the exclusive forum. California has a strong interest in applying its own law to a contract governed by California law. New York has no meaningful interest in this dispute beyond the fortuitous location of the construction site. Accordingly, the exercise of jurisdiction would be unreasonable.
-       <Citation 
-         id="cit-pj14"
-         type="case"
-         source="2d Cir."
-         title="Asahi Metal Indus. Co. v. Superior Court"
-         snippet="Held that the burden on the defendant is a significant factor in determining whether the exercise of jurisdiction is reasonable."
-       />
-     </p>
-
-     <h3 className="font-bold mt-8 mb-3 text-lg border-b border-gray-300 pb-1">CONCLUSION</h3>
-     <p className="mb-4 text-[15px] leading-relaxed text-justify">
-       For the foregoing reasons, Defendant respectfully requests that the Court grant this Motion to Dismiss for lack of personal jurisdiction pursuant to Federal Rule of Civil Procedure 12(b)(2).
+       The proposed transfer should not proceed until Meridian (1) verifies Cloudspan's DPF certification or executes the applicable SCC modules with completed annexes; (2) completes and documents a transfer impact assessment with appropriate supplementary measures; and (3) revises the breach-notification term to meet GDPR timelines. Once these steps are completed, the transfer may proceed on the basis of the executed safeguards.
      </p>
      <p className="mb-4 text-[15px] leading-relaxed">
        Dated: February 23, 2026<br/>
-       Respectfully submitted,<br/>
+       Prepared by:<br/>
        <br/>
-       /s/ Attorney for Defendant<br/>
-       WILSON & ASSOCIATES LLP<br/>
-       500 S. Grand Avenue, Suite 2500<br/>
-       Los Angeles, CA 90071<br/>
-       Attorneys for Defendant Pacific Builders Inc.
+       Office of the General Counsel<br/>
+       Meridian Financial Group, Inc.<br/>
+       200 Harbor Street<br/>
+       New York, NY 10004<br/>
+       Privacy &amp; Data Protection Team
      </p>
   </div>
 );

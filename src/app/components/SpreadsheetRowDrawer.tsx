@@ -26,66 +26,76 @@ interface FieldAnalysis {
 function generateFieldAnalyses(rowData: Record<string, string>): FieldAnalysis[] {
   const analyses: FieldAnalysis[] = [];
   
-  // File Name analysis
-  if (rowData['File Name']) {
+  // Vendor analysis
+  if (rowData['Vendor']) {
     analyses.push({
-      columnName: 'File Name',
-      abbreviatedTitle: 'Document identification',
-      question: 'What type of document is this and what is its primary subject matter?',
-      shortAnswer: 'Meeting minutes from April 2023',
-      detailedAnswer: `This document is titled "${rowData['File Name']}" and appears to be formal meeting minutes. Based on the file naming convention and content analysis, this represents an official record of discussions, decisions, and action items from a corporate meeting held on the date indicated in the filename. The document contains structured sections typical of meeting minutes including attendees, agenda items, and resolutions.`,
+      columnName: 'Vendor',
+      abbreviatedTitle: 'Vendor identification',
+      question: 'Who is this vendor and what is their role in the data processing relationship?',
+      shortAnswer: `${rowData['Vendor']} - third-party processor`,
+      detailedAnswer: `The vendor on this row is ${rowData['Vendor']}, a third-party service provider engaged by Meridian Financial Group. As a processor, ${rowData['Vendor']} receives personal data from Meridian to perform a contracted service and is bound by the terms of a data processing agreement (DPA). Establishing the vendor's identity and processing role is the first step in assessing whether the relationship is adequately governed and whether the vendor's safeguards meet program requirements.`,
       footnotes: [1, 2],
       commentCount: 2
     });
   }
 
-  // Bates Range analysis
-  if (rowData['Bates Range']) {
+  // Data Category analysis
+  if (rowData['Data Category']) {
     analyses.push({
-      columnName: 'Bates Range',
-      abbreviatedTitle: 'Document scope',
-      question: 'What is the scope and length of this document in the production set?',
-      shortAnswer: `${rowData['Bates Range']} (23 pages)`,
-      detailedAnswer: `The document has been assigned Bates numbering ${rowData['Bates Range']}, indicating it spans 23 pages in the production. This Bates range places the document in the first production batch, suggesting it was identified early in the discovery process as potentially relevant. The sequential numbering confirms this is a complete, unredacted document with no missing pages.`,
+      columnName: 'Data Category',
+      abbreviatedTitle: 'Data classification',
+      question: 'What category of personal data is shared with this vendor and why does it matter?',
+      shortAnswer: rowData['Data Category'],
+      detailedAnswer: `This vendor receives "${rowData['Data Category']}". The category determines the sensitivity of the transfer and the controls required: identifiers and customer PII raise data-minimization questions, while financial and authentication data carry heightened security and breach-notification obligations. Confirming that the vendor only receives the minimum data necessary for the contracted purpose is central to GDPR Article 5(1)(c) compliance.`,
       footnotes: [3, 4],
       commentCount: 0
     });
   }
 
-  // Date Produced analysis
-  if (rowData['Date Produced']) {
+  // Transfer Region analysis
+  if (rowData['Transfer Region']) {
     analyses.push({
-      columnName: 'Date Produced',
-      abbreviatedTitle: 'Production timeline',
-      question: 'When was this document produced and what does this timing indicate?',
-      shortAnswer: `Produced on ${rowData['Date Produced']}`,
-      detailedAnswer: `This document was produced to the requesting party on ${rowData['Date Produced']}, which falls within the initial production deadline established in the discovery schedule. The production date suggests this document was prioritized for review and release, likely due to its relevance to key issues in the litigation. Documents produced in this timeframe typically underwent privilege review and redaction analysis before release.`,
+      columnName: 'Transfer Region',
+      abbreviatedTitle: 'Transfer destination',
+      question: 'Where is the data processed and does the transfer require a safeguard mechanism?',
+      shortAnswer: `Processed in ${rowData['Transfer Region']}`,
+      detailedAnswer: `Data shared with this vendor is processed in ${rowData['Transfer Region']}. Where EU or UK personal data leaves the EEA — for example, transfers to the United States — an Article 46 transfer mechanism such as Standard Contractual Clauses plus a transfer impact assessment is required. The processing region therefore drives whether SCCs, supplementary measures, or an adequacy decision must be in place before the transfer can continue.`,
       footnotes: [5],
       commentCount: 1
     });
   }
 
-  // Custodian analysis
-  if (rowData['Custodian']) {
+  // Lawful Basis analysis
+  if (rowData['Lawful Basis']) {
     analyses.push({
-      columnName: 'Custodian',
-      abbreviatedTitle: 'Document custodian',
-      question: 'Who is the custodian of this document and what is their role in the matter?',
-      shortAnswer: `${rowData['Custodian']} - Project Manager`,
-      detailedAnswer: `The document custodian is ${rowData['Custodian']}, who served as the primary Project Manager for the construction project at issue in this litigation. As custodian, ${rowData['Custodian']?.split(' ')[0]} had direct possession or control of this document and was responsible for its creation, maintenance, or receipt. The custodian's role is significant because it establishes the document's authenticity and chain of custody, and ${rowData['Custodian']?.split(' ')[0]}'s position suggests this document contains key decision-making information.`,
+      columnName: 'Lawful Basis',
+      abbreviatedTitle: 'Lawful basis',
+      question: 'What lawful basis supports this processing and is it documented?',
+      shortAnswer: rowData['Lawful Basis'],
+      detailedAnswer: `The processing relies on "${rowData['Lawful Basis']}" as its lawful basis under GDPR Article 6. ${
+        rowData['Lawful Basis'].includes('Legitimate Interests') ? 'Legitimate interests requires a documented balancing test (LIA) weighing the business need against individual rights; an incomplete or missing LIA is a common remediation item.' :
+        rowData['Lawful Basis'].includes('Consent') ? 'Consent must be freely given, specific, informed, and revocable, with records demonstrating how and when it was obtained.' :
+        rowData['Lawful Basis'].includes('Contract') ? 'Contractual necessity is appropriate only where the processing is genuinely required to perform the service, not merely convenient.' :
+        rowData['Lawful Basis'].includes('Legal Obligation') ? 'A legal-obligation basis should cite the specific law or regulator requirement that compels the processing.' :
+        'The basis should be documented and mapped to the specific processing purpose.'
+      }`,
       footnotes: [6, 7],
       commentCount: 0
     });
   }
 
-  // Source/Type analysis
-  if (rowData['Source/Type']) {
+  // Risk Level analysis
+  if (rowData['Risk Level']) {
     analyses.push({
-      columnName: 'Source/Type',
-      abbreviatedTitle: 'Document classification',
-      question: 'What is the source and format classification of this document?',
-      shortAnswer: rowData['Source/Type'],
-      detailedAnswer: `This document is classified as ${rowData['Source/Type']}. The classification indicates both the origin of the document (${rowData['Source/Type'].split('/')[0]}) and its format type (${rowData['Source/Type'].split('/')[1]}). This classification is important for authentication purposes and helps establish the business context in which the document was created. Documents of this type are generally considered business records and may qualify for hearsay exceptions under Federal Rule of Evidence 803(6).`,
+      columnName: 'Risk Level',
+      abbreviatedTitle: 'Risk rating',
+      question: 'What is the residual risk rating for this vendor relationship?',
+      shortAnswer: `${rowData['Risk Level']} risk`,
+      detailedAnswer: `This relationship carries a ${rowData['Risk Level'].toLowerCase()} residual risk rating. ${
+        rowData['Risk Level'] === 'High' ? 'High-risk relationships typically combine sensitive data, cross-border transfers, or unresolved DPA gaps, and should be prioritized for remediation and, where applicable, a data protection impact assessment (DPIA).' :
+        rowData['Risk Level'] === 'Medium' ? 'Medium-risk relationships have controls largely in place but include open items — such as pending DPA terms or sub-processor disclosures — that should be tracked to closure.' :
+        'Low-risk relationships have appropriate safeguards documented and require only periodic monitoring under the vendor management program.'
+      }`,
       footnotes: [8, 9],
       commentCount: 3
     });
@@ -96,13 +106,15 @@ function generateFieldAnalyses(rowData: Record<string, string>): FieldAnalysis[]
     analyses.push({
       columnName: 'Status',
       abbreviatedTitle: 'Review status',
-      question: 'What is the current review status of this document?',
+      question: 'What is the current review status of this vendor record?',
       shortAnswer: rowData['Status'],
-      detailedAnswer: `The document has been marked as "${rowData['Status']}" in the document review system. This status indicates that the document has undergone complete review by the legal team, including relevance determination, privilege analysis, and responsiveness assessment. ${
-        rowData['Status'] === 'Reviewed' ? 'The completion of review means this document is ready for production or has been produced to opposing counsel.' :
-        rowData['Status'] === 'Flagged' ? 'The flagged status indicates potential issues requiring senior attorney review, such as possible privilege concerns or highly relevant content.' :
-        rowData['Status'] === 'Processing' ? 'The processing status means the document is currently undergoing technical processing, including OCR, metadata extraction, or format conversion.' :
-        'The status indicates this document requires additional processing or review before final disposition.'
+      detailedAnswer: `The vendor record has been marked as "${rowData['Status']}" in the vendor management system. ${
+        rowData['Status'] === 'Reviewed' ? 'A reviewed status means the DPA, transfer mechanism, and data inventory have been validated by the compliance team and the relationship meets program requirements.' :
+        rowData['Status'] === 'Flagged' ? 'A flagged status indicates an open issue requiring senior compliance review, such as a missing transfer mechanism, an undisclosed sub-processor, or an unresolved data-minimization gap.' :
+        rowData['Status'] === 'Processing' ? 'A processing status means the record is currently undergoing assessment, including DPA review and data-flow mapping.' :
+        rowData['Status'] === 'Remediation' ? 'A remediation status means corrective action is underway to close identified gaps before the relationship is re-approved.' :
+        rowData['Status'] === 'Pending DPA' ? 'A pending-DPA status means processing is occurring while final data processing agreement terms are still being executed.' :
+        'The status indicates this record requires additional review before final disposition.'
       }`,
       footnotes: [10],
       commentCount: 0
@@ -125,7 +137,7 @@ export function SpreadsheetRowDrawer({
 
   if (!rowData) return null;
 
-  const fileName = rowData['File Name'] || 'Document';
+  const fileName = rowData['Vendor'] ? `${rowData['Vendor']} - DPA` : 'Vendor Record';
   const totalPages = 24;
   const fieldAnalyses = generateFieldAnalyses(rowData);
   const totalQuestions = fieldAnalyses.length;

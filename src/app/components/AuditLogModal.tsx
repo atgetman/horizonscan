@@ -25,7 +25,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'Emily Chen', email: 'emily@lawfirm.com', initials: 'EC', color: '#3B82F6' },
     timestamp: '2026-03-16T09:23:00',
     action: 'Created document',
-    target: 'Motion to Dismiss Draft',
+    target: 'SEC Comment Response Draft',
     details: 'Generated from chat conversation'
   },
   {
@@ -34,8 +34,8 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'Michael Roberts', email: 'michael@lawfirm.com', initials: 'MR', color: '#8B5CF6' },
     timestamp: '2026-03-16T08:45:00',
     action: 'Added comment',
-    target: 'Discovery overview',
-    details: 'Reviewed the summary table and suggested adding two more depositions'
+    target: 'Vendor Risk Register',
+    details: 'Reviewed the risk table and suggested adding two more vendors'
   },
   {
     id: '3',
@@ -43,7 +43,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'Sarah Johnson', email: 'sarah@lawfirm.com', initials: 'SJ', color: '#EC4899' },
     timestamp: '2026-03-16T07:30:00',
     action: 'Shared document',
-    target: 'Motion to Dismiss Draft',
+    target: 'SEC Comment Response Draft',
     details: 'Shared with kevin@lawfirm.com'
   },
   {
@@ -52,7 +52,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'David Kim', email: 'david@lawfirm.com', initials: 'DK', color: '#10B981' },
     timestamp: '2026-03-15T16:15:00',
     action: 'Uploaded file',
-    target: 'deposition_transcript.pdf',
+    target: 'Cloudspan_Interview_Notes.pdf',
     details: '2.4 MB'
   },
   {
@@ -61,7 +61,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'Emily Chen', email: 'emily@lawfirm.com', initials: 'EC', color: '#3B82F6' },
     timestamp: '2026-03-15T15:45:00',
     action: 'Started chat',
-    target: 'Research on NY precedents',
+    target: 'Research on SEC climate rules',
   },
   {
     id: '6',
@@ -78,7 +78,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'Michael Roberts', email: 'michael@lawfirm.com', initials: 'MR', color: '#8B5CF6' },
     timestamp: '2026-03-15T13:20:00',
     action: 'Generated table',
-    target: 'Discovery overview',
+    target: 'Vendor Risk Register',
     details: 'Created from document analysis'
   },
   {
@@ -87,7 +87,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'Emily Chen', email: 'emily@lawfirm.com', initials: 'EC', color: '#3B82F6' },
     timestamp: '2026-03-15T11:45:00',
     action: 'Renamed document',
-    target: 'Motion to Dismiss Draft',
+    target: 'SEC Comment Response Draft',
     details: 'From "Untitled Document"'
   },
   {
@@ -96,8 +96,8 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'David Kim', email: 'david@lawfirm.com', initials: 'DK', color: '#10B981' },
     timestamp: '2026-03-15T10:30:00',
     action: 'Added comment',
-    target: 'Motion to Dismiss Draft',
-    details: 'Suggested revisions to paragraph 3 regarding jurisdiction'
+    target: 'SEC Comment Response Draft',
+    details: 'Suggested revisions to paragraph 3 regarding emissions metrics'
   },
   {
     id: '10',
@@ -131,7 +131,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'David Kim', email: 'david@lawfirm.com', initials: 'DK', color: '#10B981' },
     timestamp: '2026-03-14T13:20:00',
     action: 'Started chat',
-    target: 'Summary of deposition',
+    target: 'Summary of vendor interview',
   },
   {
     id: '14',
@@ -139,8 +139,8 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'Emily Chen', email: 'emily@lawfirm.com', initials: 'EC', color: '#3B82F6' },
     timestamp: '2026-03-13T15:30:00',
     action: 'Created document',
-    target: 'Memo for New York Freedom',
-    details: 'Generated from legal research'
+    target: 'Memo on Employee Data Privacy',
+    details: 'Generated from compliance research'
   },
   {
     id: '15',
@@ -157,8 +157,8 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'Michael Roberts', email: 'michael@lawfirm.com', initials: 'MR', color: '#8B5CF6' },
     timestamp: '2026-03-13T12:00:00',
     action: 'Added comment',
-    target: 'Memo for New York Freedom',
-    details: 'Added citation for the controlling precedent'
+    target: 'Memo on Employee Data Privacy',
+    details: 'Added citation for the controlling regulation'
   },
   {
     id: '17',
@@ -166,7 +166,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'David Kim', email: 'david@lawfirm.com', initials: 'DK', color: '#10B981' },
     timestamp: '2026-03-13T10:30:00',
     action: 'Uploaded file',
-    target: 'evidence_photos.zip',
+    target: 'data_flow_diagrams.zip',
     details: '15.2 MB'
   },
   {
@@ -175,7 +175,7 @@ const AUDIT_EVENTS: AuditEvent[] = [
     user: { name: 'Emily Chen', email: 'emily@lawfirm.com', initials: 'EC', color: '#3B82F6' },
     timestamp: '2026-03-12T16:00:00',
     action: 'Renamed chat',
-    target: 'Research on NY precedents',
+    target: 'Research on SEC climate rules',
     details: 'From "New Chat"'
   }
 ];
