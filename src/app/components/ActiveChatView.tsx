@@ -19,6 +19,39 @@ import { CPCHandoffScreen } from './CPCHandoffScreen';
 import { CPCScanSummary } from './regulatory/CPCScanSummary';
 import { useMonitoring } from '../contexts/MonitoringContext';
 
+// Builds the proactive Horizon Scan toast payload for the active scan variant.
+// The AI governance scan surfaces AI-legislation impacts on the workspace docs,
+// while the default M&A scan surfaces the SEC climate disclosure example.
+function buildHorizonScanAlertDetail() {
+  const isAiGov =
+    typeof window !== 'undefined' &&
+    sessionStorage.getItem('regulatoryScanVariant') === 'ai-gov';
+
+  if (isAiGov) {
+    return {
+      title: 'Documents impacted by the Colorado AI Act',
+      detail: 'New AI legislation affects 3 documents in your AI Governance workspace',
+      workspace: 'AI Governance',
+      documents: [
+        { name: 'Credit Decisioning Policy.docx', clause: 'Automated Decisioning §3', impact: 'high' as const },
+        { name: 'Consumer Disclosure Templates.docx', clause: 'Adverse Action Notice', impact: 'medium' as const },
+        { name: 'Internal AI Use Guidelines.docx', clause: 'Human Oversight §2', impact: 'low' as const },
+      ],
+    };
+  }
+
+  return {
+    title: 'Documents impacted by SEC climate disclosure update',
+    detail: 'New SEC climate disclosure guidance affects 3 documents in the SEC Climate Disclosure Program',
+    workspace: 'SEC Climate Disclosure Program',
+    documents: [
+      { name: 'SEC Comment Letter Response.docx', clause: 'Governance Disclosure §I', impact: 'high' as const },
+      { name: 'Compliance Risk Assessment.docx', clause: 'Securities Disclosure', impact: 'medium' as const },
+      { name: 'Memo on Disclosure Obligations.docx', clause: 'Emissions Metrics §II', impact: 'low' as const },
+    ],
+  };
+}
+
 interface StagedItem {
     id: string;
     name: string;
@@ -840,18 +873,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     // the user is working, rather than appearing immediately on load).
     safeSetTimeout(() => {
       window.dispatchEvent(
-        new CustomEvent("horizonScanAlert", {
-          detail: {
-            title: "Documents impacted by SEC climate disclosure update",
-            detail: "New SEC climate disclosure guidance affects 3 documents in the SEC Climate Disclosure Program",
-            workspace: "SEC Climate Disclosure Program",
-            documents: [
-              { name: "SEC Comment Letter Response.docx", clause: "Governance Disclosure §I", impact: "high" },
-              { name: "Compliance Risk Assessment.docx", clause: "Securities Disclosure", impact: "medium" },
-              { name: "Memo on Disclosure Obligations.docx", clause: "Emissions Metrics §II", impact: "low" },
-            ],
-          },
-        })
+        new CustomEvent("horizonScanAlert", { detail: buildHorizonScanAlertDetail() })
       );
     }, 6000);
 
@@ -1115,18 +1137,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     // the user is working, rather than appearing immediately on load).
     safeSetTimeout(() => {
       window.dispatchEvent(
-        new CustomEvent("horizonScanAlert", {
-          detail: {
-            title: "Documents impacted by SEC climate disclosure update",
-            detail: "New SEC climate disclosure guidance affects 3 documents in the SEC Climate Disclosure Program",
-            workspace: "SEC Climate Disclosure Program",
-            documents: [
-              { name: "SEC Comment Letter Response.docx", clause: "Governance Disclosure §I", impact: "high" },
-              { name: "Compliance Risk Assessment.docx", clause: "Securities Disclosure", impact: "medium" },
-              { name: "Memo on Disclosure Obligations.docx", clause: "Emissions Metrics §II", impact: "low" },
-            ],
-          },
-        })
+        new CustomEvent("horizonScanAlert", { detail: buildHorizonScanAlertDetail() })
       );
     }, 6000);
 
