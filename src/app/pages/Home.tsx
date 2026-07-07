@@ -166,6 +166,7 @@ export function Home() {
               externalValue={promptInputValue}
               onExternalValueUsed={() => setPromptInputValue("")}
               onSubmit={handlePromptSubmit}
+              autoPopulateOnFocus="What US federal or state legislation governing the use of artificial intelligence in the workplace has been enacted or is currently pending?  I need to understand our compliance obligations and how much runway we have before any new requirements take effect"
             />
         </div>
 

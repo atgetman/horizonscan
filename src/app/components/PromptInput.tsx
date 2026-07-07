@@ -42,6 +42,7 @@ interface PromptInputProps {
   onExternalValueUsed?: () => void;
   compact?: boolean;
   activeSkill?: { name: string; onRemove?: () => void } | null;
+  autoPopulateOnFocus?: string;
 }
 
 export function PromptInput({
@@ -57,6 +58,7 @@ export function PromptInput({
   onExternalValueUsed,
   compact = false,
   activeSkill = null,
+  autoPopulateOnFocus,
 }: PromptInputProps) {
   const [localText, setLocalText] = useState("");
   const [localFiles, setLocalFiles] = useState<any[]>([]);
@@ -78,6 +80,7 @@ export function PromptInput({
   const addMenuButtonRef = useRef<HTMLButtonElement>(null);
   const addMenuPopoverRef = useRef<HTMLDivElement>(null);
   const submenuPopoverRef = useRef<HTMLDivElement>(null);
+  const hasAutoPopulatedRef = useRef(false);
 
   // Use controlled or uncontrolled state
   const text = value !== undefined ? value : localText;
@@ -308,10 +311,32 @@ export function PromptInput({
     }
   }, [externalValue, text, onChange, onExternalValueUsed, compact]);
 
+  // When configured, fill the box with a preset prompt the first time the user
+  // clicks/focuses it while it's empty. Only fires once per mount so the user
+  // can still clear it and type their own message afterward.
+  const maybeAutoPopulate = () => {
+    if (!autoPopulateOnFocus || hasAutoPopulatedRef.current) return;
+    if (text?.trim()) return;
+    hasAutoPopulatedRef.current = true;
+    if (onChange) {
+      onChange(autoPopulateOnFocus);
+    } else {
+      setLocalText(autoPopulateOnFocus);
+    }
+    // Grow the textarea to fit the injected prompt.
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      }
+    }, 0);
+  };
+
   const handleFocus = () => {
     if (compact) {
       setIsExpanded(true);
     }
+    maybeAutoPopulate();
   };
 
   const handleBlur = () => {
@@ -329,6 +354,7 @@ export function PromptInput({
     if (compact) {
       setIsExpanded(true);
     }
+    maybeAutoPopulate();
     textareaRef.current?.focus();
   };
 
