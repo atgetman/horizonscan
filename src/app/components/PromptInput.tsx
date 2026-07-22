@@ -1,4 +1,4 @@
-import { Paperclip, BookOpen, AtSign, ArrowUp, X, FileText, Table, Folder, MessageCircleQuestion, Database, Landmark, SquareUser, MoreHorizontal, Blocks, Check, Plus, ChevronRight, ChevronDown, Bell, Briefcase, SlidersHorizontal, WandSparkles, FileUp, FolderSearch, ScrollText, Plug, Info, Telescope, Zap, SquarePlus } from "lucide-react";
+import { Paperclip, BookOpen, AtSign, ArrowUp, X, FileText, Table, Folder, MessageCircleQuestion, Database, Landmark, SquareUser, MoreHorizontal, Blocks, Check, Plus, ChevronRight, ChevronDown, ChevronUp, RotateCcw, Bell, Briefcase, SlidersHorizontal, WandSparkles, FileUp, FolderSearch, ScrollText, Plug, Info, Telescope, Zap, SquarePlus } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useDrop } from "react-dnd";
 import { createPortal } from "react-dom";
@@ -72,6 +72,9 @@ export function PromptInput({
   const [settingsPosition, setSettingsPosition] = useState<{ top: number; left: number } | null>(null);
   const [isWorkspaceMenuOpen, setIsWorkspaceMenuOpen] = useState(false);
   const [workspacePosition, setWorkspacePosition] = useState<{ top: number; left: number } | null>(null);
+  // The single workspace this chat is attached to. Selecting from the dropdown
+  // replaces the trigger label; "Clear workspace" resets it to null.
+  const [selectedWorkspace, setSelectedWorkspace] = useState<string | null>(null);
   const [submenuOpen, setSubmenuOpen] = useState<string | null>(null);
   const [submenuPosition, setSubmenuPosition] = useState<{ top: number; left: number } | null>(null);
   const [sharepointEnabled, setSharepointEnabled] = useState(true);
@@ -649,14 +652,24 @@ export function PromptInput({
               ref={workspaceButtonRef}
               type="button"
               onClick={handleWorkspaceMenuClick}
-              className={`h-9 flex items-center gap-2 pl-2 pr-2.5 rounded-lg text-[#212223] transition-colors ${
-                isWorkspaceMenuOpen ? 'bg-[#eef2f0]' : 'hover:bg-[#f5f5f5]'
+              className={`h-9 flex items-center gap-2 pl-2 pr-2.5 rounded-lg text-[#212223] transition-colors border ${
+                selectedWorkspace
+                  ? 'border-[#1d4b34] bg-white hover:bg-[#f5f5f5]'
+                  : isWorkspaceMenuOpen
+                    ? 'border-transparent bg-[#eef2f0]'
+                    : 'border-transparent hover:bg-[#f5f5f5]'
               }`}
-              aria-label="Add to workspace"
+              aria-label={selectedWorkspace ? `Workspace: ${selectedWorkspace}` : 'Add to workspace'}
             >
-              <Folder className="size-[18px] text-[#404040]" strokeWidth={1.75} />
-              <span className="text-[14px] font-['Clario'] font-medium leading-none">Add to workspace</span>
-              <ChevronDown className="size-4 text-[#404040]" strokeWidth={2} />
+              <Folder className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+              <span className="text-[14px] font-['Clario'] font-medium leading-none max-w-[220px] truncate">
+                {selectedWorkspace || 'Add to workspace'}
+              </span>
+              {isWorkspaceMenuOpen ? (
+                <ChevronUp className="size-4 text-[#404040] shrink-0" strokeWidth={2} />
+              ) : (
+                <ChevronDown className="size-4 text-[#404040] shrink-0" strokeWidth={2} />
+              )}
             </button>
           </div>
 
@@ -968,7 +981,7 @@ export function PromptInput({
         >
           {/* New workspace */}
           <button
-            onClick={() => addChatTag('workspace', 'Untitled workspace')}
+            onClick={() => { setSelectedWorkspace('Untitled workspace'); setIsWorkspaceMenuOpen(false); }}
             className="w-full h-11 flex items-center gap-3 px-4 hover:bg-[#F5F5F5] transition-colors text-left"
           >
             <SquarePlus className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
@@ -978,16 +991,40 @@ export function PromptInput({
           {/* Divider */}
           <div className="h-px bg-[#e5e5e5] my-1" />
 
-          {/* Existing workspaces */}
-          {WORKSPACE_OPTIONS.map((name) => (
-            <button
-              key={name}
-              onClick={() => { addChatTag('workspace', name); setIsWorkspaceMenuOpen(false); }}
-              className="w-full h-11 flex items-center px-4 hover:bg-[#F5F5F5] transition-colors text-left"
-            >
-              <span className="flex-1 truncate text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">{name}</span>
-            </button>
-          ))}
+          {/* Existing workspaces — selecting one replaces the trigger label */}
+          <div className="px-1.5">
+            {WORKSPACE_OPTIONS.map((name) => {
+              const isSelected = selectedWorkspace === name;
+              return (
+                <button
+                  key={name}
+                  onClick={() => { setSelectedWorkspace(name); setIsWorkspaceMenuOpen(false); }}
+                  className={`w-full h-10 flex items-center px-2.5 rounded-lg transition-colors text-left ${
+                    isSelected
+                      ? 'border border-[#1d4b34] bg-[#eef2f0]'
+                      : 'border border-transparent hover:bg-[#F5F5F5]'
+                  }`}
+                >
+                  <span className={`flex-1 truncate text-[15px] font-['Source_Sans_3'] leading-[1.2] ${isSelected ? 'font-medium text-[#1d4b34]' : 'font-normal text-[#212223]'}`}>{name}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-[#e5e5e5] my-1" />
+
+          {/* Clear workspace */}
+          <button
+            onClick={() => { setSelectedWorkspace(null); setIsWorkspaceMenuOpen(false); }}
+            disabled={!selectedWorkspace}
+            className={`w-full h-11 flex items-center gap-3 px-4 transition-colors text-left ${
+              selectedWorkspace ? 'hover:bg-[#F5F5F5]' : 'opacity-40 cursor-not-allowed'
+            }`}
+          >
+            <RotateCcw className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Clear workspace</span>
+          </button>
         </div>,
         document.body
       )}
