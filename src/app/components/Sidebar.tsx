@@ -1,4 +1,4 @@
-import { Home, Folders, Library, Search, UserCircle, Settings, MessageCircleCode, Bell, MessageCirclePlus, SlidersHorizontal, Compass, HelpCircle, ChevronRight, CornerUpLeft, ContactRound, LogOut } from "lucide-react";
+import { Home, Folders, BookOpen, Search, UserCircle, Settings, MessageCircleCode, Bell, FilePen, SlidersHorizontal, Compass, HelpCircle, ChevronRight, CornerUpLeft, ContactRound, LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { clsx } from "clsx";
 import { Logo } from "./Logo";
@@ -10,10 +10,12 @@ import { OmniSearchModal } from "./OmniSearchModal";
 import { NotificationPanel, MonitoringAlert } from "./monitoring/NotificationPanel";
 
 const navItems = [
-  { icon: MessageCirclePlus, label: "New chat", path: "/" },
-  { icon: Folders, label: "Workspaces", path: "/projects" },
+  { icon: Home, label: "Home", path: "/" },
   { icon: Search, label: "Search", path: "/search", isModal: true },
-  { icon: Library, label: "Knowledge", path: "/knowledge" },
+  { icon: Folders, label: "Workspaces", path: "/projects" },
+  { icon: BookOpen, label: "Knowledge", path: "/knowledge" },
+  { icon: FilePen, label: "Brief builder", path: "/brief-builder", disabled: true },
+  { icon: Settings, label: "Admin", path: "/admin", disabled: true },
 ];
 
 // Mock alerts data
@@ -89,6 +91,10 @@ export function Sidebar() {
   };
 
   const handleNavClick = (item: typeof navItems[0], e: React.MouseEvent) => {
+    if (item.disabled) {
+      e.preventDefault();
+      return;
+    }
     if (item.isModal) {
       e.preventDefault();
       setShowOmniSearch(true);
@@ -116,59 +122,74 @@ export function Sidebar() {
   const unreadCount = alerts.filter(a => !a.isRead).length;
 
   return (
-    <div className="group w-[60px] h-full flex flex-col bg-[#F2F2F2] border-r border-[#E5E5E5] shrink-0 z-20">
+    <div className="group w-[84px] h-full flex flex-col bg-[#F2F2F2] border-r border-[#E5E5E5] shrink-0 z-20">
       {/* Brand Header */}
-      <div className="h-[60px] flex items-center justify-center pt-2">
+      <div className="h-[68px] flex items-center justify-center pt-3">
         <Link to="/">
-          <Logo className="size-7" />
+          <Logo className="size-8" />
         </Link>
       </div>
 
       {/* Nav Menu */}
-      <div className="flex flex-col flex-1 items-center gap-2 mt-4">
+      <div className="flex flex-col flex-1 items-center gap-1 mt-3 px-2">
         {navItems.map((item) => {
-          const isActive = showOmniSearch
+          const isActive = item.disabled
+            ? false
+            : showOmniSearch
             ? item.label === 'Search'
             : location.pathname === item.path ||
               (item.path === '/projects' && location.pathname.startsWith('/workspace/'));
-          return (
-            <Tooltip key={item.path}>
-              <TooltipTrigger asChild>
-                {item.isModal || item.path === '/knowledge' ? (
-                  <button
-                    onClick={(e) => {
-                      handleNavClick(item, e);
-                      if (item.path === '/knowledge' && !item.isModal) {
-                        navigate(item.path);
-                      }
-                    }}
-                    className={clsx(
-                      "w-10 h-10 flex items-center justify-center rounded-md transition-colors",
-                      isActive
-                        ? "bg-white shadow-sm text-[#1D4B34]"
-                        : "text-[#666666] hover:bg-gray-100"
-                    )}
-                  >
-                    <item.icon className="size-[18px]" strokeWidth={1.5} />
-                  </button>
-                ) : (
-                  <Link
-                    to={item.path}
-                    className={clsx(
-                      "w-10 h-10 flex items-center justify-center rounded-md transition-colors",
-                      isActive
-                        ? "bg-white shadow-sm text-[#1D4B34]"
-                        : "text-[#666666] hover:bg-gray-100"
-                    )}
-                  >
-                    <item.icon className="size-[18px]" strokeWidth={1.5} />
-                  </Link>
-                )}
-              </TooltipTrigger>
-              <TooltipContent side="right" className="text-xs bg-black text-white border-0">
-                {item.label}
-              </TooltipContent>
-            </Tooltip>
+
+          const iconSquare = (
+            <div
+              className={clsx(
+                "w-11 h-11 flex items-center justify-center rounded-[14px] transition-colors",
+                isActive
+                  ? "bg-white shadow-sm text-[#1D4B34]"
+                  : "text-[#404040] group-hover:text-[#404040]"
+              )}
+            >
+              <item.icon className="size-[22px]" strokeWidth={1.75} />
+            </div>
+          );
+
+          const label = (
+            <span
+              className={clsx(
+                "text-[11px] leading-tight text-center text-balance px-0.5",
+                isActive
+                  ? "font-['Clario'] font-semibold text-[#1D4B34]"
+                  : "font-['Source_Sans_3'] font-normal text-[#404040]"
+              )}
+            >
+              {item.label}
+            </span>
+          );
+
+          const itemClassName = clsx(
+            "w-full flex flex-col items-center gap-1 py-1.5 rounded-xl transition-colors",
+            item.disabled ? "cursor-default" : "cursor-pointer hover:bg-gray-100/70"
+          );
+
+          return item.isModal || item.path === '/knowledge' || item.disabled ? (
+            <button
+              key={item.path}
+              onClick={(e) => {
+                handleNavClick(item, e);
+                if (item.path === '/knowledge' && !item.isModal) {
+                  navigate(item.path);
+                }
+              }}
+              className={itemClassName}
+            >
+              {iconSquare}
+              {label}
+            </button>
+          ) : (
+            <Link key={item.path} to={item.path} className={itemClassName}>
+              {iconSquare}
+              {label}
+            </Link>
           );
         })}
       </div>
