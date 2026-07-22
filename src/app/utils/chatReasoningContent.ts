@@ -33,6 +33,26 @@ export function getReasoningContent(
       step5: `Finally, I'll compile recommended redlines and updates for each affected document, prioritized by impact level.`
     };
   } else if (taskType === 'regulatory-scan') {
+    const isWorkplaceAi = /\bai\b|artificial intelligence|workplace|employment/.test(topic.toLowerCase());
+    if (isWorkplaceAi) {
+      return {
+        step1: `To conduct a comprehensive horizon scan on workplace AI legislation, I'll identify the jurisdiction scope and cross-reference against the documents in your AI Governance workspace.`,
+        step2Title: `I'll search federal and state sources for legislation governing AI in the workplace:`,
+        step2Items: [
+          'Automated employment decision tool (AEDT) laws and bias-audit requirements',
+          'State AI acts covering employment as a consequential decision',
+          'EEOC and federal guidance on AI in hiring and the ADA/Title VII'
+        ],
+        step3: `I'll separate what has already been enacted from bills that are still pending, and capture each effective date to show how much runway you have.`,
+        step4Title: `Now I'll analyze the potential impact of each requirement on your AI governance documents:`,
+        step4Items: [
+          'Which documents are affected by each enacted or pending requirement',
+          'Specific policy sections and controls that need updating',
+          'Risk assessment based on enacted vs. pending status and effective dates'
+        ],
+        step5: `Finally, I'll prioritize findings by impact level and effective date so you can address near-term obligations first.`
+      };
+    }
     return {
       step1: `To conduct a comprehensive regulatory horizon scan, I'll identify the practice area and jurisdiction scope based on your workspace documents.`,
       step2Title: `I'll query federal regulatory databases for recent changes:`,
@@ -134,6 +154,19 @@ export function getSourceContent(
       ]
     };
   } else if (taskType === 'regulatory-scan') {
+    const isWorkplaceAi = /\bai\b|artificial intelligence|workplace|employment/.test(topicLower);
+    if (isWorkplaceAi) {
+      return {
+        items: [
+          { icon: 'Scale', title: 'AI in Employment: State Law Tracker - Practical Law', domain: 'practicallaw.com' },
+          { icon: 'Scale', title: 'Local Law 144 & AEDT Bias Audit Requirements', domain: 'westlaw.com' },
+          { icon: 'FileCheck', title: 'Colorado AI Act (SB 24-205) - Full Text', domain: 'leg.colorado.gov' },
+          { icon: 'FileCheck', title: 'AI and the ADA / Title VII in Hiring - Guidance', domain: 'eeoc.gov' },
+          { icon: 'BookOpen', title: 'Comparative AI Regulation Analysis', domain: 'International Research' },
+          { icon: 'BookOpen', title: 'Regulatory Intelligence - Thomson Reuters', domain: 'thomsonreuters.com' }
+        ]
+      };
+    }
     return {
       items: [
         { icon: 'FileCheck', title: 'Final Rules & Proposed Changes - Federal Register', domain: 'federalregister.gov' },
