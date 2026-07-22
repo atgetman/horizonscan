@@ -156,10 +156,8 @@ export function Sidebar() {
           const label = (
             <span
               className={clsx(
-                "text-[10px] leading-tight text-center text-balance",
-                isActive
-                  ? "font-['Clario'] font-semibold text-[#1D4B34]"
-                  : "font-['Source_Sans_3'] font-normal text-[#404040]"
+                "text-[10px] leading-tight text-center text-balance font-['Source_Sans_3'] font-normal",
+                isActive ? "text-[#1D4B34]" : "text-[#404040]"
               )}
             >
               {item.label}
