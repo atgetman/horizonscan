@@ -40,6 +40,45 @@ function getAffectedDocuments(finding: RegulatoryFinding | null): AffectedDocume
   // Determine content based on the specific regulatory finding
   const findingTitle = finding.title.toLowerCase();
 
+  // Workplace AI legislation scan — surface AI Governance workspace documents
+  // and employment-AI concerns rather than M&A agreements.
+  const isAiGov =
+    typeof window !== 'undefined' &&
+    sessionStorage.getItem('regulatoryScanVariant') === 'ai-gov';
+
+  if (isAiGov) {
+    const docNames = [
+      'AI Governance Policy',
+      'Bias Testing Log (Q1 2026)',
+      'Model Inventory (Q2 2026)',
+      'AI Use Case Intake Form',
+      'Risk Management Framework',
+    ];
+    for (let i = 0; i < docCount; i++) {
+      docs.push({
+        id: `doc-${i}`,
+        title: `${docNames[i]}.docx`,
+        clausesAffected: [
+          'Section 3 - Prohibited and High-Risk Uses',
+          'Section 5 - Bias Testing and Validation',
+          'Section 7 - Notice and Transparency',
+          'Section 9 - Human Oversight and Accountability',
+        ],
+        highlights: [
+          {
+            text: 'AI systems used to screen, rank, or assess candidates and employees must undergo documented bias testing before deployment and on a recurring basis.',
+            concern: 'New workplace-AI laws (NYC Local Law 144, California ADS employment rules, Illinois HB 3773) require independent bias audits and recurring testing. Confirm the testing cadence and audit publication meet each jurisdiction\u2019s standard.',
+          },
+          {
+            text: 'Candidates and employees will be notified when an automated employment decision tool is used in a hiring, promotion, or evaluation decision.',
+            concern: 'Notice content and timing requirements differ by jurisdiction (NYC advance notice, Illinois consent for AI video interviews). The notice template should be updated to cover each in-scope state before its effective date.',
+          },
+        ],
+      });
+    }
+    return docs;
+  }
+
   // DOJ/FTC Merger Guidelines - affects antitrust/HSR clauses
   if (findingTitle.includes('merger guideline') || findingTitle.includes('doj') || findingTitle.includes('ftc')) {
     const docNames = ['Sterling Capital Acquisition Agreement', 'Merger Protocol - Sterling Capital', 'Stock Purchase Agreement - Sterling Capital', 'Asset Purchase Agreement', 'Joint Venture Agreement'];
