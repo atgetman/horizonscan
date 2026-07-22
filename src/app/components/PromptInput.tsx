@@ -1,4 +1,4 @@
-import { Paperclip, BookOpen, AtSign, ArrowUp, Sparkles, X, FileText, Table, Folder, MessageCircleQuestion, Database, Landmark, SquareUser, MoreHorizontal, Blocks, Check, Plus, ChevronRight, Bell, Briefcase } from "lucide-react";
+import { Paperclip, BookOpen, AtSign, ArrowUp, X, FileText, Table, Folder, MessageCircleQuestion, Database, Landmark, SquareUser, MoreHorizontal, Blocks, Check, Plus, ChevronRight, ChevronDown, Bell, Briefcase, SlidersHorizontal, WandSparkles, FileUp, FolderSearch, ScrollText, Plug, Info, Telescope, Zap, SquarePlus } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useDrop } from "react-dnd";
 import { createPortal } from "react-dom";
@@ -68,19 +68,34 @@ export function PromptInput({
   const [knowledgePosition, setKnowledgePosition] = useState<{ top: number; left: number } | null>(null);
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
   const [addMenuPosition, setAddMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [settingsPosition, setSettingsPosition] = useState<{ top: number; left: number } | null>(null);
+  const [isWorkspaceMenuOpen, setIsWorkspaceMenuOpen] = useState(false);
+  const [workspacePosition, setWorkspacePosition] = useState<{ top: number; left: number } | null>(null);
   const [submenuOpen, setSubmenuOpen] = useState<string | null>(null);
   const [submenuPosition, setSubmenuPosition] = useState<{ top: number; left: number } | null>(null);
   const [sharepointEnabled, setSharepointEnabled] = useState(true);
   const [imanageEnabled, setImanageEnabled] = useState(true);
+  const [isFocused, setIsFocused] = useState(false);
+  const [deepResearch, setDeepResearch] = useState(false);
+  const [artifactFormat, setArtifactFormat] = useState<'quick' | 'docx'>('quick');
+  const [jurisdiction, setJurisdiction] = useState<string | null>(null);
   const [chatTags, setChatTags] = useState<ChatTag[]>([]);
   const { savedAlerts } = useMonitoring();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const knowledgeButtonRef = useRef<HTMLButtonElement>(null);
   const knowledgePopoverRef = useRef<HTMLDivElement>(null);
   const addMenuButtonRef = useRef<HTMLButtonElement>(null);
   const addMenuPopoverRef = useRef<HTMLDivElement>(null);
+  const settingsButtonRef = useRef<HTMLButtonElement>(null);
+  const settingsPopoverRef = useRef<HTMLDivElement>(null);
+  const workspaceButtonRef = useRef<HTMLButtonElement>(null);
+  const workspacePopoverRef = useRef<HTMLDivElement>(null);
   const submenuPopoverRef = useRef<HTMLDivElement>(null);
   const hasAutoPopulatedRef = useRef(false);
+
+  const JURISDICTION_OPTIONS = ['Federal', 'California', 'New York', 'Delaware', 'European Union'];
 
   // Use controlled or uncontrolled state
   const text = value !== undefined ? value : localText;
@@ -202,6 +217,7 @@ export function PromptInput({
       return [...prev, { id: `${kind}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, label, kind }];
     });
     setIsAddMenuOpen(false);
+    setIsWorkspaceMenuOpen(false);
     setSubmenuOpen(null);
   };
 
@@ -224,7 +240,51 @@ export function PromptInput({
         left: rect.left
       });
       setIsAddMenuOpen(!isAddMenuOpen);
+      setIsSettingsOpen(false);
+      setIsWorkspaceMenuOpen(false);
+      setSubmenuOpen(null);
     }
+  };
+
+  const handleSettingsClick = () => {
+    if (settingsButtonRef.current) {
+      const rect = settingsButtonRef.current.getBoundingClientRect();
+      setSettingsPosition({ top: rect.bottom + 8, left: rect.left });
+      setIsSettingsOpen(!isSettingsOpen);
+      setIsAddMenuOpen(false);
+      setIsWorkspaceMenuOpen(false);
+      setSubmenuOpen(null);
+    }
+  };
+
+  const handleWorkspaceMenuClick = () => {
+    if (workspaceButtonRef.current) {
+      const rect = workspaceButtonRef.current.getBoundingClientRect();
+      setWorkspacePosition({ top: rect.bottom + 8, left: rect.left });
+      setIsWorkspaceMenuOpen(!isWorkspaceMenuOpen);
+      setIsAddMenuOpen(false);
+      setIsSettingsOpen(false);
+      setSubmenuOpen(null);
+    }
+  };
+
+  // Stage a file (from Upload from device or Browse files) as an attachment pill.
+  const addStagedFile = (name: string) => {
+    const newItem = { id: Math.random().toString(36).substring(7), name, type: 'file' };
+    if (items.some(i => i.name === name)) return;
+    if (onFilesChange) {
+      onFilesChange([...items, newItem]);
+    } else {
+      setLocalFiles(prev => [...prev, newItem]);
+    }
+    setIsAddMenuOpen(false);
+    setSubmenuOpen(null);
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(e.target.files ?? []);
+    selected.forEach(f => addStagedFile(f.name));
+    e.target.value = '';
   };
 
   // Click outside handler for knowledge popover
@@ -272,6 +332,44 @@ export function PromptInput({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isAddMenuOpen]);
+
+  // Click outside handler for settings menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        settingsPopoverRef.current &&
+        !settingsPopoverRef.current.contains(event.target as Node) &&
+        settingsButtonRef.current &&
+        !settingsButtonRef.current.contains(event.target as Node) &&
+        (!submenuPopoverRef.current || !submenuPopoverRef.current.contains(event.target as Node))
+      ) {
+        setIsSettingsOpen(false);
+        setSubmenuOpen(null);
+      }
+    };
+    if (isSettingsOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isSettingsOpen]);
+
+  // Click outside handler for workspace menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        workspacePopoverRef.current &&
+        !workspacePopoverRef.current.contains(event.target as Node) &&
+        workspaceButtonRef.current &&
+        !workspaceButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsWorkspaceMenuOpen(false);
+      }
+    };
+    if (isWorkspaceMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isWorkspaceMenuOpen]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -336,10 +434,12 @@ export function PromptInput({
     if (compact) {
       setIsExpanded(true);
     }
+    setIsFocused(true);
     maybeAutoPopulate();
   };
 
   const handleBlur = () => {
+    setIsFocused(false);
     if (compact && !text && items.length === 0) {
       setIsExpanded(false);
     }
@@ -363,16 +463,16 @@ export function PromptInput({
       <div
         ref={drop}
         onClick={handleContainerClick}
-        className={`flex flex-col bg-white border rounded-xl p-4 transition-all cursor-text ${
-          withFlourish
-            ? 'border-gray-300 shadow-[0px_8px_32px_0px_rgba(214,64,0,0.1),0px_8px_16px_0px_rgba(0,0,0,0.05)]'
-            : compact && !isExpanded
-            ? 'border-gray-300 shadow-sm'
-            : 'border-gray-300 shadow-md'
-        } ${
+        className={`flex flex-col bg-white border rounded-2xl p-4 transition-all cursor-text ${
           isOver && canDrop
-            ? 'border-orange-500 ring-2 ring-orange-200 shadow-lg'
-            : ''
+            ? 'border-[#1d4b34] ring-2 ring-[#1d4b34]/20 shadow-lg'
+            : isFocused
+            ? 'border-[#1d4b34] ring-2 ring-[#1d4b34]/15'
+            : withFlourish
+            ? 'border-gray-200 shadow-[0px_10px_30px_0px_rgba(0,0,0,0.06),0px_2px_8px_0px_rgba(0,0,0,0.04)]'
+            : compact && !isExpanded
+            ? 'border-gray-200 shadow-sm'
+            : 'border-gray-200 shadow-md'
         }`}
       >
         {/* Chat Tags (workspaces, skills, alerts added from the + menu) */}
@@ -500,36 +600,76 @@ export function PromptInput({
           }}
         />
 
+        {/* Hidden file input for "Upload from device" */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileInputChange}
+        />
+
         {/* Button Row */}
         <div className="flex items-center justify-between">
           {/* Left buttons */}
-          <div className="flex items-center gap-2">
-            <div className="relative group">
-              <button
-                ref={addMenuButtonRef}
-                type="button"
-                onClick={handleAddMenuClick}
-                className={`w-9 h-9 flex items-center justify-center rounded-lg text-[#1d4b34] transition-colors ${
-                  isAddMenuOpen ? 'bg-[#f0f0f0]' : 'hover:bg-[#f5f5f5]'
-                }`}
-                aria-label="Attach"
-              >
-                <Plus className="size-5" strokeWidth={2} />
-              </button>
-              {!isAddMenuOpen && (
-                <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="relative bg-[#363636] text-white text-[13px] font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">
-                    Attach
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-[6px] border-transparent border-t-[#363636]" />
-                  </div>
-                </div>
-              )}
-            </div>
+          <div className="flex items-center gap-1">
+            {/* Attach / add menu */}
+            <button
+              ref={addMenuButtonRef}
+              type="button"
+              onClick={handleAddMenuClick}
+              className={`w-9 h-9 flex items-center justify-center rounded-lg text-[#1d4b34] transition-colors ${
+                isAddMenuOpen ? 'bg-[#eef2f0]' : 'hover:bg-[#f5f5f5]'
+              }`}
+              aria-label="Add attachments"
+              title="Add"
+            >
+              <Plus className="size-5" strokeWidth={2} />
+            </button>
+
+            {/* Settings menu */}
+            <button
+              ref={settingsButtonRef}
+              type="button"
+              onClick={handleSettingsClick}
+              className={`w-9 h-9 flex items-center justify-center rounded-lg text-[#1d4b34] transition-colors ${
+                isSettingsOpen ? 'bg-[#eef2f0]' : 'hover:bg-[#f5f5f5]'
+              }`}
+              aria-label="Task settings"
+              title="Settings"
+            >
+              <SlidersHorizontal className="size-5" strokeWidth={2} />
+            </button>
+
+            {/* Divider */}
+            <div className="w-px h-5 bg-[#e0e0e0] mx-1.5" />
+
+            {/* Add to workspace */}
+            <button
+              ref={workspaceButtonRef}
+              type="button"
+              onClick={handleWorkspaceMenuClick}
+              className={`h-9 flex items-center gap-2 pl-2 pr-2.5 rounded-lg text-[#212223] transition-colors ${
+                isWorkspaceMenuOpen ? 'bg-[#eef2f0]' : 'hover:bg-[#f5f5f5]'
+              }`}
+              aria-label="Add to workspace"
+            >
+              <Folder className="size-[18px] text-[#404040]" strokeWidth={1.75} />
+              <span className="text-[14px] font-['Source_Sans_3'] font-semibold leading-none">Add to workspace</span>
+              <ChevronDown className="size-4 text-[#404040]" strokeWidth={2} />
+            </button>
           </div>
 
-          {/* Right button */}
-          <div className="flex items-center gap-2">
-            <Sparkles className="size-[18px] text-[#999999]" strokeWidth={2} />
+          {/* Right buttons */}
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-[#999999] hover:text-[#1d4b34] hover:bg-[#f5f5f5] transition-colors"
+              aria-label="Enhance prompt"
+              title="Enhance prompt"
+            >
+              <WandSparkles className="size-[18px]" strokeWidth={2} />
+            </button>
             <button
               type="button"
               onClick={handleSubmit}
@@ -674,148 +814,180 @@ export function PromptInput({
             left: `${addMenuPosition.left}px`,
             zIndex: 9999
           }}
-          className="w-[220px] bg-white rounded-[16px] border border-[#E5E5E5] shadow-lg overflow-hidden pt-2"
+          className="w-[248px] bg-white rounded-[14px] border border-[#E5E5E5] shadow-[0_12px_32px_rgba(0,0,0,0.12)] overflow-hidden py-1.5"
         >
-          {/* My Documents */}
+          {/* Upload from device */}
           <button
-            onMouseEnter={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              setSubmenuPosition({
-                top: rect.top,
-                left: rect.right + 4
-              });
-              setSubmenuOpen('documents');
-            }}
-            className="w-full h-[31px] flex items-center gap-2 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
+            onMouseEnter={() => setSubmenuOpen(null)}
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full h-10 flex items-center gap-3 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
           >
-            <div className="relative shrink-0 size-4">
-              <svg className="size-full" fill="none" viewBox="0 0 16 16">
-                <path d="M13.3333 13.3333C13.687 13.3333 14.0261 13.1929 14.2761 12.9428C14.5262 12.6928 14.6667 12.3536 14.6667 12V5.33333C14.6667 4.97971 14.5262 4.64057 14.2761 4.39052C14.0261 4.14048 13.687 4 13.3333 4H8.06667C7.84368 4.00219 7.6237 3.94841 7.42687 3.84359C7.23004 3.73877 7.06264 3.58625 6.94 3.4L6.4 2.6C6.27859 2.41565 6.11332 2.26432 5.919 2.1596C5.72468 2.05488 5.50741 2.00004 5.28667 2H2.66667C2.31304 2 1.97391 2.14048 1.72386 2.39052C1.47381 2.64057 1.33333 2.97971 1.33333 3.33333V12C1.33333 12.3536 1.47381 12.6928 1.72386 12.9428C1.97391 13.1929 2.31304 13.3333 2.66667 13.3333H13.3333Z" fill="#F8EADD" stroke="#DE6633" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">My Documents</span>
-            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.5} />
+            <FileUp className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Upload from device</span>
           </button>
 
-          {/* Workspaces */}
+          {/* Browse files */}
           <button
             onMouseEnter={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
-              setSubmenuPosition({
-                top: rect.top,
-                left: rect.right + 4
-              });
-              setSubmenuOpen('workspaces');
+              setSubmenuPosition({ top: rect.top, left: rect.right + 4 });
+              setSubmenuOpen('browse');
             }}
-            className="w-full h-[31px] flex items-center gap-2 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
+            className="w-full h-10 flex items-center gap-3 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
           >
-            <div className="relative shrink-0 size-4">
-              <svg className="size-full" fill="none" viewBox="0 0 16 16">
-                <path d="M13.3333 13.3333C13.687 13.3333 14.0261 13.1929 14.2761 12.9428C14.5262 12.6928 14.6667 12.3536 14.6667 12V5.33333C14.6667 4.97971 14.5262 4.64057 14.2761 4.39052C14.0261 4.14048 13.687 4 13.3333 4H8.06667C7.84368 4.00219 7.6237 3.94841 7.42687 3.84359C7.23004 3.73877 7.06264 3.58625 6.94 3.4L6.4 2.6C6.27859 2.41565 6.11332 2.26432 5.919 2.1596C5.72468 2.05488 5.50741 2.00004 5.28667 2H2.66667C2.31304 2 1.97391 2.14048 1.72386 2.39052C1.47381 2.64057 1.33333 2.97971 1.33333 3.33333V12C1.33333 12.3536 1.47381 12.6928 1.72386 12.9428C1.97391 13.1929 2.31304 13.3333 2.66667 13.3333H13.3333Z" fill="#F8EADD" stroke="#DE6633" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Workspaces</span>
-            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.5} />
+            <FolderSearch className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Browse files</span>
+            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.75} />
           </button>
+
+          {/* Divider */}
+          <div className="h-px bg-[#e5e5e5] my-1.5" />
 
           {/* Skills */}
           <button
             onMouseEnter={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
-              setSubmenuPosition({
-                top: rect.top,
-                left: rect.right + 4
-              });
+              setSubmenuPosition({ top: rect.top, left: rect.right + 4 });
               setSubmenuOpen('skills');
             }}
-            className="w-full h-[31px] flex items-center gap-2 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
+            className="w-full h-10 flex items-center gap-3 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
           >
-            <Blocks className="size-4 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-            <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Skills</span>
-            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.5} />
+            <ScrollText className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Skills</span>
+            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.75} />
           </button>
 
-          {/* Monitoring & alerts */}
+          {/* Connectors */}
           <button
             onMouseEnter={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
-              setSubmenuPosition({
-                top: rect.top,
-                left: rect.right + 4
-              });
-              setSubmenuOpen('alerts');
+              setSubmenuPosition({ top: rect.top, left: rect.right + 4 });
+              setSubmenuOpen('connectors');
             }}
-            className="w-full h-[31px] flex items-center gap-2 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
+            className="w-full h-10 flex items-center gap-3 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
           >
-            <Bell className="size-4 text-[#DE6633]" strokeWidth={1.5} fill="#f8eadd" />
-            <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Monitoring & alerts</span>
-            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.5} />
-          </button>
-
-          {/* HighQ */}
-          <button
-            className="w-full h-[31px] flex items-center gap-2 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
-          >
-            <div className="bg-[#1d4b34] rounded-[2px] shrink-0 size-4 flex items-center justify-center">
-              <span className="text-[8px] font-['Clario'] font-medium text-white">HQ</span>
-            </div>
-            <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">HighQ</span>
-            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.5} />
+            <Plug className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Connectors</span>
+            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.75} />
           </button>
 
           {/* Divider */}
-          <div className="h-px bg-[#e5e5e5] my-2" />
+          <div className="h-px bg-[#e5e5e5] my-1.5" />
 
-          {/* SharePoint */}
+          {/* File limit info */}
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setSharepointEnabled(!sharepointEnabled);
-            }}
-            className="w-full h-[31px] flex items-center gap-2 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
+            onMouseEnter={() => setSubmenuOpen(null)}
+            onClick={() => { setIsAddMenuOpen(false); setSubmenuOpen(null); }}
+            className="w-full h-10 flex items-center gap-3 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
           >
-            <div className="relative shrink-0 size-4">
-              <svg className="size-full" viewBox="0 0 16 16" fill="none">
-                <circle cx="5.5" cy="5.5" r="4.5" fill="#036C70"/>
-                <circle cx="10.5" cy="10.5" r="4.5" fill="#03A9AC"/>
-                <circle cx="10.5" cy="5.5" r="4.5" fill="#0E7276"/>
-                <text x="4" y="10" fontSize="8" fontWeight="600" fill="white" fontFamily="Arial">S</text>
-              </svg>
-            </div>
-            <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">SharePoint</span>
-            <div
-              className={`w-10 h-5 rounded-full transition-colors ${
-                sharepointEnabled ? 'bg-[#1d4b34]' : 'bg-gray-300'
-              } flex items-center ${sharepointEnabled ? 'justify-end' : 'justify-start'} px-0.5`}
-            >
-              <div className="size-4 bg-white rounded-full shadow-sm" />
-            </div>
+            <Info className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">File limit info</span>
+          </button>
+        </div>,
+        document.body
+      )}
+
+      {/* Settings Menu Dropdown */}
+      {isSettingsOpen && settingsPosition && createPortal(
+        <div
+          ref={settingsPopoverRef}
+          style={{
+            position: 'fixed',
+            top: `${settingsPosition.top}px`,
+            left: `${settingsPosition.left}px`,
+            zIndex: 9999
+          }}
+          className="w-[248px] bg-white rounded-[14px] border border-[#E5E5E5] shadow-[0_12px_32px_rgba(0,0,0,0.12)] overflow-hidden py-1.5"
+        >
+          {/* Deep research */}
+          <button
+            onMouseEnter={() => setSubmenuOpen(null)}
+            onClick={() => setDeepResearch(v => !v)}
+            className="w-full h-10 flex items-center gap-3 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
+          >
+            <Telescope className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Deep research</span>
+            {deepResearch && <Check className="size-4 text-[#1d4b34]" strokeWidth={2.25} />}
           </button>
 
-          {/* iManage */}
+          {/* Jurisdiction */}
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setImanageEnabled(!imanageEnabled);
+            onMouseEnter={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              setSubmenuPosition({ top: rect.top, left: rect.right + 4 });
+              setSubmenuOpen('jurisdiction');
             }}
-            className="w-full h-[31px] flex items-center gap-2 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
+            className="w-full h-10 flex items-center gap-3 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
           >
-            <div className="relative shrink-0 size-4">
-              <svg className="size-full" viewBox="0 0 16 16" fill="none">
-                <ellipse cx="8" cy="8" rx="7" ry="6.5" fill="#0047BB" transform="rotate(-15 8 8)"/>
-                <ellipse cx="8" cy="8" rx="5.5" ry="5" fill="#0066FF" transform="rotate(-15 8 8)"/>
-                <text x="5.5" y="10.5" fontSize="8" fontWeight="700" fill="white" fontFamily="Arial">m</text>
-              </svg>
-            </div>
-            <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">iManage</span>
-            <div
-              className={`w-10 h-5 rounded-full transition-colors ${
-                imanageEnabled ? 'bg-[#1d4b34]' : 'bg-gray-300'
-              } flex items-center ${imanageEnabled ? 'justify-end' : 'justify-start'} px-0.5`}
-            >
-              <div className="size-4 bg-white rounded-full shadow-sm" />
-            </div>
+            <Landmark className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Jurisdiction</span>
+            {jurisdiction && <span className="text-[13px] text-[#666] font-['Source_Sans_3']">{jurisdiction}</span>}
+            <ChevronRight className="size-4 text-[#404040]" strokeWidth={1.75} />
           </button>
+
+          {/* Divider */}
+          <div className="h-px bg-[#e5e5e5] my-1.5" />
+
+          {/* Artifact format section */}
+          <div className="px-3 pt-1 pb-1 text-[11px] font-['Source_Sans_3'] font-semibold tracking-[0.06em] text-[#8a8a8a] uppercase">
+            Artifact format
+          </div>
+          <button
+            onMouseEnter={() => setSubmenuOpen(null)}
+            onClick={() => setArtifactFormat('quick')}
+            className="w-full h-10 flex items-center gap-3 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
+          >
+            <Zap className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">Quick format</span>
+            {artifactFormat === 'quick' && <Check className="size-4 text-[#1d4b34]" strokeWidth={2.25} />}
+          </button>
+          <button
+            onMouseEnter={() => setSubmenuOpen(null)}
+            onClick={() => setArtifactFormat('docx')}
+            className="w-full h-10 flex items-center gap-3 px-3 hover:bg-[#F5F5F5] transition-colors text-left"
+          >
+            <FileText className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">DOCX format</span>
+            {artifactFormat === 'docx' && <Check className="size-4 text-[#1d4b34]" strokeWidth={2.25} />}
+          </button>
+        </div>,
+        document.body
+      )}
+
+      {/* Add to workspace Menu Dropdown */}
+      {isWorkspaceMenuOpen && workspacePosition && createPortal(
+        <div
+          ref={workspacePopoverRef}
+          style={{
+            position: 'fixed',
+            top: `${workspacePosition.top}px`,
+            left: `${workspacePosition.left}px`,
+            zIndex: 9999
+          }}
+          className="w-[300px] bg-white rounded-[14px] border border-[#E5E5E5] shadow-[0_12px_32px_rgba(0,0,0,0.12)] overflow-hidden py-1.5"
+        >
+          {/* New workspace */}
+          <button
+            onClick={() => addChatTag('workspace', 'Untitled workspace')}
+            className="w-full h-11 flex items-center gap-3 px-4 hover:bg-[#F5F5F5] transition-colors text-left"
+          >
+            <SquarePlus className="size-[18px] text-[#404040] shrink-0" strokeWidth={1.75} />
+            <span className="flex-1 text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">New workspace</span>
+          </button>
+
+          {/* Divider */}
+          <div className="h-px bg-[#e5e5e5] my-1" />
+
+          {/* Existing workspaces */}
+          {WORKSPACE_OPTIONS.map((name) => (
+            <button
+              key={name}
+              onClick={() => { addChatTag('workspace', name); setIsWorkspaceMenuOpen(false); }}
+              className="w-full h-11 flex items-center px-4 hover:bg-[#F5F5F5] transition-colors text-left"
+            >
+              <span className="flex-1 truncate text-[15px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.2]">{name}</span>
+            </button>
+          ))}
         </div>,
         document.body
       )}
@@ -833,33 +1005,18 @@ export function PromptInput({
           }}
           className="w-[240px] bg-white rounded-lg border border-[#E5E5E5] shadow-lg overflow-hidden py-1"
         >
-          {submenuOpen === 'workspaces' && (
+          {submenuOpen === 'browse' && (
             <>
-              <button className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left">
-                <Plus className="size-4 text-[#666]" strokeWidth={1.5} />
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">New Workspace</span>
-              </button>
-              {WORKSPACE_OPTIONS.map((name) => (
+              {['MFG-AI-POL-001_AI_Governance_Policy.docx', 'MFG-AI-POL-005_Consumer_Disclosure_Standards.docx', 'MFG-AI-TMPL-003_Adverse_Action_Notice_Template.docx', 'MFG-MRM-MDL001-2024_CreditScorePro_Validation.docx'].map((name) => (
                 <button
                   key={name}
-                  onClick={() => addChatTag('workspace', name)}
-                  className="w-full px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
+                  onClick={() => addStagedFile(name)}
+                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
                 >
-                  <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">{name}</span>
+                  <FileText className="size-4 text-[#054688] shrink-0" strokeWidth={1.5} />
+                  <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] truncate">{name}</span>
                 </button>
               ))}
-            </>
-          )}
-          {submenuOpen === 'documents' && (
-            <>
-              <button className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left">
-                <FileText className="size-4 text-[#666]" strokeWidth={1.5} />
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">Upload from your device</span>
-              </button>
-              <button className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left">
-                <MessageCircleQuestion className="size-4 text-[#666]" strokeWidth={1.5} />
-                <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">File limit info</span>
-              </button>
             </>
           )}
           {submenuOpen === 'skills' && (
@@ -875,16 +1032,53 @@ export function PromptInput({
               ))}
             </>
           )}
-          {submenuOpen === 'alerts' && (
+          {submenuOpen === 'connectors' && (
             <>
-              {alertOptions.map((topic) => (
+              <button
+                onClick={(e) => { e.stopPropagation(); setSharepointEnabled(!sharepointEnabled); }}
+                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
+              >
+                <div className="relative shrink-0 size-4">
+                  <svg className="size-full" viewBox="0 0 16 16" fill="none">
+                    <circle cx="5.5" cy="5.5" r="4.5" fill="#036C70"/>
+                    <circle cx="10.5" cy="10.5" r="4.5" fill="#03A9AC"/>
+                    <circle cx="10.5" cy="5.5" r="4.5" fill="#0E7276"/>
+                    <text x="4" y="10" fontSize="8" fontWeight="600" fill="white" fontFamily="Arial">S</text>
+                  </svg>
+                </div>
+                <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">SharePoint</span>
+                <div className={`w-9 h-[18px] rounded-full transition-colors ${sharepointEnabled ? 'bg-[#1d4b34]' : 'bg-gray-300'} flex items-center ${sharepointEnabled ? 'justify-end' : 'justify-start'} px-0.5`}>
+                  <div className="size-[14px] bg-white rounded-full shadow-sm" />
+                </div>
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); setImanageEnabled(!imanageEnabled); }}
+                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
+              >
+                <div className="relative shrink-0 size-4">
+                  <svg className="size-full" viewBox="0 0 16 16" fill="none">
+                    <ellipse cx="8" cy="8" rx="7" ry="6.5" fill="#0047BB" transform="rotate(-15 8 8)"/>
+                    <ellipse cx="8" cy="8" rx="5.5" ry="5" fill="#0066FF" transform="rotate(-15 8 8)"/>
+                    <text x="5.5" y="10.5" fontSize="8" fontWeight="700" fill="white" fontFamily="Arial">m</text>
+                  </svg>
+                </div>
+                <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">iManage</span>
+                <div className={`w-9 h-[18px] rounded-full transition-colors ${imanageEnabled ? 'bg-[#1d4b34]' : 'bg-gray-300'} flex items-center ${imanageEnabled ? 'justify-end' : 'justify-start'} px-0.5`}>
+                  <div className="size-[14px] bg-white rounded-full shadow-sm" />
+                </div>
+              </button>
+            </>
+          )}
+          {submenuOpen === 'jurisdiction' && (
+            <>
+              {JURISDICTION_OPTIONS.map((name) => (
                 <button
-                  key={topic}
-                  onClick={() => addChatTag('alert', topic)}
-                  className="w-full flex items-start gap-2 px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
+                  key={name}
+                  onClick={() => { setJurisdiction(name); setSubmenuOpen(null); setIsSettingsOpen(false); }}
+                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#F5F5F5] transition-colors text-left"
                 >
-                  <Bell className="size-4 text-[#DE6633] mt-0.5 shrink-0" strokeWidth={1.5} fill="#f8eadd" />
-                  <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] leading-[1.3]">{topic}</span>
+                  <span className="flex-1 text-[14px] font-['Source_Sans_3'] font-normal text-[#212223]">{name}</span>
+                  {jurisdiction === name && <Check className="size-4 text-[#1d4b34]" strokeWidth={2.25} />}
                 </button>
               ))}
             </>
