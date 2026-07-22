@@ -122,16 +122,16 @@ export function Sidebar() {
   const unreadCount = alerts.filter(a => !a.isRead).length;
 
   return (
-    <div className="group w-[84px] h-full flex flex-col bg-[#F2F2F2] border-r border-[#E5E5E5] shrink-0 z-20">
+    <div className="group w-[72px] h-full flex flex-col bg-[#F2F2F2] border-r border-[#E5E5E5] shrink-0 z-20">
       {/* Brand Header */}
-      <div className="h-[68px] flex items-center justify-center pt-3">
+      <div className="h-[52px] flex items-center justify-center">
         <Link to="/">
-          <Logo className="size-8" />
+          <Logo className="size-7" />
         </Link>
       </div>
 
       {/* Nav Menu */}
-      <div className="flex flex-col flex-1 items-center gap-1 mt-3 px-2">
+      <div className="flex flex-col flex-1 items-center gap-0.5 mt-1 px-1">
         {navItems.map((item) => {
           const isActive = item.disabled
             ? false
@@ -143,20 +143,20 @@ export function Sidebar() {
           const iconSquare = (
             <div
               className={clsx(
-                "w-11 h-11 flex items-center justify-center rounded-[14px] transition-colors",
+                "w-9 h-9 flex items-center justify-center rounded-[10px] transition-colors",
                 isActive
                   ? "bg-white shadow-sm text-[#1D4B34]"
                   : "text-[#404040] group-hover:text-[#404040]"
               )}
             >
-              <item.icon className="size-[22px]" strokeWidth={1.75} />
+              <item.icon className="size-[18px]" strokeWidth={1.75} />
             </div>
           );
 
           const label = (
             <span
               className={clsx(
-                "text-[11px] leading-tight text-center text-balance px-0.5",
+                "text-[10px] leading-tight text-center text-balance",
                 isActive
                   ? "font-['Clario'] font-semibold text-[#1D4B34]"
                   : "font-['Source_Sans_3'] font-normal text-[#404040]"
@@ -167,7 +167,7 @@ export function Sidebar() {
           );
 
           const itemClassName = clsx(
-            "w-full flex flex-col items-center gap-1 py-1.5 rounded-xl transition-colors",
+            "w-full flex flex-col items-center gap-0.5 py-1 rounded-lg transition-colors",
             item.disabled ? "cursor-default" : "cursor-pointer hover:bg-gray-100/70"
           );
 
