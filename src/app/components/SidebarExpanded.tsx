@@ -86,20 +86,20 @@ export function SidebarExpanded() {
       </div>
 
       {/* Action Buttons */}
-      <div className="px-4 py-2 flex flex-col gap-2.5">
+      <div className="px-4 py-2 flex flex-col gap-3">
         <button
           onClick={() => navigate("/")}
-          className="w-full h-11 bg-[#1D4B34] text-white rounded-xl flex items-center justify-center gap-2.5 hover:bg-[#153826] transition-colors shadow-sm"
+          className="w-full h-9 bg-[#1D4B34] text-white rounded-lg flex items-center justify-center gap-2 hover:bg-[#153826] transition-colors shadow-sm"
         >
-          <MessageCirclePlus className="size-[18px]" strokeWidth={2} />
-          <span className="text-[15px] font-['Clario'] font-semibold">New chat</span>
+          <MessageCirclePlus className="size-4" strokeWidth={2.5} />
+          <span className="text-[14px] font-medium">New chat</span>
         </button>
         <button
           onClick={() => navigate("/projects")}
-          className="w-full h-11 bg-white text-[#212223] border border-[#E5E5E5] rounded-xl flex items-center justify-center gap-2.5 hover:bg-gray-50 transition-colors"
+          className="w-full h-9 bg-white text-[#212223] border border-[#E5E5E5] rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
         >
-          <FolderPlus className="size-[18px] text-[#212223]" strokeWidth={2} />
-          <span className="text-[15px] font-['Clario'] font-semibold">New workspace</span>
+          <FolderPlus className="size-4 text-[#212223]" strokeWidth={2} />
+          <span className="text-[14px] font-medium">New workspace</span>
         </button>
       </div>
 
