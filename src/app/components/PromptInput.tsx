@@ -655,7 +655,7 @@ export function PromptInput({
               aria-label="Add to workspace"
             >
               <Folder className="size-[18px] text-[#404040]" strokeWidth={1.75} />
-              <span className="text-[14px] font-['Source_Sans_3'] font-semibold leading-none">Add to workspace</span>
+              <span className="text-[14px] font-['Clario'] font-medium leading-none">Add to workspace</span>
               <ChevronDown className="size-4 text-[#404040]" strokeWidth={2} />
             </button>
           </div>
