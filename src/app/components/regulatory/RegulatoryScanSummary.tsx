@@ -1,8 +1,13 @@
-import { useState } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink, Bell, CheckCircle2, X, ArrowUpRight } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { ChevronDown, ChevronUp, Bell, CheckCircle2, X, ArrowUpRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router';
 import { useMonitoring } from '../../contexts/MonitoringContext';
+import { FileChipsArea, MoreDocsChip, SupportingDocChip } from '../ui/SupportingDocChip';
+import { AffectedDocumentPreview } from './AffectedDocumentPreview';
+import { getAffectedDocuments } from './affectedDocumentRedlines';
+
+const VISIBLE_DOC_CHIPS = 5;
 
 interface TopFinding {
   regulation: string;
@@ -79,6 +84,12 @@ export function RegulatoryScanSummary({
 }: RegulatoryScanSummaryProps) {
   const config = SCAN_VARIANTS[variant];
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['what-found']));
+  const affectedDocs = getAffectedDocuments(variant);
+  const [showAllDocs, setShowAllDocs] = useState(false);
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const closePreview = useCallback(() => setPreviewIndex(null), []);
+  const visibleDocs = showAllDocs ? affectedDocs : affectedDocs.slice(0, VISIBLE_DOC_CHIPS);
+  const hiddenDocCount = affectedDocs.length - visibleDocs.length;
   // Shared alert state — synced across the chat summary and the tabular toolbar
   const { savedAlerts, addAlert, removeAlert } = useMonitoring();
   const regulatoryAlert = savedAlerts.find(a => a.sourceType === 'regulatory-table');
@@ -278,15 +289,23 @@ export function RegulatoryScanSummary({
               <p className="text-[15px] font-['Source_Sans_3'] text-[#212223] leading-[1.5] mb-3">
                 {config.docsText(documentsAffected)}
               </p>
-              {onViewAffectedClauses && (
-                <button
-                  onClick={onViewAffectedClauses}
-                  className="h-[24px] px-[8px] py-[4px] flex items-center gap-1.5 text-[14px] font-['Clario'] font-medium text-[#1d4b34] rounded-[4px] border border-transparent hover:bg-[#edf2f0] hover:border-[#8a8a8a] transition-all"
-                >
-                  View affected clauses
-                  <ExternalLink className="size-3.5" />
-                </button>
-              )}
+              <FileChipsArea label="Affected documents">
+                {visibleDocs.map((doc, idx) => (
+                  <li key={doc.name} className="max-w-full">
+                    <SupportingDocChip
+                      name={doc.name}
+                      fileType={doc.fileType}
+                      selected={previewIndex === idx}
+                      onClick={() => setPreviewIndex(idx)}
+                    />
+                  </li>
+                ))}
+                {hiddenDocCount > 0 && (
+                  <li>
+                    <MoreDocsChip count={hiddenDocCount} onClick={() => setShowAllDocs(true)} />
+                  </li>
+                )}
+              </FileChipsArea>
             </div>
           )}
         </div>
@@ -433,6 +452,13 @@ export function RegulatoryScanSummary({
           )}
         </div>
       </div>
+
+      <AffectedDocumentPreview
+        documents={affectedDocs}
+        activeIndex={previewIndex}
+        onSelect={setPreviewIndex}
+        onClose={closePreview}
+      />
     </div>
   );
 }
