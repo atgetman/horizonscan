@@ -1982,9 +1982,11 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       return next;
     });
 
-    // Show the scan plan panel so the user can confirm or edit before the scan.
-    safeSetTimeout(() => setShowScanPlanPanel(true), 250);
-  }, [safeSetTimeout]);
+    // Go straight into the research workflow once jurisdictions are resolved.
+    safeSetTimeout(() => {
+      processChat([{ role: 'user', text: '__ai_gov_research__ us ai legislation' }]);
+    }, 400);
+  }, [processChat, safeSetTimeout]);
 
   // User confirmed the plan ("Looks good — proceed"): record the confirmation and
   // kick off the research workflow animation. The scope details aren't echoed back
@@ -2139,9 +2141,59 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
           totalFindings: 8,
           documentsAffected: 7,
           topFindings: [
-            { regulation: 'NYC Local Law 144 – Automated Employment Decision Tools (New York City)', impact: 'High' as const, deadline: 'In effect' },
-            { regulation: 'CRD Automated-Decision Systems employment rules (California)', impact: 'High' as const, deadline: 'Oct 1, 2025' },
-            { regulation: 'Colorado AI Act, SB 24-205 (Colorado)', impact: 'High' as const, deadline: 'Jun 30, 2026' },
+        {
+          regulation: 'NYC Local Law 144 – Automated Employment Decision Tools (New York City)',
+          impact: 'High' as const,
+          status: 'In effect',
+          statusDate: 'Jul 5, 2023',
+          relevance: [
+            'Your résumé-screening tool ranks candidates, so it counts as an ',
+            { strong: 'automated employment decision tool' },
+            '. Before use you need an ',
+            { strong: 'independent bias audit within the past year' },
+            ', a public summary of results, and ',
+            { strong: '10 business days’ notice' },
+            ' to candidates (',
+            { cite: 'Practical Law: NYC Automated Employment Decision Tools Law' },
+            '). Your Bias Testing Log records internal testing only, which doesn’t meet the independence requirement.',
+          ],
+        },
+        {
+          regulation: 'CRD Automated-Decision Systems employment rules (California)',
+          impact: 'High' as const,
+          status: 'In effect',
+          statusDate: 'Oct 1, 2025',
+          relevance: [
+            'Employers are liable under FEHA for discriminatory outcomes from automated-decision systems, ',
+            { strong: 'including vendor tools' },
+            ' (',
+            { cite: 'Cal. Code Regs. tit. 2, § 11008 et seq.' },
+            '). Records and ADS data must be kept for ',
+            { strong: 'four years' },
+            ', and anti-bias testing is relevant evidence in a defense. Your Model Inventory doesn’t record retention periods.',
+          ],
+        },
+        {
+          regulation: 'Colorado AI Act (Colorado)',
+          impact: 'High' as const,
+          status: 'Enacted',
+          statusDate: 'May 14, 2026',
+          relevance: [
+            'Repeals and re-enacts the 2024 AI Act, which ',
+            { strong: 'never took effect' },
+            ' — its date moved from February 1 to June 30, 2026, and it was replaced before that arrived (',
+            { cite: 'Practical Law: Colorado Repeals and Replaces Its AI Act' },
+            '). The duty of reasonable care, annual impact assessments and the risk-management program are gone. What binds instead is procedural: ',
+            { strong: 'notice before a covered ADMT is used' },
+            ', a plain-language explanation ',
+            { strong: 'within 30 days of an adverse outcome' },
+            ', meaningful human review by someone with authority to override, and ',
+            { strong: 'three-year record retention' },
+            ' (',
+            { cite: 'Colo. Rev. Stat. §§ 6-1-1701 et seq.' },
+            '). Covered only where the output materially influences the decision — ranking, scoring or classifying a candidate counts; summarizing for a human does not.',
+          ],
+        },
           ],
         },
       }
@@ -2161,9 +2213,27 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
           totalFindings: 3,
           documentsAffected: 25,
           topFindings: [
-            { regulation: 'SEC Climate Disclosure Rules', impact: 'High' as const, deadline: 'Jan 1, 2027' },
-            { regulation: 'CFPB Consumer Data Rights Rule', impact: 'High' as const, deadline: 'Apr 1, 2027' },
-            { regulation: 'FTC Non-Compete Ban Amendments', impact: 'Medium' as const, deadline: 'TBD (Pending)' },
+        {
+          regulation: 'SEC Climate Disclosure Rules',
+          impact: 'High' as const,
+          status: 'Final rule',
+          statusDate: 'Effective Jan 1, 2027',
+          relevance: ['Adds ', { strong: 'climate-risk disclosure' }, ' obligations that the reps and warranties in your purchase agreement templates don’t address.'],
+        },
+        {
+          regulation: 'CFPB Consumer Data Rights Rule',
+          impact: 'High' as const,
+          status: 'Final rule',
+          statusDate: 'Effective Apr 1, 2027',
+          relevance: ['Targets holding consumer financial data need ', { strong: 'data-access and portability' }, ' diligence, which your due diligence checklist doesn’t cover.'],
+        },
+        {
+          regulation: 'FTC Non-Compete Ban Amendments',
+          impact: 'Medium' as const,
+          status: 'Pending',
+          statusDate: 'Date to be set',
+          relevance: ['Could limit the ', { strong: 'non-compete covenants' }, ' in your seller and key-employee agreements.'],
+        },
           ],
         },
       };

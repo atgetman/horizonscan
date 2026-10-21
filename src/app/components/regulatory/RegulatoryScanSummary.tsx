@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ChevronDown, ChevronUp, Bell, CheckCircle2, X, ArrowUpRight } from 'lucide-react';
+import { ChevronDown, ChevronUp, Bell, CheckCircle2, X, ArrowUpRight, SquareDot } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router';
 import { useMonitoring } from '../../contexts/MonitoringContext';
@@ -9,10 +9,35 @@ import { getAffectedDocuments } from './affectedDocumentRedlines';
 
 const VISIBLE_DOC_CHIPS = 5;
 
+type RelevanceSegment = string | { strong: string } | { cite: string };
+
 interface TopFinding {
   regulation: string;
   impact: 'High' | 'Medium' | 'Low';
-  deadline: string;
+  status: string;
+  statusDate?: string;
+  relevance: RelevanceSegment[];
+}
+
+function RelevanceText({ segments }: { segments: RelevanceSegment[] }) {
+  return (
+    <p className="text-[14px] font-['Source_Sans_3'] text-[#212223] leading-[1.6] text-pretty">
+      {segments.map((segment, i) => {
+        if (typeof segment === 'string') return <span key={i}>{segment}</span>;
+        if ('strong' in segment) return <strong key={i} className="font-semibold">{segment.strong}</strong>;
+        return (
+          <span
+            key={i}
+            className="inline-flex items-baseline gap-1.5 mx-0.5 px-2 py-0.5 rounded-md bg-[#f0f0f0] text-[13px] leading-[1.4] text-[#666666] align-baseline"
+          >
+            <span>1</span>
+            <SquareDot className="size-3 self-center shrink-0" strokeWidth={1.75} aria-hidden="true" />
+            <span>{segment.cite}</span>
+          </span>
+        );
+      })}
+    </p>
+  );
 }
 
 interface RegulatoryScanSummaryProps {
@@ -185,84 +210,55 @@ export function RegulatoryScanSummary({
               </p>
 
               {/* Top findings mini table */}
-              <div className="relative">
-                <div className="overflow-clip">
-                  {/* Header Row */}
-                  <div className="content-stretch flex items-center w-full">
-                    <div className="bg-[#f0f2f1] content-stretch flex items-center min-h-[40px] flex-[1_0_0]">
-                      <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid border-t inset-0 pointer-events-none" />
-                      <div className="content-stretch flex gap-[16px] items-center min-h-[inherit] px-[12px] py-[4px] w-full">
-                        <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3:SemiBold',sans-serif] font-semibold justify-center leading-[0] text-[#212223]">
-                          <p className="leading-[1.2] text-[14px]">Regulation</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-[#f0f2f1] content-stretch flex items-center min-h-[40px] flex-[1_0_0]">
-                      <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid border-t inset-0 pointer-events-none" />
-                      <div className="content-stretch flex gap-[16px] items-center min-h-[inherit] px-[12px] py-[4px] w-full">
-                        <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3:SemiBold',sans-serif] font-semibold justify-center leading-[0] text-[#212223]">
-                          <p className="leading-[1.2] text-[14px]">Impact</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-[#f0f2f1] content-stretch flex items-center min-h-[40px] flex-[1_0_0]">
-                      <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid border-t inset-0 pointer-events-none" />
-                      <div className="content-stretch flex gap-[16px] items-center min-h-[inherit] px-[12px] py-[4px] w-full">
-                        <div className="[word-break:break-word] flex flex-col font-['Source_Sans_3:SemiBold',sans-serif] font-semibold justify-center leading-[0] text-[#212223]">
-                          <p className="leading-[1.2] text-[14px]">Deadline</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Data Rows */}
-                  {topFindings.map((finding, idx) => (
-                    <div key={idx} className="content-stretch flex items-center w-full h-[40px]">
-                      <div className="flex flex-[1_0_0] flex-row items-center self-stretch">
-                        <div className="bg-white flex-[1_0_0] h-full min-h-[40px] min-w-px relative">
-                          <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid inset-0 pointer-events-none" />
-                          <div className="content-stretch flex items-start min-h-[inherit] px-[12px] py-[8px] size-full">
-                            <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-start min-w-px">
-                              <p className="[word-break:break-word] flex-[1_0_0] font-['Source_Sans_3:Regular',sans-serif] font-normal leading-[1.2] min-w-px overflow-hidden text-[#404040] text-[14px] text-ellipsis">
-                                {finding.regulation}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-[1_0_0] flex-row items-center self-stretch">
-                        <div className="bg-white flex-[1_0_0] h-full min-h-[40px] min-w-px relative">
-                          <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid inset-0 pointer-events-none" />
-                          <div className="content-stretch flex items-center min-h-[inherit] px-[12px] py-[8px] size-full">
-                            <div className={`${impactColors[finding.impact].bgColor} relative rounded-[88px]`}>
-                              <div className="content-stretch flex gap-[4px] items-center justify-center min-h-[inherit] overflow-clip px-[8px] py-[2px] relative rounded-[inherit]">
-                                <div className="content-stretch flex items-start relative shrink-0">
-                                  <div className={`[word-break:break-word] flex flex-col font-['Source_Sans_3:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 ${impactColors[finding.impact].textColor} text-[12px] whitespace-nowrap`}>
-                                    <p className="leading-[1.2]">{finding.impact}</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div aria-hidden="true" className="absolute border border-[rgba(252,252,252,0)] border-solid inset-[-1px] pointer-events-none rounded-[89px] shadow-[0px_0px_0px_1px_white]" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-[1_0_0] flex-row items-center self-stretch">
-                        <div className="bg-white flex-[1_0_0] h-full min-h-[40px] min-w-px relative">
-                          <div aria-hidden="true" className="absolute border-[#ededed] border-b border-solid inset-0 pointer-events-none" />
-                          <div className="content-stretch flex items-start min-h-[inherit] px-[12px] py-[8px] size-full">
-                            <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-start min-w-px">
-                              <p className="[word-break:break-word] flex-[1_0_0] font-['Source_Sans_3:Regular',sans-serif] font-normal leading-[1.2] min-w-px overflow-hidden text-[#404040] text-[14px] text-ellipsis">
-                                {finding.deadline}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div aria-hidden="true" className="absolute border border-[#ededed] border-solid inset-0 pointer-events-none" />
+              <div className="border border-[#ededed] overflow-x-auto">
+                <table className="w-full min-w-[640px] border-collapse text-left">
+                  <colgroup>
+                    <col className="w-[26%]" />
+                    <col className="w-[88px]" />
+                    <col />
+                    <col className="w-[132px]" />
+                  </colgroup>
+                  <thead>
+                    <tr className="bg-[#f0f2f1]">
+                      {['Regulation', 'Impact', 'Why is this relevant?', 'Status'].map((label) => (
+                        <th
+                          key={label}
+                          scope="col"
+                          className="px-3 py-2.5 border-b border-[#ededed] text-[14px] font-['Source_Sans_3'] font-semibold text-[#212223] leading-[1.2]"
+                        >
+                          {label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topFindings.map((finding) => (
+                      <tr key={finding.regulation} className="bg-white align-top border-b border-[#ededed] last:border-b-0">
+                        <td className="px-3 py-3 text-[14px] font-['Source_Sans_3'] text-[#404040] leading-[1.4]">
+                          {finding.regulation}
+                        </td>
+                        <td className="px-3 py-3">
+                          <span className={`inline-flex px-2 py-0.5 rounded-full text-[12px] font-['Source_Sans_3'] leading-[1.2] whitespace-nowrap ${impactColors[finding.impact].bgColor} ${impactColors[finding.impact].textColor}`}>
+                            {finding.impact}
+                          </span>
+                        </td>
+                        <td className="px-3 py-3">
+                          <RelevanceText segments={finding.relevance} />
+                        </td>
+                        <td className="px-3 py-3">
+                          <p className="text-[15px] font-['Source_Sans_3'] font-semibold text-[#212223] leading-[1.3]">
+                            {finding.status}
+                          </p>
+                          {finding.statusDate && (
+                            <p className="mt-0.5 text-[13px] font-['Source_Sans_3'] text-[#666666] leading-[1.4]">
+                              {finding.statusDate}
+                            </p>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
