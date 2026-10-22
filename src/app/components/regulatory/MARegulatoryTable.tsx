@@ -118,97 +118,99 @@ const MA_REGULATORY_DATA: RegulatoryFinding[] = [
   },
 ];
 
-// AI governance / AI legislation findings data — aligned to the chosen scope:
-// Federal + all 50 states, with priority on California and New York. Sources are
-// limited to Westlaw, Practical Law, International Research, and web sources.
+// Workplace AI legislation findings — aligned to the prompt: US federal and
+// state legislation governing the use of AI in the workplace (automated
+// employment decision tools, hiring/promotion, and employee monitoring), with
+// enacted vs. pending status and the runway before requirements take effect.
+// Sources limited to Westlaw, Practical Law, International Research, and web sources.
 const AI_GOV_REGULATORY_DATA: RegulatoryFinding[] = [
   {
-    title: 'Federal — CFPB Circular 2022-03: Adverse Action Notices for AI Credit Denials',
+    title: 'New York City — Local Law 144: Automated Employment Decision Tools (AEDT)',
     sourceType: 'Westlaw',
-    summary: 'CFPB circular confirms ECOA/Regulation B require specific, accurate reasons for adverse credit actions even when lenders use complex algorithms or "black-box" AI models. Generic or checklist reasons are insufficient.',
+    summary: 'Enacted and enforced since July 5, 2023. Requires an independent annual bias audit before using an automated employment decision tool for hiring or promotion, publication of audit results, and advance notice to NYC candidates and employees.',
     impactLevel: 'High',
-    relevance: '95%',
-    rationale: 'Directly governs adverse action workflows and model explainability for AI-driven credit denials. Requires updates to your Consumer Disclosure Standards and Adverse Action Notice Template.',
+    relevance: '96%',
+    rationale: 'Directly governs any AI hiring or promotion tool used for NYC roles. Requires a documented bias-audit cadence and candidate-notice process tied to your AI Governance Policy and Bias Testing Log.',
     complianceDate: 'In effect',
+    docsAffected: 5,
+    clausesAffected: 11
+  },
+  {
+    title: 'Colorado — Colorado AI Act (SB 24-205)',
+    sourceType: 'Westlaw',
+    summary: 'Enacted May 2024; effective June 30, 2026. Imposes a duty of reasonable care on deployers of high-risk AI to avoid algorithmic discrimination in "consequential decisions," which expressly include employment, with impact assessments, consumer notice, and an AG disclosure obligation.',
+    impactLevel: 'High',
+    relevance: '93%',
+    rationale: 'Employment is a named consequential decision, so AI used in hiring and promotion falls squarely in scope. Requires impact assessments and a risk-management program mapped to your Risk Management Framework and Model Inventory before the June 2026 effective date.',
+    complianceDate: '2026-06-30',
+    docsAffected: 6,
+    clausesAffected: 14
+  },
+  {
+    title: 'California — Civil Rights Council Automated-Decision Systems Employment Regulations (FEHA)',
+    sourceType: 'Westlaw',
+    summary: 'Approved regulations effective October 1, 2025 extend the Fair Employment and Housing Act to automated-decision systems used in hiring, promotion, and other employment decisions, prohibiting discriminatory use and requiring four-year retention of ADS and selection data.',
+    impactLevel: 'High',
+    relevance: '91%',
+    rationale: 'Applies FEHA anti-discrimination and recordkeeping duties to any AI screening or ranking tool used for California workers. Requires updates to your AI Governance Policy and Bias Testing Log with a near-term October 2025 effective date.',
+    complianceDate: '2025-10-01',
     docsAffected: 5,
     clausesAffected: 12
   },
   {
-    title: 'Federal — Interagency Model Risk Management Guidance (SR 11-7) Applied to AI/ML Models',
+    title: 'Illinois — HB 3773: AI in Employment Amendments to the Human Rights Act',
     sourceType: 'Practical Law',
-    summary: 'Federal Reserve, OCC and FDIC guidance on model risk management is increasingly applied to AI/ML credit and underwriting models, expecting documented validation, monitoring, and governance controls.',
+    summary: 'Enacted August 2024; effective January 1, 2026. Makes it a civil-rights violation to use AI that discriminates in recruitment, hiring, promotion, discharge, or other terms of employment, bars use of ZIP code as a proxy for protected classes, and requires employee notice of AI use.',
     impactLevel: 'High',
-    relevance: '90%',
-    rationale: 'Sets supervisory expectations for validation and human oversight of credit-decisioning models. Affects your Risk Management Framework, Model Inventory, and CreditScorePro Model Validation.',
-    complianceDate: 'In effect',
-    docsAffected: 4,
-    clausesAffected: 11
-  },
-  {
-    title: 'California — CPPA Automated Decisionmaking Technology (ADMT) Regulations',
-    sourceType: 'Westlaw',
-    summary: 'CPPA rulemaking establishes consumer rights to access and opt out of automated decisionmaking technology used for significant decisions, including financial services and lending, with pre-use notice requirements.',
-    impactLevel: 'High',
-    relevance: '92%',
-    rationale: 'Introduces opt-out and pre-use notice obligations for ADMT in lending. Requires updates to your Consumer Disclosure Standards and AI Governance Policy in priority jurisdiction California.',
-    complianceDate: '2027-01-01',
-    docsAffected: 4,
-    clausesAffected: 10
-  },
-  {
-    title: 'New York — NYDFS Circular Letter on AI and External Consumer Data in Underwriting',
-    sourceType: 'Practical Law',
-    summary: 'NYDFS guidance addresses the use of artificial intelligence and external consumer data sources in underwriting and pricing, requiring fairness testing, documentation, and demonstrable lack of unlawful discrimination.',
-    impactLevel: 'High',
-    relevance: '89%',
-    rationale: 'NYDFS supervises Meridian\u2019s lending activity in priority jurisdiction New York. Requires bias testing and documentation tied to your Bias Testing Log and Risk Management Framework.',
-    complianceDate: 'In effect',
+    relevance: '88%',
+    rationale: 'Creates direct discrimination liability and a notice duty for AI used across the employment lifecycle. Requires a notice workflow and proxy-variable review tied to your AI Governance Policy and AI Use Case Intake Form.',
+    complianceDate: '2026-01-01',
     docsAffected: 4,
     clausesAffected: 9
   },
   {
-    title: 'California — AB 2013: Generative AI Training Data Transparency',
+    title: 'Illinois — Artificial Intelligence Video Interview Act (820 ILCS 42)',
+    sourceType: 'Practical Law',
+    summary: 'Enacted and in effect since 2020. Requires employers that use AI to analyze video interviews to notify applicants, explain how the AI works, obtain consent, limit sharing, and delete recordings within 30 days of an applicant request.',
+    impactLevel: 'Medium',
+    relevance: '79%',
+    rationale: 'Applies if any AI video-interview or assessment tool is used for Illinois candidates. Requires consent, disclosure, and deletion controls documented in your AI Governance Policy and Annual Impact Assessment.',
+    complianceDate: 'In effect',
+    docsAffected: 3,
+    clausesAffected: 6
+  },
+  {
+    title: 'Texas — Responsible Artificial Intelligence Governance Act (TRAIGA, HB 149)',
     sourceType: 'Westlaw',
-    summary: 'Requires developers of generative AI systems to publicly document the datasets used to train those systems, including data sources and whether personal information is included.',
+    summary: 'Enacted June 2025; effective January 1, 2026. Prohibits developing or deploying AI with the intent to unlawfully discriminate against a protected class and adds disclosure duties, with employment among the covered use contexts.',
     impactLevel: 'Medium',
-    relevance: '81%',
-    rationale: 'Applies to consumer-facing generative AI features. May require disclosure updates if Meridian deploys generative tools in California-facing products.',
+    relevance: '75%',
+    rationale: 'Adds an intent-based anti-discrimination standard and disclosure expectations for AI used with Texas workers. Requires an intake and review step captured in your AI Use Case Intake Form and Colorado Gap Assessment comparison.',
     complianceDate: '2026-01-01',
-    docsAffected: 2,
-    clausesAffected: 5
+    docsAffected: 3,
+    clausesAffected: 6
   },
   {
-    title: 'New York City — Local Law 144: Automated Employment Decision Tools (AEDT)',
+    title: 'Federal — EEOC Guidance on AI, the ADA and Title VII in Employment',
     sourceType: 'Web sources',
-    summary: 'Requires independent bias audits and candidate notice for automated employment decision tools used in hiring and promotion within New York City.',
-    impactLevel: 'Medium',
-    relevance: '76%',
-    rationale: 'Relevant to workplace AI use governed by your AI Governance Policy for New York-based hiring, though not tied to consumer lending.',
-    complianceDate: 'In effect',
-    docsAffected: 2,
-    clausesAffected: 4
-  },
-  {
-    title: 'Federal — EEOC Guidance on AI, Algorithmic Fairness and the ADA in Employment',
-    sourceType: 'Web sources',
-    summary: 'EEOC guidance addresses how the use of AI and algorithmic tools in employment decisions can implicate the Americans with Disabilities Act and Title VII, with notice and accommodation considerations.',
-    impactLevel: 'Low',
-    relevance: '68%',
-    rationale: 'Primarily workplace-focused; modest impact on your AI Governance Policy rather than consumer lending products.',
-    complianceDate: 'In effect',
-    docsAffected: 1,
-    clausesAffected: 3
-  },
-  {
-    title: 'International (comparative) — EU AI Act High-Risk Classification for Creditworthiness Scoring',
-    sourceType: 'International Research',
-    summary: 'Classifies AI systems used to evaluate creditworthiness or establish credit scores as "high-risk," triggering conformity assessments, risk management, data governance, human oversight, and transparency obligations.',
+    summary: 'Standing EEOC technical guidance on how algorithmic and AI selection tools can create disparate impact under Title VII or fail to accommodate applicants under the ADA, addressing validation, alternatives, and reasonable-accommodation processes.',
     impactLevel: 'Medium',
     relevance: '72%',
-    rationale: 'Flagged via International Research as comparative guidance. Relevant if Meridian extends consumer credit to EU data subjects; informs emerging US human-oversight expectations.',
-    complianceDate: '2026-08-02',
+    rationale: 'Federal baseline that applies nationwide even where no state statute is in force. Informs validation and accommodation controls in your Risk Management Framework and Bias Testing Log.',
+    complianceDate: 'In effect',
     docsAffected: 2,
     clausesAffected: 5
+  },
+  {
+    title: 'Federal (pending) — No Robot Bosses Act / Stop Spying Bosses Act',
+    sourceType: 'Practical Law',
+    summary: 'Pending federal bills, introduced but not enacted, that would require human oversight of automated employment decision systems, pre-use disclosure to workers, and limits on AI-driven electronic surveillance of employees. No effective date yet.',
+    impactLevel: 'Low',
+    relevance: '66%',
+    rationale: 'Not yet law, but signals the likely direction of federal workplace-AI requirements around human oversight and worker notice. Track for readiness against your AI Governance Policy rather than immediate remediation.',
+    complianceDate: 'Pending',
+    docsAffected: 2,
+    clausesAffected: 4
   },
 ];
 

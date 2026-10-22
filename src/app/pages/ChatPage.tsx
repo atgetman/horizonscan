@@ -82,7 +82,7 @@ export function ChatPage() {
     // Match the tab title to the active scan variant (M&A vs AI governance).
     const tableName =
       sessionStorage.getItem('regulatoryScanVariant') === 'ai-gov'
-        ? 'AI legislation findings'
+        ? 'Workplace AI legislation findings'
         : 'M&A regulatory findings';
     navigate(`/chat?open=${encodeURIComponent(tableName)}&type=regulatory-table&from=${chatId}`);
   };

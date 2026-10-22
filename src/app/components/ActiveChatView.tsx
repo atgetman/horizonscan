@@ -29,13 +29,13 @@ function buildHorizonScanAlertDetail() {
 
   if (isAiGov) {
     return {
-      title: 'Documents impacted by CFPB AI adverse-action guidance',
-      detail: 'New federal and state AI requirements affect 3 documents in your AI Governance workspace',
+      title: 'Documents impacted by workplace AI legislation',
+      detail: 'New federal and state workplace-AI requirements affect 3 documents in your AI Governance workspace',
       workspace: 'AI Governance',
       documents: [
-        { name: 'MFG-AI-POL-005_Consumer_Disclosure_Standards.docx', clause: 'Adverse Action Notice §4', impact: 'high' as const },
-        { name: 'MFG-AI-TMPL-003_Adverse_Action_Notice_Template.docx', clause: 'Reason Codes', impact: 'medium' as const },
-        { name: 'MFG-MRM-MDL001-2024_CreditScorePro_Validation.docx', clause: 'Model Explainability §2', impact: 'low' as const },
+        { name: 'MFG-AI-POL-001_Governance_Policy.docx', clause: 'High-Risk Uses §3', impact: 'high' as const },
+        { name: 'MFG-AI-LOG-002_Q1-2026_Bias_Testing_Log.docx', clause: 'Employment Screening Tests', impact: 'medium' as const },
+        { name: 'MFG-AI-INV-001_Model_Inventory_Q2_2026.docx', clause: 'Hiring & HR Models', impact: 'low' as const },
       ],
     };
   }
@@ -824,8 +824,8 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
     // with AI-legislation content via the 'ai-gov' variant.
     if (isAiGovScan) {
       detectedType = 'regulatory-scan';
-      topic = 'US AI Legislation & Compliance Requirements';
-      setArtifactName('AI legislation findings');
+      topic = 'Workplace AI Legislation & Compliance Requirements';
+      setArtifactName('Workplace AI legislation findings');
       setArtifactCategory('Regulatory scan');
       setIsAiGovScanActive(true);
       sessionStorage.setItem('regulatoryScanVariant', 'ai-gov');
@@ -972,7 +972,7 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
                                       descText = `This analysis examines the regulatory requirements, applies them to your facts, and identifies key considerations. It includes discussion of relevant guidance, potential exposures, and remediation recommendations. Let me know if you'd like me to explore any particular aspect in more detail.`;
                                     } else if (detectedType === 'regulatory-scan') {
                                       introText = isAiGovScan
-                                        ? `I ran a horizon scan across federal and state sources for AI legislation governing automated decision-making, workplace AI, and consumer-facing products, then cross-referenced it against the documents in your AI Governance workspace.`
+                                        ? `I ran a horizon scan across federal and state sources for legislation governing the use of AI in the workplace — automated employment decision tools, hiring and promotion, and employee monitoring — then cross-referenced it against the documents in your AI Governance workspace.`
                                         : `I ran a regulatory horizon scan across federal and state sources to identify any changes that may impact your M&A contract templates.`;
                                       descText = ``;
                                     } else if (detectedType === 'cpc-analysis') {
@@ -1982,9 +1982,11 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
       return next;
     });
 
-    // Show the scan plan panel so the user can confirm or edit before the scan.
-    safeSetTimeout(() => setShowScanPlanPanel(true), 250);
-  }, [safeSetTimeout]);
+    // Go straight into the research workflow once jurisdictions are resolved.
+    safeSetTimeout(() => {
+      processChat([{ role: 'user', text: '__ai_gov_research__ us ai legislation' }]);
+    }, 400);
+  }, [processChat, safeSetTimeout]);
 
   // User confirmed the plan ("Looks good — proceed"): record the confirmation and
   // kick off the research workflow animation. The scope details aren't echoed back
@@ -2124,24 +2126,74 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
   // Scenario-specific copy for the regulatory-scan artifact (M&A vs AI gov).
   const scanConfig = isAiGovScanActive
     ? {
-        tableTabName: 'AI legislation findings',
-        findingsLabel: 'AI legislation findings',
+        tableTabName: 'Workplace AI legislation findings',
+        findingsLabel: 'Workplace AI legislation findings',
         supportingDocs: ['Westlaw', 'Practical Law', 'International Research'],
-        monitorPrompt: 'Monitor AI legislation going forward?',
-        confirmationLabel: 'Now monitoring AI legislation',
+        monitorPrompt: 'Monitor workplace AI legislation going forward?',
+        confirmationLabel: 'Now monitoring workplace AI legislation',
         alert: {
-          topic: 'AI Legislation Updates',
-          criteria: 'Monitor AI legislation affecting automated decision-making, consumer lending, and credit decisioning',
-          practiceAreas: ['AI Governance', 'Consumer Finance'],
-          jurisdictions: ['Federal', 'California', 'New York'],
+          topic: 'Workplace AI Legislation Updates',
+          criteria: 'Monitor legislation governing AI in the workplace — automated employment decision tools, hiring, and employee monitoring',
+          practiceAreas: ['AI Governance', 'Employment & Labor'],
+          jurisdictions: ['Federal', 'New York', 'Colorado', 'California'],
         },
         summary: {
           totalFindings: 8,
           documentsAffected: 7,
           topFindings: [
-            { regulation: 'CFPB Circular 2022-03 – AI adverse action notices (Federal)', impact: 'High' as const, deadline: 'In effect' },
-            { regulation: 'CPPA ADMT Regulations (California)', impact: 'High' as const, deadline: 'Jan 1, 2027' },
-            { regulation: 'NYDFS AI underwriting guidance (New York)', impact: 'High' as const, deadline: 'In effect' },
+        {
+          regulation: 'NYC Local Law 144 – Automated Employment Decision Tools (New York City)',
+          impact: 'High' as const,
+          status: 'In effect',
+          statusDate: 'Jul 5, 2023',
+          relevance: [
+            'Your résumé-screening tool ranks candidates, so it counts as an ',
+            { strong: 'automated employment decision tool' },
+            '. Before use you need an ',
+            { strong: 'independent bias audit within the past year' },
+            ', a public summary of results, and ',
+            { strong: '10 business days’ notice' },
+            ' to candidates (',
+            { cite: 'Practical Law: NYC Automated Employment Decision Tools Law' },
+            '). Your Bias Testing Log records internal testing only, which doesn’t meet the independence requirement.',
+          ],
+        },
+        {
+          regulation: 'CRD Automated-Decision Systems employment rules (California)',
+          impact: 'High' as const,
+          status: 'In effect',
+          statusDate: 'Oct 1, 2025',
+          relevance: [
+            'Employers are liable under FEHA for discriminatory outcomes from automated-decision systems, ',
+            { strong: 'including vendor tools' },
+            ' (',
+            { cite: 'Cal. Code Regs. tit. 2, § 11008 et seq.' },
+            '). Records and ADS data must be kept for ',
+            { strong: 'four years' },
+            ', and anti-bias testing is relevant evidence in a defense. Your Model Inventory doesn’t record retention periods.',
+          ],
+        },
+        {
+          regulation: 'Colorado AI Act (Colorado)',
+          impact: 'High' as const,
+          status: 'Enacted',
+          statusDate: 'May 14, 2026',
+          relevance: [
+            'Repeals and re-enacts the 2024 AI Act, which ',
+            { strong: 'never took effect' },
+            ' — its date moved from February 1 to June 30, 2026, and it was replaced before that arrived (',
+            { cite: 'Practical Law: Colorado Repeals and Replaces Its AI Act' },
+            '). The duty of reasonable care, annual impact assessments and the risk-management program are gone. What binds instead is procedural: ',
+            { strong: 'notice before a covered ADMT is used' },
+            ', a plain-language explanation ',
+            { strong: 'within 30 days of an adverse outcome' },
+            ', meaningful human review by someone with authority to override, and ',
+            { strong: 'three-year record retention' },
+            ' (',
+            { cite: 'Colo. Rev. Stat. §§ 6-1-1701 et seq.' },
+            '). Covered only where the output materially influences the decision — ranking, scoring or classifying a candidate counts; summarizing for a human does not.',
+          ],
+        },
           ],
         },
       }
@@ -2161,9 +2213,27 @@ export function ActiveChatView({ prompt, attachments, onNewPrompt, onThinkingCha
           totalFindings: 3,
           documentsAffected: 25,
           topFindings: [
-            { regulation: 'SEC Climate Disclosure Rules', impact: 'High' as const, deadline: 'Jan 1, 2027' },
-            { regulation: 'CFPB Consumer Data Rights Rule', impact: 'High' as const, deadline: 'Apr 1, 2027' },
-            { regulation: 'FTC Non-Compete Ban Amendments', impact: 'Medium' as const, deadline: 'TBD (Pending)' },
+        {
+          regulation: 'SEC Climate Disclosure Rules',
+          impact: 'High' as const,
+          status: 'Final rule',
+          statusDate: 'Effective Jan 1, 2027',
+          relevance: ['Adds ', { strong: 'climate-risk disclosure' }, ' obligations that the reps and warranties in your purchase agreement templates don’t address.'],
+        },
+        {
+          regulation: 'CFPB Consumer Data Rights Rule',
+          impact: 'High' as const,
+          status: 'Final rule',
+          statusDate: 'Effective Apr 1, 2027',
+          relevance: ['Targets holding consumer financial data need ', { strong: 'data-access and portability' }, ' diligence, which your due diligence checklist doesn’t cover.'],
+        },
+        {
+          regulation: 'FTC Non-Compete Ban Amendments',
+          impact: 'Medium' as const,
+          status: 'Pending',
+          statusDate: 'Date to be set',
+          relevance: ['Could limit the ', { strong: 'non-compete covenants' }, ' in your seller and key-employee agreements.'],
+        },
           ],
         },
       };

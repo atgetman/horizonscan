@@ -15,16 +15,16 @@ interface ScanPlanPanelProps {
   onAdjust: () => void;
 }
 
-// The most credit/AI-decisioning-relevant documents from the AI Governance
-// workspace (titles mirror the real MFG-AI-* files in that workspace).
+// The workplace-AI-relevant documents from the AI Governance workspace
+// (titles mirror the real MFG-AI-* files in that workspace).
 const DEFAULT_DOCUMENTS: PlanDocument[] = [
   { title: 'AI Governance Policy', date: 'Jan 2026' },
-  { title: 'Consumer Disclosure Standards', date: 'Jan 2026' },
-  { title: 'Adverse Action Notice Template', date: 'Feb 2026' },
-  { title: 'CreditScorePro Model Validation', date: '2024' },
-  { title: 'Risk Management Framework', date: 'Jan 2026' },
-  { title: 'Model Inventory (Q2 2026)', date: 'Q2 2026' },
+  { title: 'AI Use Case Intake Form', date: 'Jan 2026' },
   { title: 'Bias Testing Log (Q1 2026)', date: 'Q1 2026' },
+  { title: 'Model Inventory (Q2 2026)', date: 'Q2 2026' },
+  { title: 'Risk Management Framework', date: 'Jan 2026' },
+  { title: 'Colorado Gap Assessment', date: '2025' },
+  { title: 'Annual Impact Assessment Template', date: '2026' },
 ];
 
 // Render the priority jurisdictions as a readable, comma + "and" joined list
@@ -104,9 +104,10 @@ export function ScanPlanPanel({
 
           {/* Sections */}
           <PlanSection label="Topic">
-            US AI regulation governing automated decision-making, workplace AI use, and
-            consumer-facing applications, with a focus on consumer lending and credit
-            decisioning.
+            US federal and state legislation governing the use of AI in the workplace —
+            automated employment decision tools, hiring and promotion, and employee
+            monitoring — including what has been enacted, what is pending, and the runway
+            before new requirements take effect.
           </PlanSection>
 
           <PlanSection label="Jurisdictions">

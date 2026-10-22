@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import {
   Plus,
   Table,
+  MessageCirclePlus,
+  FolderPlus,
   ChevronDown,
   ChevronRight,
   Folder,
@@ -85,13 +87,19 @@ export function SidebarExpanded() {
 
       {/* Action Buttons */}
       <div className="px-4 py-2 flex flex-col gap-3">
-        <button className="w-full h-9 bg-[#1D4B34] text-white rounded-lg flex items-center justify-center gap-2 hover:bg-[#153826] transition-colors shadow-sm">
-          <Plus className="size-4" strokeWidth={2.5} />
-          <span className="text-[14px] font-medium">New workspace</span>
+        <button
+          onClick={() => navigate("/")}
+          className="w-full h-9 bg-[#1D4B34] text-white rounded-lg flex items-center justify-center gap-2 hover:bg-[#153826] transition-colors shadow-sm"
+        >
+          <MessageCirclePlus className="size-4" strokeWidth={2.5} />
+          <span className="text-[14px] font-medium">New chat</span>
         </button>
-        <button className="w-full h-9 bg-white text-[#212223] border border-[#E5E5E5] rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
-          <Table className="size-4 text-[#212223]" strokeWidth={2} />
-          <span className="text-[14px] font-medium">New tabular analysis</span>
+        <button
+          onClick={() => navigate("/projects")}
+          className="w-full h-9 bg-white text-[#212223] border border-[#E5E5E5] rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
+        >
+          <FolderPlus className="size-4 text-[#212223]" strokeWidth={2} />
+          <span className="text-[14px] font-medium">New workspace</span>
         </button>
       </div>
 
@@ -103,7 +111,7 @@ export function SidebarExpanded() {
           data-tour-step="3"
         >
           {isRecentWorkspacesOpen ? <ChevronDown className="size-3" /> : <ChevronRight className="size-3" />}
-          <span className="text-[13px] font-semibold text-[#212223]">Recent workspaces</span>
+          <span className="text-[13px] font-['Clario'] font-semibold text-[#212223]">Recent workspaces</span>
         </button>
         
         {isRecentWorkspacesOpen && (
@@ -156,7 +164,7 @@ export function SidebarExpanded() {
           data-tour-step="2"
         >
           {isRecentActivityOpen ? <ChevronDown className="size-3" /> : <ChevronRight className="size-3" />}
-          <span className="text-[13px] font-semibold text-[#212223]">Recent activity</span>
+          <span className="text-[13px] font-['Clario'] font-semibold text-[#212223]">Recent activity</span>
         </button>
         
         {isRecentActivityOpen && (
@@ -231,7 +239,7 @@ function WorkspaceItem({ workspace, onShare, onManageAccess }: { workspace: stri
         className="flex items-center gap-2 flex-1 min-w-0"
       >
         <Folder className="size-4 text-[#DE6633] fill-[#F8EADD] shrink-0" />
-        <span className="text-[14px] font-['Clario'] font-normal text-[#212223] truncate leading-tight group-hover:text-[#1D4B34] transition-colors flex-1 group-hover:pr-8">
+        <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] truncate leading-tight group-hover:text-[#1D4B34] transition-colors flex-1 group-hover:pr-8">
           {workspace}
         </span>
       </Link>
@@ -343,10 +351,10 @@ function ActivityItem({ item, onShare }: { item: { type: 'table' | 'doc' | 'chat
         {item.type === 'monitor' && <Bell className="size-4 text-[#666666] shrink-0 mt-0.5" />}
         {item.type === 'regulatory-table' && <Table className="size-4 text-[#666666] shrink-0 mt-0.5" />}
         <div className="flex flex-col min-w-0 flex-1 group-hover:pr-8">
-          <span className="text-[14px] text-[#212223] truncate leading-tight group-hover:text-[#1D4B34] transition-colors">
+          <span className="text-[14px] font-['Source_Sans_3'] font-normal text-[#212223] truncate leading-tight group-hover:text-[#1D4B34] transition-colors">
             {item.name}
           </span>
-          <span className="text-[11px] text-[#999999] truncate">
+          <span className="text-[11px] font-['Source_Sans_3'] text-[#999999] truncate">
             {item.workspace || 'Quick chat'}
           </span>
         </div>
